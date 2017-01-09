@@ -1,6 +1,5 @@
 /*
- * Taskbar: A taskbar extension for the Gnome panel.
- * Copyright (C) 2016 Zorin OS
+ * This file is part of the Dash-To-Panel extension for Gnome 3
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +16,8 @@
  *
  *
  * Credits:
- * This file is based on code from the Dash to Dock extension by micheleg.
+ * This file is based on code from the Dash to Dock extension by micheleg
+ * and code from the Taskbar extension by Zorin OS
  * Some code was also adapted from the upstream Gnome Shell source code.
  */
 
@@ -159,16 +159,29 @@ const taskbarActor = new Lang.Class({
     },
 
     _allocate: function(actor, box, flags) {
+        
+        this._isHorizontal = true;
+        this._isAppAtLeft = true;
         let contentBox = box;
+        let availWidth = contentBox.x2 - contentBox.x1;
+        let availHeight = contentBox.y2 - contentBox.y1;
 
-        let [appIcons] = actor.get_children();
+        let [appIcons, showAppsButton] = actor.get_children();
+        let [showAppsMinHeight, showAppsNatHeight] = showAppsButton.get_preferred_height(availWidth);
+        let [showAppsMinWidth, showAppsNatWidth] = showAppsButton.get_preferred_width(availHeight);
 
         let childBox = new Clutter.ActorBox();
-            childBox.x1 = contentBox.x1;
-            childBox.y1 = contentBox.y1;
-            childBox.x2 = contentBox.x2;
-            childBox.y2 = contentBox.y2;
-            appIcons.allocate(childBox, flags);
+        childBox.x1 = contentBox.x1 + showAppsNatWidth;
+        childBox.y1 = contentBox.y1;
+        childBox.x2 = contentBox.x2;
+        childBox.y2 = contentBox.y2;
+        appIcons.allocate(childBox, flags);
+
+        childBox.y1 = contentBox.y1;
+        childBox.x1 = contentBox.x1;
+        childBox.x2 = contentBox.x1 + showAppsNatWidth;
+        childBox.y2 = contentBox.y2;
+        showAppsButton.allocate(childBox, flags);
     },
 
     _getPreferredWidth: function(actor, forHeight, alloc) {
@@ -209,7 +222,8 @@ const baseIconSizes = [ 16, 22, 24, 32, 48, 64, 96, 128 ];
 const taskbar = new Lang.Class({
     Name: 'taskbar.taskbar',
 
-    _init : function() {
+    _init : function(settings) {
+        this._dtpSettings = settings;
         this._maxHeight = -1;
         this.iconSize = 32;
         this._availableIconSizes = baseIconSizes;
@@ -242,6 +256,23 @@ const taskbar = new Lang.Class({
         this._box._delegate = this;
         this._container.add_actor(this._scrollView);
         this._scrollView.add_actor(this._box);
+
+        this._showAppsIcon = new Dash.ShowAppsIcon();
+        this._showAppsIcon.showLabel = ItemShowLabel;
+        this.showAppsButton = this._showAppsIcon.toggleButton;
+        this._showAppsIcon.actor = this.showAppsButton;
+             
+        this.showAppsButton.connect('notify::checked', Lang.bind(this, this._onShowAppsButtonToggled));
+
+        this._showAppsIcon.childScale = 1;
+        this._showAppsIcon.childOpacity = 255;
+        this._showAppsIcon.icon.setIconSize(this.iconSize);
+        this._hookUpLabel(this._showAppsIcon);
+
+        this._container.add_actor(this._showAppsIcon);
+
+        if (!this._dtpSettings.get_boolean('show-show-apps-button'))
+            this.hideShowAppsButton();
 
         let rtl = Clutter.get_default_text_direction() == Clutter.TextDirection.RTL;
         this.actor = new St.Bin({ child: this._container,
@@ -305,13 +336,29 @@ const taskbar = new Lang.Class({
                 Main.overview,
                 'item-drag-cancelled',
                 Lang.bind(this, this._onDragCancelled)
+            ],
+            [
+                // Ensure the ShowAppsButton status is kept in sync
+                Main.overview.viewSelector._showAppsButton,
+                'notify::checked',
+                Lang.bind(this, this._syncShowAppsButtonToggled)
             ]
         );
 
+        this._bindSettingsChanges();
     },
 
     destroy: function() {
         this._signalsHandler.destroy();
+    },
+
+    _bindSettingsChanges: function () {
+        this._dtpSettings.connect('changed::show-show-apps-button', Lang.bind(this, function() {
+            if (this._dtpSettings.get_boolean('show-show-apps-button'))
+                this.showShowAppsButton();
+            else
+                this.hideShowAppsButton();
+        }));
     },
 
     _onScrollEvent: function(actor, event) {
@@ -433,9 +480,10 @@ const taskbar = new Lang.Class({
     },
 
     _createAppItem: function(app) {
-        let appIcon = new taskbarAppIcon(app,
+        let appIcon = new taskbarAppIcon(this._dtpSettings, app,
                                              { setSizeManually: true,
                                                showLabel: false });
+
         if (appIcon._draggable) {
             appIcon._draggable.connect('drag-begin',
                                        Lang.bind(this, function() {
@@ -487,7 +535,7 @@ const taskbar = new Lang.Class({
                     appIcon._menu._boxPointer.yOffset = -y_shift;
                 }
         }));
-
+        
         // Override default AppIcon label_actor, now the
         // accessible_name is set at DashItemContainer.setLabelText
         appIcon.actor.label_actor = null;
@@ -592,6 +640,8 @@ const taskbar = new Lang.Class({
                    !actor.animatingOut;
         });
 
+        iconChildren.push(this._showAppsIcon);
+
         if (this._maxHeight == -1)
             return;
 
@@ -659,6 +709,14 @@ const taskbar = new Lang.Class({
         let favorites = AppFavorites.getAppFavorites().getFavoriteMap();
 
         let running = this._appSystem.get_running().sort(this.sortAppsCompareFunction);
+        if (this._dtpSettings.get_boolean('isolate-workspaces')) {
+            // When using isolation, we filter out apps that have no windows in
+            // the current workspace
+            let settings = this._dtpSettings;
+            running = running.filter(function(_app) {
+                return getInterestingWindows(_app, settings).length != 0;
+            });
+        }
 
         let children = this._box.get_children().filter(function(actor) {
                 return actor.child &&
@@ -967,6 +1025,119 @@ const taskbar = new Lang.Class({
             }));
 
         return true;
+    },
+
+    _onShowAppsButtonToggled: function() {
+        // Sync the status of the default appButtons. Only if the two statuses are
+        // different, that means the user interacted with the extension provided
+        // application button, cutomize the behaviour. Otherwise the shell has changed the
+        // status (due to the _syncShowAppsButtonToggled function below) and it
+        // has already performed the desired action.
+
+        let animate = this._dtpSettings.get_boolean('animate-show-apps');
+        let selector = Main.overview.viewSelector;
+
+        if (selector._showAppsButton.checked !== this.showAppsButton.checked) {
+            // find visible view
+            let visibleView;
+            Main.overview.viewSelector.appDisplay._views.every(function(v, index) {
+                if (v.view.actor.visible) {
+                    visibleView = index;
+                    return false;
+                }
+                else
+                    return true;
+            });
+
+            if (this.showAppsButton.checked) {
+                // force spring animation triggering.By default the animation only
+                // runs if we are already inside the overview.
+                if (!Main.overview._shown) {
+                    this.forcedOverview = true;
+                    if (animate) {
+                        let view = Main.overview.viewSelector.appDisplay._views[visibleView].view;
+                        let grid = view._grid;
+
+                        // Animate in the the appview, hide the appGrid to avoiud flashing
+                        // Go to the appView before entering the overview, skipping the workspaces.
+                        // Do this manually avoiding opacity in transitions so that the setting of the opacity
+                        // to 0 doesn't get overwritten.
+                        Main.overview.viewSelector._activePage.opacity = 0;
+                        Main.overview.viewSelector._activePage.hide();
+                        Main.overview.viewSelector._activePage = Main.overview.viewSelector._appsPage;
+                        Main.overview.viewSelector._activePage.show();
+                        grid.actor.opacity = 0;
+
+                        // The animation has to be trigered manually because the AppDisplay.animate
+                        // method is waiting for an allocation not happening, as we skip the workspace view
+                        // and the appgrid could already be allocated from previous shown.
+                        // It has to be triggered after the overview is shown as wrong coordinates are obtained
+                        // otherwise.
+                        let overviewShownId = Main.overview.connect('shown', Lang.bind(this, function() {
+                            Main.overview.disconnect(overviewShownId);
+                            Meta.later_add(Meta.LaterType.BEFORE_REDRAW, Lang.bind(this, function() {
+                                grid.actor.opacity = 255;
+                                grid.animateSpring(IconGrid.AnimationDirection.IN, this.showAppsButton);
+                            }));
+                        }));
+                    }
+                }
+
+                // Finally show the overview
+                selector._showAppsButton.checked = true;
+                Main.overview.show();
+            }
+            else {
+                if (this.forcedOverview) {
+                    // force exiting overview if needed
+
+                    if (animate) {
+                        // Manually trigger springout animation without activating the
+                        // workspaceView to avoid the zoomout animation. Hide the appPage
+                        // onComplete to avoid ugly flashing of original icons.
+                        let view = Main.overview.viewSelector.appDisplay._views[visibleView].view;
+                        let grid = view._grid;
+                        view.animate(IconGrid.AnimationDirection.OUT, Lang.bind(this, function() {
+                            Main.overview.viewSelector._appsPage.hide();
+                            Main.overview.hide();
+                            selector._showAppsButton.checked = false;
+                            this.forcedOverview = false;
+                        }));
+                    }
+                    else {
+                        Main.overview.hide();
+                        this.forcedOverview = false;
+                    }
+                }
+                else {
+                    selector._showAppsButton.checked = false;
+                    this.forcedOverview = false;
+                }
+            }
+        }
+
+        // whenever the button is unactivated even if not by the user still reset the
+        // forcedOverview flag
+        if (this.showAppsButton.checked == false)
+            this.forcedOverview = false;
+    },
+    
+    _syncShowAppsButtonToggled: function() {
+        let status = Main.overview.viewSelector._showAppsButton.checked;
+        if (this.showAppsButton.checked !== status)
+            this.showAppsButton.checked = status;
+    },
+    
+    showShowAppsButton: function() {
+        this.showAppsButton.visible = true;
+        this.showAppsButton.set_width(-1);
+        this.showAppsButton.set_height(-1);
+    },
+
+    hideShowAppsButton: function() {
+        this.showAppsButton.hide();
+        this.showAppsButton.set_width(0);
+        this.showAppsButton.set_height(0);
     }
 
 });
@@ -993,8 +1164,10 @@ const taskbarAppIcon = new Lang.Class({
     Name: 'taskbar.AppIcon',
     Extends: AppDisplay.AppIcon,
 
-    _init: function(app, iconParams, onActivateOverride) {
-
+    _init: function(settings, app, iconParams, onActivateOverride) {
+        
+        // a prefix is required to avoid conflicting with the parent class variable
+        this._dtpSettings = settings;
         this._nWindows = 0;
 
         this.parent(app, iconParams, onActivateOverride);
@@ -1016,23 +1189,29 @@ const taskbarAppIcon = new Lang.Class({
 
         this._dots = null;
 
+        this._dtpSettings.connect('changed::dot-position', Lang.bind(this, this._showDots));
         this._showDots();
+
+        this._dtpSettings.connect('changed::appicon-margin', Lang.bind(this, this._setMargin));
+        this._setMargin();        
 
         // Creating a new menu manager for window previews as adding it to the
         // using the secondary menu's menu manager (which uses the "ignoreRelease"
         // function) caused the extension to crash.
         this._menuManagerWindowPreview = new PopupMenu.PopupMenuManager(this);
 
-        this._windowPreview = new WindowPreview.thumbnailPreviewMenu(this);
+        this._windowPreview = new WindowPreview.thumbnailPreviewMenu(this, this._dtpSettings);
         this._windowPreview.connect('open-state-changed', Lang.bind(this, function (menu, isPoppedUp) {
             if (!isPoppedUp)
                 this._onMenuPoppedDown();
         }));
         this._menuManagerWindowPreview.addMenu(this._windowPreview);
+        
+        this.forcedOverview = false;
     },
 
     shouldShowTooltip: function() {
-        let windows = getAppInterestingWindows(this.app);
+        let windows = getInterestingWindows(this.app, this._dtpSettings);
         if (windows.length > 0) {
             return false;
         } else {
@@ -1094,7 +1273,23 @@ const taskbarAppIcon = new Lang.Class({
 
     },
 
+    _setMargin: function() {
+        let margin = this._dtpSettings.get_int('appicon-margin');
+        if(margin)
+            this.actor.set_style('margin: 0 ' + margin + 'px;');
+    },
+
     _updateRunningStyle: function() {
+        // When using workspace isolation, we need to hide the dots of apps with
+        // no windows in the current workspace
+        if (this._dtpSettings.get_boolean('isolate-workspaces')) {
+            if (this.app.state != Shell.AppState.STOPPED
+                && getInterestingWindows(this.app, this._dtpSettings).length != 0)
+                this._dot.show();
+            else
+                this._dot.hide();
+        }
+
         this._updateCounterClass();
     },
 
@@ -1104,9 +1299,9 @@ const taskbarAppIcon = new Lang.Class({
         this._draggable.fakeRelease();
 
         if (!this._menu) {
-            this._menu = new SecondaryMenu.taskbarSecondaryMenu(this);
+            this._menu = new SecondaryMenu.taskbarSecondaryMenu(this, this._dtpSettings);
             this._menu.connect('activate-window', Lang.bind(this, function (menu, window) {
-                this.activateWindow(window);
+                this.activateWindow(window, this._dtpSettings);
             }));
             this._menu.connect('open-state-changed', Lang.bind(this, function (menu, isPoppedUp) {
                 if (!isPoppedUp)
@@ -1170,36 +1365,108 @@ const taskbarAppIcon = new Lang.Class({
 
         let event = Clutter.get_current_event();
         let modifiers = event ? event.get_state() : 0;
-        let openNewWindow = modifiers & Clutter.ModifierType.CONTROL_MASK &&
-                            this.app.state == Shell.AppState.RUNNING ||
-                            button && button == 2;
         let focusedApp = tracker.focus_app;
 
-        if (this.app.state == Shell.AppState.STOPPED || openNewWindow)
-            this.animateLaunch();
+        // Only consider SHIFT and CONTROL as modifiers (exclude SUPER, CAPS-LOCK, etc.)
+        modifiers = modifiers & (Clutter.ModifierType.SHIFT_MASK | Clutter.ModifierType.CONTROL_MASK);
 
-        if (button && button == 1 && this.app.state == Shell.AppState.RUNNING) {
-
-            if (modifiers & Clutter.ModifierType.CONTROL_MASK){
+        // We don't change the CTRL-click behaviour: in such case we just chain
+        // up the parent method and return.
+        if (modifiers & Clutter.ModifierType.CONTROL_MASK) {
                 // Keep default behaviour: launch new window
                 // By calling the parent method I make it compatible
                 // with other extensions tweaking ctrl + click
+                this.parent(button);
+                return;
+        }
+
+        // We check what type of click we have and if the modifier SHIFT is
+        // being used. We then define what buttonAction should be for this
+        // event.
+        let buttonAction = 0;
+        if (button && button == 2 ) {
+            if (modifiers & Clutter.ModifierType.SHIFT_MASK)
+                buttonAction = this._dtpSettings.get_string('shift-middle-click-action');
+            else
+                buttonAction = this._dtpSettings.get_string('middle-click-action');
+        }
+        else if (button && button == 1) {
+            if (modifiers & Clutter.ModifierType.SHIFT_MASK)
+                buttonAction = this._dtpSettings.get_string('shift-click-action');
+            else
+                buttonAction = this._dtpSettings.get_string('click-action');
+        }
+
+        // We check if the app is running, and that the # of windows is > 0 in
+        // case we use workspace isolation,
+        let appIsRunning = this.app.state == Shell.AppState.RUNNING
+            && getInterestingWindows(this.app, this._dtpSettings).length > 0
+
+        // We customize the action only when the application is already running
+        if (appIsRunning) {
+            switch (buttonAction) {
+            case "RAISE":
+                activateAllWindows(this.app, this._dtpSettings);
+                break;
+
+            case "LAUNCH":
                 this.animateLaunch();
                 this.app.open_new_window(-1);
-                return;
+                break;
 
-            } else if (this.app == focusedApp && !Main.overview._shown){
-                minimizeWindow(this.app, true);
-            } else {
-                // If click minimizes all, then one expects all windows to be reshown
-                activateAllWindows(this.app);
+            case "MINIMIZE":
+                // In overview just activate the app, unless the acion is explicitely
+                // requested with a keyboard modifier
+                if (!Main.overview._shown || modifiers){
+                    // If we have button=2 or a modifier, allow minimization even if
+                    // the app is not focused
+                    if (this.app == focusedApp || button == 2 || modifiers & Clutter.ModifierType.SHIFT_MASK) {
+                        // minimize all windows on double click and always in the case of primary click without
+                        // additional modifiers
+                        let click_count = 0;
+                        if (Clutter.EventType.CLUTTER_BUTTON_PRESS)
+                            click_count = event.get_click_count();
+                        let all_windows = (button == 1 && ! modifiers) || click_count > 1;
+                        minimizeWindow(this.app, all_windows, this._dtpSettings);
+                    }
+                    else
+                        activateAllWindows(this.app, this._dtpSettings);
+                }
+                else
+                    this.app.activate();
+                break;
+
+            case "CYCLE":
+                if (!Main.overview._shown){
+                    if (this.app == focusedApp)
+                        activateNextWindow(this.app, false, this._dtpSettings);
+                    else {
+                        activateFirstWindow(this.app, this._dtpSettings);
+                    }
+                }
+                else
+                    this.app.activate();
+                break;
+            case "CYCLE-MIN":
+                if (!Main.overview._shown){
+                    if (this.app == focusedApp)
+                        activateNextWindow(this.app, true, this._dtpSettings);
+                    else {
+                        activateFirstWindow(this.app, this._dtpSettings);
+                    }
+                }
+                else
+                    this.app.activate();
+                break;
+
+            case "QUIT":
+                closeAllWindows(this.app, this._dtpSettings);
+                break;
             }
-        } else {
-         // Default behaviour
-         if (openNewWindow)
+        }
+        else {
+            this.animateLaunch();
             this.app.open_new_window(-1);
-         else
-            this.app.activate();
         }
 
         Main.overview.hide();
@@ -1207,8 +1474,13 @@ const taskbarAppIcon = new Lang.Class({
 
     _updateCounterClass: function() {
 
+        if(this._dtpSettings.get_string('dot-position') == "TOP")
+            this._dot.set_y_align(Clutter.ActorAlign.START);
+        else
+            this._dot.set_y_align(Clutter.ActorAlign.END);
+
         let maxN = 4;
-        this._nWindows = Math.min(getAppInterestingWindows(this.app).length, maxN);
+        this._nWindows = Math.min(getInterestingWindows(this.app, this._dtpSettings).length, maxN);
 
         for (let i = 1; i <= maxN; i++){
             let className = 'running'+i;
@@ -1239,7 +1511,7 @@ const taskbarAppIcon = new Lang.Class({
 
         Clutter.cairo_set_source_color(cr, bodyColor);
 
-        cr.translate((width - (2*n)*radius - (n-1)*spacing)/2, height- padding- 2*radius);
+        cr.translate((width - (2*n)*radius - (n-1)*spacing)/2, this._dtpSettings.get_string('dot-position') == "TOP" ? 0 : (height- padding- 2*radius));
         for (let i = 0; i < n; i++) {
             cr.newSubPath();
             cr.arc((2*i+1)*radius + i*spacing, radius, radius, 0, 2*Math.PI);
@@ -1251,9 +1523,9 @@ const taskbarAppIcon = new Lang.Class({
 
 });
 
-function minimizeWindow(app, param){
+function minimizeWindow(app, param, settings){
     // Param true make all app windows minimize
-    let windows = getAppInterestingWindows(app);
+    let windows = getInterestingWindows(app, settings);
     let current_workspace = global.screen.get_active_workspace();
     for (let i = 0; i < windows.length; i++) {
         let w = windows[i];
@@ -1271,11 +1543,11 @@ function minimizeWindow(app, param){
  * By default only non minimized windows are activated.
  * This activates all windows in the current workspace.
  */
-function activateAllWindows(app){
+function activateAllWindows(app, settings){
 
     // First activate first window so workspace is switched if needed,
     // then activate all other app windows in the current workspace.
-    let windows = getAppInterestingWindows(app);
+    let windows = getInterestingWindows(app, settings);
     let w = windows[0];
     Main.activateWindow(w);
     let activeWorkspace = global.screen.get_active_workspace_index();
@@ -1293,9 +1565,45 @@ function activateAllWindows(app){
     }
 }
 
-function getAppInterestingWindows(app) {
-    // Filter out unnecessary windows, for instance
-    // nautilus desktop window.
+function activateFirstWindow(app, settings){
+
+    let windows = getInterestingWindows(app, settings).sort(function(windowA, windowB) {
+        return windowA.get_stable_sequence() > windowB.get_stable_sequence();
+    });
+
+    Main.activateWindow(windows[0]);
+}
+
+/*
+ * Activate the next running window for the current application
+ */
+function activateNextWindow(app, shouldMinimize, settings){
+
+    let windows = getInterestingWindows(app, settings).sort(function(windowA, windowB) {
+        return windowA.get_stable_sequence() > windowB.get_stable_sequence();
+    });
+
+    let focused_window = global.display.focus_window;
+
+    for (let i = 0 ; i < windows.length; i++){
+        if(windows[i] == focused_window) {
+            if(i < windows.length - 1)
+                Main.activateWindow(windows[i + 1]);
+            else
+                shouldMinimize ? minimizeWindow(app, true, settings) : Main.activateWindow(windows[0]); 
+
+            break;
+        }
+    }
+}
+
+function closeAllWindows(app, settings) {
+    let windows = getInterestingWindows(app, settings);
+    for (let i = 0; i < windows.length; i++)
+        windows[i].delete(global.get_current_time());
+}
+
+function getAppInterestingWindows(app, settings) {
     let windows = app.get_windows().filter(function(w) {
         return !w.skip_taskbar;
     });
@@ -1303,6 +1611,22 @@ function getAppInterestingWindows(app) {
     return windows;
 }
 
+// Filter out unnecessary windows, for instance
+// nautilus desktop window.
+function getInterestingWindows(app, settings) {
+    let windows = app.get_windows().filter(function(w) {
+        return !w.skip_taskbar;
+    });
+
+    // When using workspace isolation, we filter out windows
+    // that are not in the current workspace
+    if (settings.get_boolean('isolate-workspaces'))
+        windows = windows.filter(function(w) {
+            return w.get_workspace().index() == global.screen.get_active_workspace_index();
+        });
+
+    return windows;
+}
 
 /*
  * This is a copy of the same function in utils.js, but also adjust horizontal scrolling

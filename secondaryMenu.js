@@ -1,6 +1,5 @@
 /*
- * Taskbar: A taskbar extension for the Gnome panel.
- * Copyright (C) 2016 Zorin OS
+ * This file is part of the Dash-To-Panel extension for Gnome 3
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +16,8 @@
  *
  *
  * Credits:
- * This file is based on code from the Dash to Dock extension by micheleg.
+ * This file is based on code from the Dash to Dock extension by micheleg
+ * and code from the Taskbar extension by Zorin OS
  * Some code was also adapted from the upstream Gnome Shell source code.
  */
 
@@ -40,7 +40,9 @@ const taskbarSecondaryMenu = new Lang.Class({
     Name: 'taskbarSecondaryMenu',
     Extends: AppDisplay.AppIconMenu,
 
-    _init: function(source) {
+    _init: function(source, settings) {
+
+        this._dtpSettings = settings;
 
         let side = Taskbar.getPosition();
 
@@ -65,7 +67,7 @@ const taskbarSecondaryMenu = new Lang.Class({
 
         // quit menu
         let app = this._source.app;
-        let count = Taskbar.getAppInterestingWindows(app).length;
+        let count = Taskbar.getInterestingWindows(app, this._dtpSettings).length;
         if ( count > 0) {
             this._appendSeparator();
             let quitFromTaskbarMenuText = "";
