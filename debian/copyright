@@ -1,0 +1,73 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: gnome-shell-extension-zorin-taskbar
+
+Files: *
+Copyright: 2016-2020, Jason DeRose (https://github.com/jderose9)
+           2016-2020, Zorin OS Technologies Ltd.
+License: GPL-2+
+
+Files: po/cs.po
+Copyright: 2017-2018 Milan Zink <zeten30@gmail.com>
+License: GPL-2+
+
+Files: po/es.po
+Copyright: 2017 Fran Glais <franglais125@gmail.com>
+License: GPL-2+
+
+Files: po/gl.po
+Copyright: 2020 Fran Dieguez <frandieguez@gnome.org>
+License: GPL-2+
+
+Files: po/pt_BR.po
+Copyright: 2017 Fábio Nogueira <fnogueira@gnome.org>
+License: GPL-2+
+
+Files: po/ru.po
+Copyright: 2017 Alex Gluck <alexgluck@bk.ru>
+License: GPL-2+
+
+Files: po/hu.po
+Copyright: 2017 Balázs Úr <urbalazs@gmail.com>
+License: GPL-2+
+
+Files: po/it.po
+Copyright: 2018 Enrico Bella <enricobe@hotmail.com>
+License: GPL-2+
+
+Files: po/ja.po
+Copyright: 2017-2018 Shinichirou Yamada <yamada_strong_yamada_nice_64bit@yahoo.co.jp>
+           2018 sicklylife.jp <translation@sicklylife.jp>
+License: GPL-2+
+
+Files: po/kk.po
+Copyright: 2017 Baurzhan Muftakhidinov <baurthefirst@gmail.com>
+License: GPL-2+
+
+Files: po/zh_CN.po
+       po/zh_TW.po
+Copyright: 2017 Boyuan Yang <073plan@gmail.com>
+License: GPL-2+
+
+Files: po/tr.po
+Copyright: 2018 Serdar Sağlam <teknomobil@yandex.com>
+License: GPL-2+
+
+Files: debian/*
+Copyright: 2017-2020 Jonathan Carter <jcc@debian.org>
+License: GPL-2+
+
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License can be found in `/usr/share/common-licenses/GPL-2'.

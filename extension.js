@@ -1,10 +1,9 @@
 /*
- * Taskbar: A taskbar extension for the Gnome panel.
- * Copyright (C) 2016 Zorin OS
+ * This file is part of the Zorin Taskbar extension for Zorin OS.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -15,151 +14,127 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Credits:
- * This file is based on code from the Dash to Dock extension by micheleg.
- * Some code was also adapted from the upstream Gnome Shell source code.
  */
 
 
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const Clutter = imports.gi.Clutter;
-const Convenience = Me.imports.convenience;
-const Taskbar = Me.imports.taskbar;
-const Lang = imports.lang;
 const Main = imports.ui.main;
+const Meta = imports.gi.Meta;
+const Gio = imports.gi.Gio;
+const GLib = imports.gi.GLib;
+const Lang = imports.lang;
+const Shell = imports.gi.Shell;
+const St = imports.gi.St;
+const WindowManager = imports.ui.windowManager;
+const ExtensionUtils = imports.misc.extensionUtils;
+const Mainloop = imports.mainloop;
+const Signals = imports.signals;
 
-let appMenu;
-let container;
-let panel;
-let panelConnectId;
-let signalsHandler;
-let taskbar;
+const Me = ExtensionUtils.getCurrentExtension();
+const Convenience = Me.imports.convenience;
+const PanelManager = Me.imports.panelManager;
+const Utils = Me.imports.utils;
+
+const ZORIN_DASH_UUID = 'zorin-dash@zorinos.com';
+
+let panelManager;
+let oldDash;
+let extensionChangedHandler;
+let disabledZorinDash;
+let extensionSystem = (Main.extensionManager || imports.ui.extensionSystem);
 
 function init() {
+    Convenience.initTranslations(Utils.TRANSLATION_DOMAIN);
+    
+    //create an object that persists until gnome-shell is restarted, even if the extension is disabled
+    Me.persistentStorage = {};
 }
 
 function enable() {
-    panel = Main.panel;
-    container = panel._leftBox;
-    appMenu = panel.statusArea['appMenu'];
+    // The Zorin Dash extension might get enabled after this extension
+    extensionChangedHandler = extensionSystem.connect('extension-state-changed', (data, extension) => {
+        if (extension.uuid === ZORIN_DASH_UUID && extension.state === 1) {
+            _enable();
+        }
+    });
 
-    panelConnectId = panel.actor.connect('allocate', allocate);
-    container.remove_child(appMenu.container);
-    taskbar = new Taskbar.taskbar();
-    Main.overview.dashIconSize = taskbar.iconSize;
-
-    container.insert_child_at_index( taskbar.actor, 2 );
-
-    // Since Gnome 3.8 dragging an app without having opened the overview before cause the attemp to
-    //animate a null target since some variables are not initialized when the viewSelector is created
-    if(Main.overview.viewSelector._activePage == null)
-        Main.overview.viewSelector._activePage = Main.overview.viewSelector._workspacesPage;
-
-    // sync hover after a popupmenu is closed
-    taskbar.connect('menu-closed', Lang.bind(this, function(){container.sync_hover();}));
-
-    signalsHandler = new Convenience.GlobalSignalsHandler();
-    signalsHandler.add(
-        // Keep dragged icon consistent in size with this dash
-        [
-            taskbar,
-            'icon-size-changed',
-            Lang.bind(this, function() {
-                Main.overview.dashIconSize = taskbar.iconSize;
-            })
-        ],
-        // This duplicate the similar signal which is in owerview.js.
-        // Being connected and thus executed later this effectively
-        // overwrite any attempt to use the size of the default dash
-        // which given the customization is usually much smaller.
-        // I can't easily disconnect the original signal
-        [
-            Main.overview._controls.dash,
-            'icon-size-changed',
-            Lang.bind(this, function() {
-                Main.overview.dashIconSize = taskbar.iconSize;
-            })
-        ]
-    );
-   }
-
-function disable() {
-    signalsHandler.destroy();
-    container.remove_child(taskbar.actor);
-    container.add_child(appMenu.container);
-    taskbar.destroy();
-    panel.actor.disconnect(panelConnectId);
-
-    // reset stored icon size  to the default dash
-    Main.overview.dashIconSize = Main.overview._controls.dash.iconSize;
-
-    appMenu = null;
-    container = null;
-    panel = null;
-    panelConnectId = null;
-    signalsHandler = null;
-    taskbar = null;
+    //create a global object that can emit signals and conveniently expose functionalities to other extensions 
+    global.zorinTaskbar = {};
+    Signals.addSignalMethods(global.zorinTaskbar);
+    
+    _enable();
 }
 
-function allocate(actor, box, flags) {
-    let allocWidth = box.x2 - box.x1;
-    let allocHeight = box.y2 - box.y1;
+function _enable() {
+    let zorinDash = Main.extensionManager ?
+                     Main.extensionManager.lookup(ZORIN_DASH_UUID) : //gnome-shell >= 3.33.4
+                     ExtensionUtils.extensions[ZORIN_DASH_UUID];
 
-    let [leftMinWidth, leftNaturalWidth] = panel._leftBox.get_preferred_width(-1);
-    let [centerMinWidth, centerNaturalWidth] = panel._centerBox.get_preferred_width(-1);
-    let [rightMinWidth, rightNaturalWidth] = panel._rightBox.get_preferred_width(-1);
+    if (zorinDash && zorinDash.stateObj && zorinDash.stateObj.dockManager) {
+        // Disable Zorin Dash
+        let extensionOrder = (extensionSystem.extensionOrder || extensionSystem._extensionOrder);
 
-    let sideWidth = allocWidth - rightNaturalWidth - centerNaturalWidth;
+        Utils.getStageTheme().get_theme().unload_stylesheet(zorinDash.stylesheet);
+        zorinDash.stateObj.disable();
+        disabledZorinDash = true;
+        zorinDash.state = 2; //ExtensionState.DISABLED
+        extensionOrder.splice(extensionOrder.indexOf(ZORIN_DASH_UUID), 1);
 
-    let childBox = new Clutter.ActorBox();
-
-    childBox.y1 = 0;
-    childBox.y2 = allocHeight;
-    if (panel.actor.get_text_direction() == Clutter.TextDirection.RTL) {
-	      childBox.x1 = allocWidth - Math.min(Math.floor(sideWidth), leftNaturalWidth);
-	      childBox.x2 = allocWidth;
-    } else {
-	      childBox.x1 = 0;
-	      childBox.x2 = sideWidth;
+        //reset to prevent conflicts with the zorin-dash
+        if (panelManager) {
+            disable(true);
+        }
     }
-    panel._leftBox.allocate(childBox, flags);
 
-    childBox.y1 = 0;
-    childBox.y2 = allocHeight;
-    if (panel.actor.get_text_direction() == Clutter.TextDirection.RTL) {
-	      childBox.x1 = rightNaturalWidth;
-	      childBox.x2 = childBox.x1 + centerNaturalWidth;
-    } else {
-	      childBox.x1 = allocWidth - centerNaturalWidth - rightNaturalWidth;
-	      childBox.x2 = childBox.x1 + centerNaturalWidth;
+    if (panelManager) return; //already initialized
+
+    Me.settings = Convenience.getSettings('org.gnome.shell.extensions.zorin-taskbar');
+    Me.desktopSettings = Convenience.getSettings('org.gnome.desktop.interface');
+
+    panelManager = new PanelManager.dtpPanelManager();
+
+    panelManager.enable();
+    
+    Utils.removeKeybinding('open-application-menu');
+    Utils.addKeybinding(
+        'open-application-menu',
+        new Gio.Settings({ schema_id: WindowManager.SHELL_KEYBINDINGS_SCHEMA }),
+        Lang.bind(this, function() {
+            panelManager.primaryPanel.taskbar.popupFocusedAppSecondaryMenu();
+        }),
+        Shell.ActionMode.NORMAL | Shell.ActionMode.POPUP
+    );
+
+    // Pretend I'm the dash: meant to make appgrd swarm animation come from the
+    // right position of the appShowButton.
+    oldDash = Main.overview._dash;
+    Main.overview._dash = panelManager.primaryPanel.taskbar;
+}
+
+function disable(reset) {
+    panelManager.disable();
+    Main.overview._dash = oldDash;
+    Me.settings.run_dispose();
+    Me.desktopSettings.run_dispose();
+
+    delete Me.settings;
+    oldDash = null;
+    panelManager = null;
+    
+    Utils.removeKeybinding('open-application-menu');
+    Utils.addKeybinding(
+        'open-application-menu',
+        new Gio.Settings({ schema_id: WindowManager.SHELL_KEYBINDINGS_SCHEMA }),
+        Lang.bind(Main.wm, Main.wm._toggleAppMenu),
+        Shell.ActionMode.NORMAL | Shell.ActionMode.POPUP
+    );
+
+    if (!reset) {
+        extensionSystem.disconnect(extensionChangedHandler);
+        delete global.zorinTaskbar;
+
+        // Re-enable Zorin Dash if it was disabled by Zorin Taskbar
+        if (disabledZorinDash && Main.sessionMode.allowExtensions) {
+            (extensionSystem._callExtensionEnable || extensionSystem.enableExtension).call(extensionSystem, ZORIN_DASH_UUID);
+        }
     }
-    panel._centerBox.allocate(childBox, flags);
-
-    childBox.y1 = 0;
-    childBox.y2 = allocHeight;
-    if (panel.actor.get_text_direction() == Clutter.TextDirection.RTL) {
-	      childBox.x1 = 0;
-	      childBox.x2 = rightNaturalWidth;
-    } else {
-	      childBox.x1 = allocWidth - rightNaturalWidth;
-	      childBox.x2 = allocWidth;
-    }
-    panel._rightBox.allocate(childBox, flags);
-
-    let [cornerMinWidth, cornerWidth] = panel._leftCorner.actor.get_preferred_width(-1);
-    let [cornerMinHeight, cornerHeight] = panel._leftCorner.actor.get_preferred_width(-1);
-    childBox.x1 = 0;
-    childBox.x2 = cornerWidth;
-    childBox.y1 = allocHeight;
-    childBox.y2 = allocHeight + cornerHeight;
-    panel._leftCorner.actor.allocate(childBox, flags);
-
-    let [cornerMinWidth, cornerWidth] = panel._rightCorner.actor.get_preferred_width(-1);
-    let [cornerMinHeight, cornerHeight] = panel._rightCorner.actor.get_preferred_width(-1);
-    childBox.x1 = allocWidth - cornerWidth;
-    childBox.x2 = allocWidth;
-    childBox.y1 = allocHeight;
-    childBox.y2 = allocHeight + cornerHeight;
-    panel._rightCorner.actor.allocate(childBox, flags);
 }

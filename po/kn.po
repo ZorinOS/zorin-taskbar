@@ -1,0 +1,17 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+"Project-Id-Version: Zorin OS\n"
+"Language: kn\n"
+
+msgid "System Monitor"
+msgstr "ಗಣಕ ಮೇಲ್ವಿಚಾರಕ"
+
+msgid "Files"
+msgstr "ಕಡತಗಳು"
+
+msgid "Settings"
+msgstr "ಸಿದ್ಧತೆಗಳು"

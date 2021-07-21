@@ -1,10 +1,9 @@
 /*
- * Taskbar: A taskbar extension for the Gnome panel.
- * Copyright (C) 2016 Zorin OS
+ * This file is part of the Zorin Taskbar extension for Zorin OS.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -17,87 +16,74 @@
  *
  *
  * Credits:
- * This file is based on code from the Dash to Dock extension by micheleg.
+ * This file is based on code from the Dash to Dock extension by micheleg
+ * and code from the Dash to Panel extension
  * Some code was also adapted from the upstream Gnome Shell source code.
  */
 
+const Config = imports.misc.config;
+const ExtensionUtils = imports.misc.extensionUtils;
+const Gettext = imports.gettext;
+const Gio = imports.gi.Gio;
 
-const Lang = imports.lang;
+/**
+ * initTranslations:
+ * @domain: (optional): the gettext domain to use
+ *
+ * Initialize Gettext to load translations from extensionsdir/locale.
+ * If @domain is not provided, it will be taken from metadata['gettext-domain']
+ */
+function initTranslations(domain) {
+    let extension = ExtensionUtils.getCurrentExtension();
 
+    domain = domain || extension.metadata['gettext-domain'];
 
-// simplify global signals and function injections handling
-// abstract class
-const BasicHandler = new Lang.Class({
-    Name: 'Taskbar.BasicHandler',
+    // Check if this extension was built with "make zip-file", and thus
+    // has the locale files in a subfolder
+    // otherwise assume that extension has been installed in the
+    // same prefix as gnome-shell
+    let localeDir = extension.dir.get_child('locale');
+    if (localeDir.query_exists(null))
+        Gettext.bindtextdomain(domain, localeDir.get_path());
+    else
+        Gettext.bindtextdomain(domain, Config.LOCALEDIR);
+}
 
-    _init: function(){
-        this._storage = new Object();
-    },
+/**
+ * getSettings:
+ * @schema: (optional): the GSettings schema id
+ *
+ * Builds and return a GSettings schema for @schema, using schema files
+ * in extensionsdir/schemas. If @schema is not provided, it is taken from
+ * metadata['settings-schema'].
+ */
+function getSettings(schema) {
+    let extension = ExtensionUtils.getCurrentExtension();
 
-    add: function(/*unlimited 3-long array arguments*/){
+    schema = schema || extension.metadata['settings-schema'];
 
-        // convert arguments object to array, concatenate with generic
-        let args = Array.concat('generic', Array.slice(arguments));
-        // call addWithLabel with ags as if they were passed arguments
-        this.addWithLabel.apply(this, args);
-    },
+    const GioSSS = Gio.SettingsSchemaSource;
 
-    destroy: function() {
-        for( let label in this._storage )
-            this.removeWithLabel(label);
-    },
+    // Check if this extension was built with "make zip-file", and thus
+    // has the schema files in a subfolder
+    // otherwise assume that extension has been installed in the
+    // same prefix as gnome-shell (and therefore schemas are available
+    // in the standard folders)
+    let schemaDir = extension.dir.get_child('schemas');
+    let schemaSource;
+    if (schemaDir.query_exists(null))
+        schemaSource = GioSSS.new_from_directory(schemaDir.get_path(),
+                                                 GioSSS.get_default(),
+                                                 false);
+    else
+        schemaSource = GioSSS.get_default();
 
-    addWithLabel: function( label /* plus unlimited 3-long array arguments*/) {
+    let schemaObj = schemaSource.lookup(schema, true);
+    if (!schemaObj)
+        throw new Error('Schema ' + schema + ' could not be found for extension '
+                        + extension.metadata.uuid + '. Please check your installation.');
 
-        if(this._storage[label] == undefined)
-            this._storage[label] = new Array();
-
-        // skip first element of the arguments
-        for( let i = 1; i < arguments.length; i++ ) {
-            this._storage[label].push( this._create(arguments[i]) );
-        }
-
-    },
-
-    removeWithLabel: function(label){
-
-        if(this._storage[label]) {
-            for( let i = 0; i < this._storage[label].length; i++ ) {
-                this._remove(this._storage[label][i]);
-            }
-
-            delete this._storage[label];
-        }
-    },
-
-    /* Virtual methods to be implemented by subclass */
-    // create single element to be stored in the storage structure
-    _create: function(item){
-      throw new Error('no implementation of _create in ' + this);
-    },
-
-    // correctly delete single element
-    _remove: function(item){
-      throw new Error('no implementation of _remove in ' + this);
-    }
-});
-
-// Manage global signals
-const GlobalSignalsHandler = new Lang.Class({
-    Name: 'Taskbar.GlobalSignalsHandler',
-    Extends: BasicHandler,
-
-    _create: function(item) {
-
-      let object = item[0];
-      let event = item[1];
-      let callback = item[2]
-      let id = object.connect(event, callback);
-
-      return [object, id];
-    },
-
-    _remove: function(item){
-       item[0].disconnect(item[1]);
-    }
-});
+    return new Gio.Settings({
+        settings_schema: schemaObj
+    });
+}

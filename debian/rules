@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_install:
+	dh_install
+	rm -f debian/gnome-shell-extension-zorin-taskbar/usr/share/gnome-shell/extensions/zorin-taskbar@zorinos.com/COPYING
+	rm -f debian/gnome-shell-extension-zorin-taskbar/usr/share/gnome-shell/extensions/zorin-taskbar@zorinos.com/README.md

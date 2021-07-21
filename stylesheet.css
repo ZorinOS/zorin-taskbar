@@ -1,6 +1,5 @@
 /*
- * Taskbar: A taskbar extension for the Gnome panel.
- * Copyright (C) 2016 Zorin OS
+ * This file is part of the Zorin Taskbar extension for Zorin OS.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,48 +13,128 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Credits:
+ * This file is based on code from the Dash to Dock extension by micheleg
+ * and code from the Dash to Panel extension
+ * Some code was also adapted from the upstream Gnome Shell source code.
  */
 
-#taskbarScrollview .dash-item-container > StWidget {
-	padding: 0;
-	margin: 0 8px;
+#zorintaskbarTaskbar .dash-item-container > StWidget {
+	margin: 0;
+	padding: 0; 
 }
 
-#taskbarScrollview .app-well-app .overview-icon {
-	border-radius: 0;
-	padding: 8px;
+#zorintaskbarScrollview .app-well-app .overview-icon,
+.zorintaskbarMainPanel .show-apps .overview-icon {
+	background: none;
 	border: none;
+	margin: 0;
+	padding: 0;
 }
 
-#taskbarScrollview .app-well-app-running-dot {
+#zorintaskbarScrollview .app-well-app .overview-label {
+	/* must match TITLE_RIGHT_PADDING in apppicons.js */
+	padding-right: 8px;
+}
+
+#zorintaskbarScrollview .app-well-app .favorite {
+	background-color: rgba(80, 150, 255, 0.4);
+}
+
+#zorintaskbarScrollview .app-well-app-running-dot {
 	margin-bottom: 0;
 }
 
-#thumbnailPreviewScrollview,
-#taskbarScrollview {
-	-st-hfade-offset: 48px;
+#zorintaskbarTaskbar .scrollview-fade {
+    background-gradient-end: rgba(0, 0, 0, 0);
 }
 
-.taskbarSecondaryMenu {
+.zorintaskbarSecondaryMenu {
 	max-width: 400px;
 }
 
-#thumbnailPreviewList {
+.zorintaskbarMainPanel.vertical .panel-button {
+	text-align: center; 
+}
+
+.zorintaskbarMainPanel.vertical .panel-button.vertical *,
+.zorintaskbarMainPanel.vertical .panel-button.clock-display * {
+	padding: 0;
+	margin: 0; 
+}
+
+.zorintaskbarMainPanel.vertical .panel-button > *,
+.zorintaskbarMainPanel.vertical .panel-button.vertical > *,
+.zorintaskbarMainPanel.vertical .panel-button.clock-display > * {
+	padding: 8px 0; 
+}
+
+#zorintaskbarThumbnailList {
 	spacing: 0em;
 	padding: 0 1em;
 }
 
-#thumbnailPreviewList .popup-menu-item {
-	padding: 1em;
+#zorintaskbarThumbnailList .popup-menu-item {
+	padding: 0;
 	border-radius: 5px;
 	spacing: 0;
 }
 
-#thumbnailPreviewList .window-box {
+#zorintaskbarThumbnailList .window-box {
 	padding: 0;
 	spacing: 0;
 }
 
-#thumbnailPreviewList .preview-window-title {
+#zorintaskbarThumbnailList .preview-window-title {
 	padding-top: 1em;
+}
+
+.popup-menu.panel-menu {
+    margin-bottom: 0;
+}
+
+#panel #panelLeft, #panel #panelCenter {
+	spacing: 0px; 
+}
+
+#panelBox.floating {
+	padding: 8px;
+	background: transparent;
+}
+
+#panelBox.floating #panel,
+#panelBox.floating .panel-button {
+	border-radius: 10px;
+}
+
+.panel-corner.hidden:active, .panel-corner.hidden:overview, .panel-corner.hidden:focus {
+    -panel-corner-border-color: rgba(0, 0, 0, .001);
+}
+#zorintaskbarScrollview .badge {
+	color: rgba(255, 255, 255, 1);
+	font-weight: bold;
+	text-align: center;
+}
+
+#zorintaskbarScrollview .number-overlay {
+	background-color: rgba(0,0,0,0.8);
+}
+
+#zorintaskbarScrollview .notification-badge {
+    background-color: rgba(255,0,0,0.8);
+    margin: 2px;
+}
+
+#zorintaskbarScrollview .progress-bar {
+    /* Customization of the progress bar style, e.g.:
+      -progress-bar-background: rgba(0.8, 0.8, 0.8, 1);
+      -progress-bar-border: rgba(0.9, 0.9, 0.9, 1);
+    */
+}
+
+.preview-container,
+#preview-menu {
+	border-radius: 10px;
 }

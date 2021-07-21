@@ -1,0 +1,328 @@
+gnome-shell-extension-zorin-taskbar (40.17) focal; urgency=medium
+
+  * Fixed notification badge sizing on 200% scaled displays
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 21 Jul 2021 13:00:25 +0100
+
+gnome-shell-extension-zorin-taskbar (40.16) focal; urgency=medium
+
+  * Fixed bug that caused the panel to disappear after locking the
+    screen while fullscreen content is playing
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 02 Jun 2021 20:24:27 +0100
+
+gnome-shell-extension-zorin-taskbar (40.15) focal; urgency=medium
+
+  * Updated translations
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 23 May 2021 20:32:41 +0100
+
+gnome-shell-extension-zorin-taskbar (40.14) focal; urgency=medium
+
+  * Fixed new translations
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 23 May 2021 20:26:18 +0100
+
+gnome-shell-extension-zorin-taskbar (40.13) focal; urgency=medium
+
+  * Added new translations and made the main panel always appear on the
+    primary display
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 23 May 2021 20:03:46 +0100
+
+gnome-shell-extension-zorin-taskbar (40.12) focal; urgency=medium
+
+  * Updated Russian and Japanese translations
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 05 May 2021 20:10:48 +0100
+
+gnome-shell-extension-zorin-taskbar (40.11) focal; urgency=medium
+
+  * No longer animates disposed icons
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 06 Apr 2021 13:13:47 +0100
+
+gnome-shell-extension-zorin-taskbar (40.10) focal; urgency=medium
+
+  * Added Zorin Appearance link to taskbar right-click menu
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 23 Mar 2021 19:36:07 +0000
+
+gnome-shell-extension-zorin-taskbar (40.9) focal; urgency=medium
+
+  * Removed Terminal from right-click menu
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Mon, 22 Mar 2021 15:38:20 +0000
+
+gnome-shell-extension-zorin-taskbar (40.8) focal; urgency=medium
+
+  * Removed dot style settings and moved Intellihide to Style tab in
+    prefs
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 21 Mar 2021 15:08:03 +0000
+
+gnome-shell-extension-zorin-taskbar (40.7) focal; urgency=medium
+
+  * Removed style override for app-well-app items
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 21 Feb 2021 20:00:12 +0000
+
+gnome-shell-extension-zorin-taskbar (40.6) focal; urgency=medium
+
+  * Improved styling of progress bars
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 21 Feb 2021 15:54:07 +0000
+
+gnome-shell-extension-zorin-taskbar (40.5) focal; urgency=medium
+
+  * Re-based on upstream as at commit
+    e4a71fa014b565171c93d15f436be9c3599b11fb
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 21 Feb 2021 15:22:52 +0000
+
+gnome-shell-extension-zorin-taskbar (40.4) focal; urgency=medium
+
+  * Updated notification badge overlay and limited minimum panel size to
+    24px
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 21 Feb 2021 15:02:09 +0000
+
+gnome-shell-extension-zorin-taskbar (40.3) focal; urgency=medium
+
+  * Increased border radius of floating panel and preview container
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 21 Feb 2021 00:50:25 +0000
+
+gnome-shell-extension-zorin-taskbar (40.2) focal; urgency=medium
+
+  * Imporved visibility of window previews by styling them with the dash-
+    label class
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Thu, 31 Dec 2020 18:34:46 +0000
+
+gnome-shell-extension-zorin-taskbar (40.1) focal; urgency=medium
+
+  * Added floating rounded theme when using Intellihide
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 30 Dec 2020 00:44:32 +0000
+
+gnome-shell-extension-zorin-taskbar (40) focal; urgency=medium
+
+  * Re-based on upstream version 40 as at commit
+    48a69e529614d1da456802b818e7d7f0d4d1d642
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Mon, 28 Dec 2020 22:08:11 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.11) bionic; urgency=medium
+
+  * Set variables to 0 on destroy in taskbar.js
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 19 Feb 2019 18:35:40 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.10) bionic; urgency=medium
+
+  * Fixed bugs with windowPreview peek mode
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 15 Feb 2019 00:13:19 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.9) bionic; urgency=medium
+
+  * Fixed touch support in Gnome Shell 3.30 and made touching an app
+    icon show its window preview if more than one window is opened
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Thu, 14 Feb 2019 13:27:40 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.8) bionic; urgency=medium
+
+  * Added definition check when getting taskbar icons
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 05 Feb 2019 18:17:32 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.7) bionic; urgency=medium
+
+  * Fixed _dragInfo definition check
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 05 Feb 2019 14:45:45 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.6) bionic; urgency=medium
+
+  * Fixed name of Taskbar Actor
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 12 Jan 2019 18:35:19 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.5) bionic; urgency=medium
+
+  * Re-based on Dash to Panel as at commit
+    b6094fdaec89349cc6f3e0da887d19fdf3db1c60
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 12 Jan 2019 16:02:44 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.4) bionic; urgency=medium
+
+  * Re-based on Dash to Panel as at commit
+    6e53889082eef4eed9cdc1c496e90a6f8450d1fd
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 11 Jan 2019 16:41:36 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.3) bionic; urgency=medium
+
+  * Re-based on Dash to Panel as at commit
+    8e715c7b07d30bfe0858a1eb93638c653b8bd268
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 08 Jan 2019 18:46:52 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.2) bionic; urgency=medium
+
+  * Re-based on Dash to Panel as at commit
+    dcd8a017e2a9ae66518ade2ae7a74d9836dd3633
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Thu, 03 Jan 2019 14:27:47 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0.1) bionic; urgency=medium
+
+  * Updated URL in metadata.json
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Mon, 31 Dec 2018 14:27:13 +0000
+
+gnome-shell-extension-zorin-taskbar (2.0) bionic; urgency=medium
+
+  * Re-based on Dash to Panel commit
+    e2eeb0290152bdf9ea3a9643ce6d36d8ba12813d
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 30 Dec 2018 18:44:22 +0000
+
+gnome-shell-extension-zorin-taskbar (1.4.4) xenial; urgency=medium
+
+  * Re-based on Dash to Panel version 13
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 07 Mar 2018 15:16:36 +0000
+
+gnome-shell-extension-zorin-taskbar (1.4.3) xenial; urgency=medium
+
+  * Fixed window preview issue with Remmina
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 06 Mar 2018 22:37:07 +0000
+
+gnome-shell-extension-zorin-taskbar (1.4.2) xenial; urgency=medium
+
+  * Various bug fixes
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 06 Mar 2018 20:44:12 +0000
+
+gnome-shell-extension-zorin-taskbar (1.4.1) xenial; urgency=medium
+
+  * Added more required imports
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 06 Mar 2018 11:22:48 +0000
+
+gnome-shell-extension-zorin-taskbar (1.4) xenial; urgency=medium
+
+  * Re-based on Dash to Panel version 12
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 06 Mar 2018 01:25:06 +0000
+
+gnome-shell-extension-zorin-taskbar (1.3) xenial; urgency=medium
+
+  * Added opacify peek on window preview hover
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 28 Jul 2017 00:40:19 +0100
+
+gnome-shell-extension-zorin-taskbar (1.2.1) xenial; urgency=medium
+
+  * Removed window preview opening animation
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 14 Apr 2017 20:05:44 +0100
+
+gnome-shell-extension-zorin-taskbar (1.2) xenial; urgency=medium
+
+  * Re-based on Dash to Panel commit
+    1415cbdf5cadff94f4d9483b4b77676a3a2ea8d1
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 11 Apr 2017 22:16:41 +0100
+
+gnome-shell-extension-zorin-taskbar (1.1.5) xenial; urgency=medium
+
+  * Enabled opening animations for window previews
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Thu, 12 Jan 2017 11:54:50 +0000
+
+gnome-shell-extension-zorin-taskbar (1.1.4) xenial; urgency=medium
+
+  * App running indicators now appear on top when the panel is on top
+    and bug fixes
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 11 Jan 2017 12:46:23 +0000
+
+gnome-shell-extension-zorin-taskbar (1.1.3) xenial; urgency=medium
+
+  * Fixed another high CPU usage issue – credit to jderose9
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 10 Jan 2017 22:01:51 +0000
+
+gnome-shell-extension-zorin-taskbar (1.1.2) xenial; urgency=medium
+
+  * Reduced CPU usage – credit to jderose9 – and improved the
+    responsiveness of DPI changes
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 10 Jan 2017 12:40:58 +0000
+
+gnome-shell-extension-zorin-taskbar (1.1.1) xenial; urgency=medium
+
+  * Removed window preview menu enter timeout to fix keygrab focus
+    lockup bug and make the taskbar experience faster
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 08 Jan 2017 20:02:26 +0000
+
+gnome-shell-extension-zorin-taskbar (1.1) xenial; urgency=medium
+
+  * Added full support for HiDPI displays
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Mon, 02 Jan 2017 00:28:46 +0000
+
+gnome-shell-extension-zorin-taskbar (1.0.6) xenial; urgency=medium
+
+  * Fixed a number of memory leaks in the Window Preview code
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 27 Dec 2016 15:53:08 +0000
+
+gnome-shell-extension-zorin-taskbar (1.0.5) xenial; urgency=medium
+
+  * Updated copyright notices
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 04 Nov 2016 14:34:48 +0000
+
+gnome-shell-extension-zorin-taskbar (1.0.4) xenial; urgency=medium
+
+  * Disconnected signals
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 23 Oct 2016 13:43:35 +0100
+
+gnome-shell-extension-zorin-taskbar (1.0.3) xenial; urgency=medium
+
+  * Fixed Work ID issue
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Thu, 20 Oct 2016 22:59:07 +0100
+
+gnome-shell-extension-zorin-taskbar (1.0.2) xenial; urgency=medium
+
+  * Ready for public use in Zorin OS 12
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 18 Sep 2016 20:24:18 +0100
+
+gnome-shell-extension-zorin-taskbar (1.0.1) xenial; urgency=medium
+
+  * Updated copyright notice
+
+ -- Zorin OS <os@zoringroup.com>  Mon, 12 Sep 2016 19:23:04 +0100
+
+gnome-shell-extension-zorin-taskbar (1.0) xenial; urgency=medium
+
+  * Initial stable release
+
+ -- Zorin OS <os@zoringroup.com>  Sat, 03 Sep 2016 23:19:10 +0100
+
+gnome-shell-extension-zorin-taskbar (0.9) xenial; urgency=low
+
+  * Pre-release
+
+ -- Zorin OS <os@zoringroup.com>  Fri, 02 Sep 2016 10:47:51 -0400
