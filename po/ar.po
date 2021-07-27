@@ -15,3 +15,12 @@ msgstr "الملفات"
 
 msgid "Settings"
 msgstr "الإعدادات"
+
+msgid "Show Desktop icon"
+msgstr "أظهر أيقونات سطح المكتب"
+
+msgid "Show Desktop button padding (px)"
+msgstr "أظهر زر سطح المكتب المساحة المتروكة (بيكسل)"
+
+msgid "Floating rounded theme"
+msgstr "مظهر دائري عائم"

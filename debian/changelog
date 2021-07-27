@@ -1,3 +1,21 @@
+gnome-shell-extension-zorin-taskbar (40.20) focal; urgency=medium
+
+  * Corrected translation string
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 27 Jul 2021 22:37:26 +0100
+
+gnome-shell-extension-zorin-taskbar (40.19) focal; urgency=medium
+
+  * Corrected translation strings
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 27 Jul 2021 22:35:25 +0100
+
+gnome-shell-extension-zorin-taskbar (40.18) focal; urgency=medium
+
+  * Updated translations
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 27 Jul 2021 22:29:20 +0100
+
 gnome-shell-extension-zorin-taskbar (40.17) focal; urgency=medium
 
   * Fixed notification badge sizing on 200% scaled displays

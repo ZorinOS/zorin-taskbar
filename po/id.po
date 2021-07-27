@@ -15,3 +15,12 @@ msgstr "Berkas"
 
 msgid "Settings"
 msgstr "Pengaturan"
+
+msgid "Show Desktop icon"
+msgstr "Tampilkan ikon desktop"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Tampilkan tombol desktop padding (px)"
+
+msgid "Floating rounded theme"
+msgstr "Tema bulat mengambang"

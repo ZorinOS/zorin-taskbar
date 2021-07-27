@@ -12,3 +12,12 @@ msgstr "সিস্টেম পর্যবেক্ষক"
 
 msgid "Files"
 msgstr "ফাইল"
+
+msgid "Show Desktop icon"
+msgstr "ডেস্কটপ আইকন দেখান"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Show Desktop button প্যাডিং (px আকারে)"
+
+msgid "Floating rounded theme"
+msgstr "ভাসমান বৃত্তাকার থিম"

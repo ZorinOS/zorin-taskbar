@@ -1309,3 +1309,12 @@ msgstr "Datum"
 
 msgid "Seconds"
 msgstr "Sekundy"
+
+msgid "Show Desktop icon"
+msgstr "Zobrazit ikonu plochy"
+
+msgid "Show Desktop button padding (px)"
+msgstr "vybarvení tlačítka Zobraz plochu"
+
+msgid "Floating rounded theme"
+msgstr "Plovoucí zaoblený vzhled"

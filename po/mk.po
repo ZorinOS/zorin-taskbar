@@ -12,3 +12,12 @@ msgstr "Надгледувач на системот"
 
 msgid "Files"
 msgstr "Датотеки"
+
+msgid "Show Desktop icon"
+msgstr "Покажете ја иконата за работната површина"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Пополнување „Покажи копче за работна површина“ (px)"
+
+msgid "Floating rounded theme"
+msgstr "Лебдечка заоблена тема"

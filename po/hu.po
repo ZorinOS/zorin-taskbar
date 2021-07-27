@@ -1303,3 +1303,12 @@ msgstr "Dátum"
 
 msgid "Seconds"
 msgstr "Másodperc"
+
+msgid "Show Desktop icon"
+msgstr "Asztali ikon megjelenítése"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Asztal megjelenítése gomb margója (px)"
+
+msgid "Floating rounded theme"
+msgstr "Lebegő lekerekített téma"

@@ -15,3 +15,9 @@ msgstr "Fișiere"
 
 msgid "Settings"
 msgstr "Configurări"
+
+msgid "Show Desktop icon"
+msgstr "Afișați pictograma Desktop"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Afișați umplerea butonului desktop (px)"

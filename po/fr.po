@@ -1424,3 +1424,12 @@ msgstr "Fichiers"
 
 msgid "Settings"
 msgstr "Paramètres"
+
+msgid "Show Desktop icon"
+msgstr "Afficher le Bureau – icône"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Afficher le Bureau - rembourrage du bouton (px)"
+
+msgid "Floating rounded theme"
+msgstr "Thème arrondi flottant"

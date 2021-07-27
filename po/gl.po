@@ -1310,3 +1310,12 @@ msgstr "Data"
 
 msgid "Seconds"
 msgstr "Segundos"
+
+msgid "Show Desktop icon"
+msgstr "Mostrar iconas na escritorio"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Recheo Mostrar o botón do escritorio (px)"
+
+msgid "Floating rounded theme"
+msgstr "Tema redondeado flotante"

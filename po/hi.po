@@ -15,3 +15,12 @@ msgstr "फ़ाइल"
 
 msgid "Settings"
 msgstr "सेटिंग्स"
+
+msgid "Show Desktop icon"
+msgstr "डेस्कटॉप आइकन दिखाएं"
+
+msgid "Show Desktop button padding (px)"
+msgstr "डेस्कटॉप बटन दिखाएं पैडिंग (पीएक्स)"
+
+msgid "Floating rounded theme"
+msgstr "फ़्लोटिंग गोलाकार थीम"

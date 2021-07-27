@@ -9,3 +9,12 @@ msgstr ""
 
 msgid "System Monitor"
 msgstr "სისტემის მონიტორი"
+
+msgid "Show Desktop icon"
+msgstr "აჩვენე დესკტოპის იკონები"
+
+msgid "Show Desktop button padding (px)"
+msgstr "ღილაკი აჩვენე დესკტოპი"
+
+msgid "Floating rounded theme"
+msgstr "მოფარფატე მომრგვალო თემა"

@@ -12,3 +12,12 @@ msgstr "Lêers"
 
 msgid "Settings"
 msgstr "Instellings"
+
+msgid "Show Desktop icon"
+msgstr "Wys Rekenaar-Ikoon"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Wys Rekenaar-Ikoon vulling (px)"
+
+msgid "Floating rounded theme"
+msgstr "Swewende afgeronde tema"

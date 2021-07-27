@@ -15,3 +15,12 @@ msgstr "ಕಡತಗಳು"
 
 msgid "Settings"
 msgstr "ಸಿದ್ಧತೆಗಳು"
+
+msgid "Show Desktop icon"
+msgstr "ಡೆಸ್ಕ್ಟಾಪ್ ಐಕಾನ್ ತೋರಿಸಿ"
+
+msgid "Show Desktop button padding (px)"
+msgstr "ಡೆಸ್ಕ್ಟಾಪ್ ಬಟನ್ ತೋರಿಸು ಪ್ಯಾಡಿಂಗ್ (ಪಿಎಕ್ಸ್)"
+
+msgid "Floating rounded theme"
+msgstr "ತೇಲುವ ದುಂಡಾದ ಥೀಮ್"

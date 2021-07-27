@@ -15,3 +15,12 @@ msgstr "ਫਾਇਲਾਂ"
 
 msgid "Settings"
 msgstr "ਸੈਟਿੰਗ"
+
+msgid "Show Desktop icon"
+msgstr "ਡੈਸਕਟਾਪ ਆਈਕਾਨ ਵੇਖਾਓ"
+
+msgid "Show Desktop button padding (px)"
+msgstr "ਡੈਸਕਟਾਪ ਬਟਨ ਦਿਖਾਓ ਭਰਾਵ (px)"
+
+msgid "Floating rounded theme"
+msgstr "ਫਲੋਟਿੰਗ ਗੋਲ ਥੀਮ"

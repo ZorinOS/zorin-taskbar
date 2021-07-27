@@ -1431,3 +1431,12 @@ msgstr "Secondi"
 
 msgid "System Monitor"
 msgstr "Monitor di sistema"
+
+msgid "Show Desktop icon"
+msgstr "Mostra le icone del Desktop"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Spaziatura del pulsante Mostra Desktop (px)"
+
+msgid "Floating rounded theme"
+msgstr "Tema arrotondato fluttuante"

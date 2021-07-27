@@ -1295,3 +1295,12 @@ msgstr "Datum"
 
 msgid "Seconds"
 msgstr "Sekunden"
+
+msgid "Show Desktop icon"
+msgstr "Desktop-Symbol anzeigen"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Padding (px) für Desktop-Symbol anzeigen"
+
+msgid "Floating rounded theme"
+msgstr "Schwebendes abgerundetes Thema"

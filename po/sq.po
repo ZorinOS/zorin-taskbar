@@ -9,3 +9,12 @@ msgstr ""
 
 msgid "System Monitor"
 msgstr "Monitori i sistemit"
+
+msgid "Show Desktop icon"
+msgstr "Shfaq ikonën e desktopit"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Mbushja Shfaq butonin e desktopit (px)"
+
+msgid "Floating rounded theme"
+msgstr "Temë lundruese e rrumbullakosur"

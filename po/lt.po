@@ -15,3 +15,12 @@ msgstr "Failai"
 
 msgid "Settings"
 msgstr "Nustatymai"
+
+msgid "Show Desktop icon"
+msgstr "Rodyti Darbalaukio ikoną"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Rodyti Darbalaukio mygtuką"
+
+msgid "Floating rounded theme"
+msgstr "Plūduriuojanti apskrita tema"

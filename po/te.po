@@ -15,3 +15,12 @@ msgstr "దస్త్రాలు"
 
 msgid "Settings"
 msgstr "అమరికలు"
+
+msgid "Show Desktop icon"
+msgstr "డెస్క్‌టాప్ చిహ్నాన్ని చూపించు"
+
+msgid "Show Desktop button padding (px)"
+msgstr "డెస్క్‌టాప్ బటన్ చూపించు పాడింగ్ (px)"
+
+msgid "Floating rounded theme"
+msgstr "తేలియాడే గుండ్రని థీమ్"

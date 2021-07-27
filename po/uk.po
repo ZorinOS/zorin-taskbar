@@ -459,3 +459,12 @@ msgstr "Файли"
 
 msgid "Settings"
 msgstr "Параметри"
+
+msgid "Show Desktop icon"
+msgstr "Показати значок робочого столу"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Відступ Показати кнопку робочого столу (px)"
+
+msgid "Floating rounded theme"
+msgstr "Плаваюча округла тема"

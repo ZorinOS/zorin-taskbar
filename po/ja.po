@@ -1453,3 +1453,12 @@ msgstr "日付"
 
 msgid "Seconds"
 msgstr "秒"
+
+msgid "Show Desktop icon"
+msgstr "デスクトップアイコンを表示"
+
+msgid "Show Desktop button padding (px)"
+msgstr "デスクトップボタンを表示 余白 (px)"
+
+msgid "Floating rounded theme"
+msgstr "フローティングラウンドテーマ"

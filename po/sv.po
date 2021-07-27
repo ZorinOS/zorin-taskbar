@@ -1294,3 +1294,12 @@ msgstr "Datum"
 
 msgid "Seconds"
 msgstr "Sekunder"
+
+msgid "Show Desktop icon"
+msgstr "Visa Skrivbordsikonen"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Fyllnad (px) för knappen Visa Skrivbordet"
+
+msgid "Floating rounded theme"
+msgstr "Flytande rundat tema"

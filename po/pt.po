@@ -15,3 +15,12 @@ msgstr "Ficheiros"
 
 msgid "Settings"
 msgstr "Definições"
+
+msgid "Show Desktop icon"
+msgstr "Mostrar ícone da Área de Trabalho"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Preenchimento do botão Mostrar Área de Trabalho (px)"
+
+msgid "Floating rounded theme"
+msgstr "Tema arredondado flutuante"

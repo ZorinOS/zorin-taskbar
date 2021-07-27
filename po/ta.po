@@ -15,3 +15,12 @@ msgstr "கோப்புகள்"
 
 msgid "Settings"
 msgstr "அமைவுகள்"
+
+msgid "Show Desktop icon"
+msgstr "டெஸ்க்டாப் ஐகானைக் காட்டு"
+
+msgid "Show Desktop button padding (px)"
+msgstr "டெஸ்க்டாப் பொத்தானைக் காட்டு திணிப்பு (px)"
+
+msgid "Floating rounded theme"
+msgstr "மிதக்கும் வட்டமான தீம்"

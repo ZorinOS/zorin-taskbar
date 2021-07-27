@@ -1319,3 +1319,12 @@ msgstr "Data"
 
 msgid "Seconds"
 msgstr "Sekundy"
+
+msgid "Show Desktop icon"
+msgstr "Pokaż ikony na pulpicie"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Pokaż margines wewnętrzny przycisków pulpitu (px)"
+
+msgid "Floating rounded theme"
+msgstr "Pływający, zaokrąglony motyw"

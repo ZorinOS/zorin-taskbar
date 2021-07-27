@@ -15,3 +15,12 @@ msgstr "Fitxers"
 
 msgid "Settings"
 msgstr "Paràmetres"
+
+msgid "Show Desktop icon"
+msgstr "Mostrar l'icona de l'Escriptori"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Farciment Mostra el botó de l'escriptori (px)"
+
+msgid "Floating rounded theme"
+msgstr "Tema flotant arrodonit"

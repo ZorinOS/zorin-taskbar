@@ -15,3 +15,12 @@ msgstr "Αρχεία"
 
 msgid "Settings"
 msgstr "Ρυθμίσεις"
+
+msgid "Show Desktop icon"
+msgstr "Εμφάνιση επιφάνειας εργασίας"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Εμφάνισε διαχωριστικό"
+
+msgid "Floating rounded theme"
+msgstr "Κυμαινόμενο στρογγυλεμένο θέμα"

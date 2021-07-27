@@ -15,3 +15,12 @@ msgstr "Bestanden"
 
 msgid "Settings"
 msgstr "Instellingen"
+
+msgid "Show Desktop icon"
+msgstr "Pictogram Bureaublad weergeven"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Opvulling Pictogram bureaublad weergeven (px)"
+
+msgid "Floating rounded theme"
+msgstr "zwevend afgerond thema"

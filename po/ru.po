@@ -1417,3 +1417,12 @@ msgstr "Файлы"
 
 msgid "Settings"
 msgstr "Параметры"
+
+msgid "Show Desktop icon"
+msgstr "Показать значок рабочего стола"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Показать рабочий стол - отступ внутри кнопки (px)"
+
+msgid "Floating rounded theme"
+msgstr "Плавающая закругленная тема"

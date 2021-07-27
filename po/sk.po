@@ -15,3 +15,12 @@ msgstr "Súbory"
 
 msgid "Settings"
 msgstr "Nastavenia"
+
+msgid "Show Desktop icon"
+msgstr "Zobrať ikonu plochy"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Zobraziť ikonu plochy výplň (px)"
+
+msgid "Floating rounded theme"
+msgstr "Zaoblený plávajúci motív"

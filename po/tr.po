@@ -1317,3 +1317,12 @@ msgstr "Tarih"
 
 msgid "Seconds"
 msgstr "Saniye"
+
+msgid "Show Desktop icon"
+msgstr "Masaüstünü Göster simgesi"
+
+msgid "Show Desktop button padding (px)"
+msgstr "Masaüstünü göster butonu boşluğu (px)"
+
+msgid "Floating rounded theme"
+msgstr "Yüzen yuvarlatılmış tema"

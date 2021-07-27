@@ -15,3 +15,12 @@ msgstr "קבצים"
 
 msgid "Settings"
 msgstr "הגדרות"
+
+msgid "Show Desktop icon"
+msgstr "הצגת סמל שולחן העבודה"
+
+msgid "Show Desktop button padding (px)"
+msgstr "ריפוד הצגת כפתור שולחן עבודה (פיקסלים)"
+
+msgid "Floating rounded theme"
+msgstr "ערכת נושא מעוגלת עם ריחוף"

@@ -15,3 +15,12 @@ msgstr "پرونده‌ها"
 
 msgid "Settings"
 msgstr "تنظیمات"
+
+msgid "Show Desktop icon"
+msgstr "نمایش آیکون دسکتاپ"
+
+msgid "Show Desktop button padding (px)"
+msgstr "حاشیه‌ی دکمه‌ی نمایش دسکتاپ (px)"
+
+msgid "Floating rounded theme"
+msgstr "تم گرد و شناور"
