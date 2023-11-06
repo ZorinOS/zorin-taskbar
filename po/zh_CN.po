@@ -237,7 +237,7 @@ msgstr "文件"
 
 #: appIcons.js:1726
 msgid "Settings"
-msgstr "导出设置设置"
+msgstr "设置"
 
 #: appIcons.js:1733
 msgid "Unlock taskbar"
