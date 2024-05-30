@@ -120,7 +120,7 @@ msgstr "Options du bouton Afficher les Applications"
 #: prefs.js:1146 prefs.js:1405 prefs.js:1500 prefs.js:1565 prefs.js:1608
 #: prefs.js:1705 prefs.js:1739 prefs.js:1781
 msgid "Reset to defaults"
-msgstr "Restaurer paramètres"
+msgstr "Restaurer les paramètres par défaut"
 
 #: prefs.js:426
 msgid "Show Desktop options"
@@ -406,11 +406,11 @@ msgstr "plus légere"
 
 #: Settings.ui.h:35
 msgid "bold"
-msgstr "grasse"
+msgstr "gras"
 
 #: Settings.ui.h:36
 msgid "bolder"
-msgstr "plus grasse"
+msgstr "plus gras"
 
 #: Settings.ui.h:37
 msgid "Font color of the application titles"
@@ -620,7 +620,7 @@ msgstr "19"
 
 #: Settings.ui.h:87
 msgid "20"
-msgstr "200"
+msgstr "20"
 
 #: Settings.ui.h:88
 msgid "21"
@@ -656,7 +656,7 @@ msgstr "Haut"
 
 #: Settings.ui.h:96
 msgid "Display window preview headers"
-msgstr "Afficher le titre de la fenêtre dans la prévis."
+msgstr "Afficher le titre de la fenêtre dans la prévisualisation."
 
 #: Settings.ui.h:97
 msgid "Font size (px) of the preview titles"
@@ -664,11 +664,11 @@ msgstr "Taille (px) du texte des prévisualisations"
 
 #: Settings.ui.h:98
 msgid "Font weight of the preview titles"
-msgstr "Épaisseur du texte des titres de prévisualisation"
+msgstr "Épaisseur du texte des titres pendant la prévisualisation"
 
 #: Settings.ui.h:99
 msgid "Font color of the preview titles"
-msgstr "Couleur du texte des titres de prévisualisation"
+msgstr "Couleur du texte des titres pendant la prévisualisation"
 
 #: Settings.ui.h:100
 msgid "Enable window peeking"
@@ -1408,7 +1408,7 @@ msgstr "À propos"
 #~ msgstr "GitHub"
 
 msgid "Weekday"
-msgstr "Jour de semaine"
+msgstr "Jour de la semaine"
 
 msgid "Date"
 msgstr "Date"
