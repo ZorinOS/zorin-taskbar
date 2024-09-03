@@ -24,3 +24,6 @@ msgstr "أظهر زر سطح المكتب المساحة المتروكة (بي�
 
 msgid "Floating rounded theme"
 msgstr "مظهر دائري عائم"
+
+msgid "Isolate Workspaces and Monitors in Application Switching settings"
+msgstr "عزل مساحات العمل والشاشات في إعدادات تبديل التطبيقات"

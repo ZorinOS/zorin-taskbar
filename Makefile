@@ -2,7 +2,9 @@
 
 UUID = zorin-taskbar@zorinos.com
 BASE_MODULES = extension.js stylesheet.css metadata.json COPYING README.md
-EXTRA_MODULES = appIcons.js convenience.js panel.js panelManager.js proximity.js intellihide.js progress.js panelPositions.js panelStyle.js overview.js taskbar.js transparency.js windowPreview.js prefs.js utils.js Settings.ui
+EXTRA_MODULES = appIcons.js panel.js panelManager.js proximity.js intellihide.js progress.js panelPositions.js panelSettings.js panelStyle.js overview.js taskbar.js transparency.js windowPreview.js prefs.js utils.js desktopIconsIntegration.js
+UI_MODULES = ui/BoxDynamicOpacityOptions.ui ui/BoxGroupAppsOptions.ui ui/BoxIntellihideOptions.ui ui/BoxMiddleClickOptions.ui ui/BoxOverlayShortcut.ui ui/BoxShowDateMenuOptions.ui ui/BoxShowDesktopOptions.ui ui/BoxWindowPreviewOptions.ui ui/SettingsAction.ui ui/SettingsBehavior.ui ui/SettingsPosition.ui ui/SettingsStyle.ui
+
 EXTRA_IMAGES = show-desktop-symbolic.svg
 
 TOLOCALIZE =  prefs.js appIcons.js
@@ -18,7 +20,7 @@ INSTALLNAME = zorin-taskbar@zorinos.com
 # in the metadata and in the generated zip-file.
 ifdef VERSION
 else
-	VERSION = 40
+	VERSION = 56
 endif
 
 ifdef TARGET
@@ -44,11 +46,17 @@ mergepo: potfile
 		msgmerge -U $$l ./po/zorin-taskbar.pot; \
 	done;
 
-./po/zorin-taskbar.pot: $(TOLOCALIZE) Settings.ui
+./po/zorin-taskbar.pot: $(TOLOCALIZE)
 	mkdir -p po
-	xgettext -k_ -kN_ -o po/zorin-taskbar.pot --package-name "Zorin Taskbar" $(TOLOCALIZE)
-	intltool-extract --type=gettext/glade Settings.ui
-	xgettext -k_ -kN_ --join-existing -o po/zorin-taskbar.pot Settings.ui.h
+	xgettext -k_ -kN_ -o po/zorin-taskbar.pot --package-name "Zorin Taskbar" $(TOLOCALIZE) --from-code=UTF-8
+	
+	for l in $(UI_MODULES) ; do \
+		intltool-extract --type=gettext/glade $$l; \
+		xgettext -k_ -kN_ -o po/zorin-taskbar.pot $$l.h --join-existing --from-code=UTF-8; \
+		rm -rf $$l.h; \
+	done;
+
+	sed -i -e 's/&\#10;/\\n/g' po/zorin-taskbar.pot
 
 ./po/%.mo: ./po/%.po
 	msgfmt -c $< -o $@
@@ -72,10 +80,8 @@ _build: all
 	-rm -fR ./_build
 	mkdir -p _build
 	cp $(BASE_MODULES) $(EXTRA_MODULES) _build
-
-ifeq ($(TARGET),ego)
-	find _build -name '*.js' -exec sed -i '/\/\/!start-update/,/\/\/!end-update/d' {} +
-endif
+	mkdir -p _build/ui
+	cp $(UI_MODULES) _build/ui
 
 	mkdir -p _build/img
 	cd img ; cp $(EXTRA_IMAGES) ../_build/img/

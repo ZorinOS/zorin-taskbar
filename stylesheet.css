@@ -21,7 +21,8 @@
  * Some code was also adapted from the upstream Gnome Shell source code.
  */
 
-#zorintaskbarTaskbar .dash-item-container > StWidget {
+#zorintaskbarTaskbar .dash-item-container > StWidget,
+.zorintaskbarMainPanel .show-apps {
 	margin: 0;
 	padding: 0; 
 }
@@ -40,7 +41,7 @@
 }
 
 #zorintaskbarScrollview .app-well-app .favorite {
-	background-color: rgba(80, 150, 255, 0.4);
+	/*background-color: rgba(80, 150, 255, 0.4);*/
 }
 
 #zorintaskbarScrollview .app-well-app-running-dot {
@@ -67,8 +68,15 @@
 
 .zorintaskbarMainPanel.vertical .panel-button > *,
 .zorintaskbarMainPanel.vertical .panel-button.vertical > *,
-.zorintaskbarMainPanel.vertical .panel-button.clock-display > * {
+.zorintaskbarMainPanel.vertical .panel-button.vertical .system-status-icon,
+.zorintaskbarMainPanel.vertical .panel-button.clock-display > *,
+.zorintaskbarMainPanel.vertical .panel-button.clock-display .clock {
 	padding: 8px 0; 
+}
+
+.zorintaskbarMainPanel.vertical .panel-button.clock-display {
+	-natural-hpadding: 0;
+	-minimum-hpadding: 0;
 }
 
 #zorintaskbarThumbnailList {
@@ -105,13 +113,11 @@
 }
 
 #panelBox.floating #panel,
-#panelBox.floating .panel-button {
+#panelBox.floating .panel-button,
+#panelBox.floating .panel-button.clock-display .clock {
 	border-radius: 10px;
 }
 
-.panel-corner.hidden:active, .panel-corner.hidden:overview, .panel-corner.hidden:focus {
-    -panel-corner-border-color: rgba(0, 0, 0, .001);
-}
 #zorintaskbarScrollview .badge {
 	color: rgba(255, 255, 255, 1);
 	font-weight: bold;

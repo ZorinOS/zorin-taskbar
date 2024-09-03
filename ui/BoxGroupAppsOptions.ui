@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+
+  <object class="GtkAdjustment" id="group_apps_label_max_width_adjustment">
+    <property name="upper">1000</property>
+    <property name="step_increment">10</property>
+    <property name="page_increment">100</property>
+  </object>
+
+  <object class="GtkBox" id="box_group_apps_options">
+    <property name="orientation">vertical</property>
+    <property name="width-request">600</property>
+    <property name="spacing">24</property>
+    <property name="margin-top">32</property>
+    <property name="margin-bottom">32</property>
+    <property name="margin-start">32</property>
+    <property name="margin-end">32</property>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Maximum width (px) of the application titles</property>
+            <property name="subtitle" translatable="yes">(default is 160)</property>
+            <child>
+              <object class="GtkSpinButton" id="group_apps_label_max_width_spinbutton">
+                <property name="valign">center</property>
+                <property name="width_chars">4</property>
+                <property name="text">0</property>
+                <property name="adjustment">group_apps_label_max_width_adjustment</property>
+                <property name="numeric">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Use a fixed width for the application titles</property>
+            <property name="subtitle" translatable="yes">The application titles all have the same width, even if their texts are shorter than the maximum width. The maximum width value is used as the fixed width.</property>
+            <child>
+              <object class="GtkSwitch" id="group_apps_use_fixed_width_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Use the favorite icons as application launchers</property>
+            <child>
+              <object class="GtkSwitch" id="group_apps_use_launchers_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+  </object>
+
+</interface>

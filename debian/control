@@ -2,12 +2,12 @@ Source: gnome-shell-extension-zorin-taskbar
 Section: gnome
 Priority: optional
 Maintainer: Artyom Zorin <azorin@zoringroup.com>
-Build-Depends: debhelper-compat (= 12), libglib2.0-bin, zip
-Standards-Version: 4.5.0
+Build-Depends: debhelper-compat (= 13), libglib2.0-bin, zip
+Standards-Version: 4.6.0
 Rules-Requires-Root: no
 
 Package: gnome-shell-extension-zorin-taskbar
 Architecture: all
-Depends: ${misc:Depends}, gnome-shell (>= 3.18)
+Depends: ${misc:Depends}, gnome-shell (>= 42), gnome-shell (<< 45~)
 Description: Zorin Taskbar extension
  A taskbar extension for the Zorin Desktop environment.

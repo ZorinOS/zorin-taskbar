@@ -38,6 +38,10 @@ var BOTTOM = 'BOTTOM';
 var LEFT = 'LEFT';
 var RIGHT = 'RIGHT';
 
+var START = 'START';
+var MIDDLE = 'MIDDLE';
+var END = 'END';
+
 var defaults = [
     { element: LEFT_BOX,        visible: true,     position: STACKED_TL },
     { element: SHOW_APPS_BTN,   visible: false,    position: STACKED_TL },
@@ -52,21 +56,8 @@ var defaults = [
 
 var optionDialogFunctions = {};
 
-optionDialogFunctions[SHOW_APPS_BTN] = '_showShowAppsButtonOptions';
 optionDialogFunctions[DATE_MENU] = '_showDateMenuOptions';
 optionDialogFunctions[DESKTOP_BTN] = '_showDesktopButtonOptions';
-
-function getSettingsPositions(settings, setting) {
-    var positions = null;
-
-    try {
-        positions = JSON.parse(settings.get_string(setting));
-    } catch(e) {
-        log('Error parsing positions: ' + e.message);
-    }
-
-    return positions;
-}
 
 function checkIfCentered(position) {
     return position == CENTERED || position == CENTERED_MONITOR;

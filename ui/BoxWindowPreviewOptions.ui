@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+
+  <object class="GtkAdjustment" id="preview_size_adjustment">
+    <property name="lower">100</property>
+    <property name="upper">800</property>
+    <property name="step_increment">10</property>
+    <property name="page_increment">50</property>
+  </object>
+
+  <object class="GtkScrolledWindow" id="box_window_preview_options">
+    <property name="width-request">680</property>
+    <property name="height-request">280</property>
+    <property name="vexpand">True</property>
+    <child>
+
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="width-request">600</property>
+        <property name="spacing">24</property>
+        <property name="margin-top">32</property>
+        <property name="margin-bottom">32</property>
+        <property name="margin-start">32</property>
+        <property name="margin-end">32</property>
+
+        <child>
+          <object class="AdwPreferencesGroup">
+
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Middle click on the preview to close the window</property>
+                <child>
+                  <object class="GtkSwitch" id="preview_middle_click_close_switch">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwPreferencesGroup">
+
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Window previews preferred size (px)</property>
+                <child>
+                  <object class="GtkSpinButton" id="preview_size_spinbutton">
+                    <property name="valign">center</property>
+                    <property name="width_chars">4</property>
+                    <property name="text">100</property>
+                    <property name="adjustment">preview_size_adjustment</property>
+                    <property name="numeric">True</property>
+                    <property name="value">100</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwPreferencesGroup">
+
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Enable window peeking</property>
+                <property name="subtitle" translatable="yes">When hovering over a window preview for some time, the window gets distinguished.</property>
+                <child>
+                  <object class="GtkSwitch" id="peek_mode_switch">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+      </object>
+
+    </child>
+  </object>
+
+</interface>

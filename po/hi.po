@@ -24,3 +24,6 @@ msgstr "डेस्कटॉप बटन दिखाएं पैडिंग
 
 msgid "Floating rounded theme"
 msgstr "फ़्लोटिंग गोलाकार थीम"
+
+msgid "Isolate Workspaces and Monitors in Application Switching settings"
+msgstr "एप्लिकेशन स्विचिंग सेटिंग्स में कार्यस्थलों और मॉनिटर को अलग करें"

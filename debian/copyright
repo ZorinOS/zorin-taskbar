@@ -2,8 +2,8 @@ Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: gnome-shell-extension-zorin-taskbar
 
 Files: *
-Copyright: 2016-2020, Jason DeRose (https://github.com/jderose9)
-           2016-2020, Zorin OS Technologies Ltd.
+Copyright: 2016-2021, Jason DeRose (https://github.com/jderose9)
+           2016-2023, Zorin OS Technologies Ltd.
 License: GPL-2+
 
 Files: po/cs.po
@@ -52,8 +52,12 @@ Files: po/tr.po
 Copyright: 2018 Serdar Sağlam <teknomobil@yandex.com>
 License: GPL-2+
 
+Files: po/sk.po
+Copyright: 2021 Jose Riha <jose1711@gmail.com>
+License: GPL-2+
+
 Files: debian/*
-Copyright: 2017-2020 Jonathan Carter <jcc@debian.org>
+Copyright: 2017-2021 Jonathan Carter <jcc@debian.org>
 License: GPL-2+
 
 License: GPL-2+

@@ -1,20 +1,1467 @@
+# Korean translation of dash-to-dock
+# Copyright (C) 2013 tuhaihe
+# This file is distributed under the same license as the dash-to-dock package.
+# Junghee Lee <daemul72@gmail.com>, 2022.
+#
 msgid ""
 msgstr ""
+"Project-Id-Version: Dash to Dock\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-08 08:31-0500\n"
+"PO-Revision-Date: 2022-04-23 08:23+0900\n"
+"Last-Translator: 이정희 <daemul72@gmail.com>\n"
+"Language-Team: 이정희 <daemul72@gmail.com>\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2\n"
-"Project-Id-Version: Zorin OS\n"
-"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.0.1\n"
 
+#: prefs.js:247
+msgid "Show Desktop button height (px)"
+msgstr "바탕화면 단추 높이 표시 (px)"
+
+#: prefs.js:247
+msgid "Show Desktop button width (px)"
+msgstr "바탕화면 단추 너비 표시 (px)"
+
+#: prefs.js:259
+msgid "Unavailable when gnome-shell top panel is present"
+msgstr "gnome-shell 상단 패널이 있는 경우 사용할 수 없음"
+
+#: prefs.js:317 ui/SettingsPosition.ui.h:12 ui/SettingsStyle.ui.h:11
+msgid "Left"
+msgstr "왼쪽"
+
+#: prefs.js:318
+msgid "Center"
+msgstr "중앙"
+
+#: prefs.js:319 ui/SettingsPosition.ui.h:13 ui/SettingsStyle.ui.h:12
+msgid "Right"
+msgstr "오른쪽"
+
+#: prefs.js:321 ui/BoxWindowPreviewOptions.ui.h:38 ui/SettingsPosition.ui.h:11
+#: ui/SettingsStyle.ui.h:10
+msgid "Top"
+msgstr "상단"
+
+#: prefs.js:322 prefs.js:327 ui/SettingsPosition.ui.h:21
+msgid "Middle"
+msgstr "중간"
+
+#: prefs.js:323 ui/BoxWindowPreviewOptions.ui.h:37 ui/SettingsPosition.ui.h:10
+#: ui/SettingsStyle.ui.h:9
+msgid "Bottom"
+msgstr "하단"
+
+#: prefs.js:326 ui/SettingsPosition.ui.h:20
+msgid "Start"
+msgstr "시작"
+
+#: prefs.js:328 ui/SettingsPosition.ui.h:22
+msgid "End"
+msgstr "끝"
+
+#: prefs.js:413
+msgid "Show Applications button"
+msgstr "응용프로그램 표시 단추"
+
+#: prefs.js:414
+msgid "Activities button"
+msgstr "움직임 단추"
+
+#: prefs.js:415
+msgid "Taskbar"
+msgstr "작업 표시줄"
+
+#: prefs.js:416
+msgid "Date menu"
+msgstr "날짜 메뉴"
+
+#: prefs.js:417
+msgid "System menu"
+msgstr "시스템 메뉴"
+
+#: prefs.js:418
+msgid "Left box"
+msgstr "왼쪽 상자"
+
+#: prefs.js:419
+msgid "Center box"
+msgstr "중앙 상자"
+
+#: prefs.js:420
+msgid "Right box"
+msgstr "오른쪽 상자"
+
+#: prefs.js:421
+msgid "Desktop button"
+msgstr "바탕화면 단추"
+
+#: prefs.js:427
+msgid "Move up"
+msgstr "위로 이동"
+
+#: prefs.js:429
+msgid "Move down"
+msgstr "아래로 이동"
+
+#: prefs.js:431
+msgid "Visible"
+msgstr "보임"
+
+#: prefs.js:432
+msgid "Select element position"
+msgstr "요소 위치 선택"
+
+#: prefs.js:443
+msgid "Stacked to top"
+msgstr "상단에 쌓임"
+
+#: prefs.js:443
+msgid "Stacked to left"
+msgstr "왼쪽에 쌓임"
+
+#: prefs.js:444
+msgid "Stacked to bottom"
+msgstr "하단에 쌓임"
+
+#: prefs.js:444
+msgid "Stacked to right"
+msgstr "오른쪽에 쌓임"
+
+#: prefs.js:445
+msgid "Centered"
+msgstr "중앙"
+
+#: prefs.js:446
+msgid "Monitor Center"
+msgstr "모니터 가운데"
+
+#: prefs.js:465
+msgid "More options"
+msgstr "더 많은 옵션"
+
+#: prefs.js:497
+msgid "Reset to defaults"
+msgstr "기본값으로 재설정"
+
+#: prefs.js:520
+msgid "Show Applications options"
+msgstr "응용프로그램 표시 옵션"
+
+#: prefs.js:530
+msgid "Open icon"
+msgstr "아이콘 열기"
+
+#: prefs.js:577
+msgid "Show Desktop options"
+msgstr "바탕화면 표시 옵션"
+
+#: prefs.js:661
+#, javascript-format
+msgid "%d ms"
+msgstr "%d ms"
+
+#: prefs.js:666
+#, javascript-format
+msgid "%d °"
+msgstr "%d °"
+
+#: prefs.js:671 prefs.js:676
+#, javascript-format
+msgid "%d %%"
+msgstr "%d %%"
+
+#: prefs.js:681
+#, javascript-format
+msgid "%.1f"
+msgstr "%.1f"
+
+#: prefs.js:686
+#, javascript-format
+msgid "%d icon"
+msgid_plural "%d icons"
+msgstr[0] "%d개 아이콘"
+
+#: prefs.js:782
+msgid "Running Indicator Options"
+msgstr "실행중인 표시기 옵션"
+
+#: prefs.js:928
+msgid "Primary monitor"
+msgstr "기본 모니터"
+
+#: prefs.js:928
+msgid "Monitor "
+msgstr "모니터 "
+
+#: prefs.js:1122
+msgid "Dynamic opacity options"
+msgstr "동적 불투명도 옵션"
+
+#: prefs.js:1255
+msgid "Intellihide options"
+msgstr "지능적 숨김 옵션"
+
+#: prefs.js:1366
+msgid "Window preview options"
+msgstr "창 미리보기 옵션"
+
+#: prefs.js:1642
+msgid "Ungrouped application options"
+msgstr "그룹화되지 않은 프로그램 옵션"
+
+#: prefs.js:1721
+msgid "Customize middle-click behavior"
+msgstr "가운데 클릭 동작 사용자 정의"
+
+#: prefs.js:1771
+msgid "Customize panel scroll behavior"
+msgstr "패널 스크롤 동작 사용자 정의"
+
+#: prefs.js:1799
+msgid "Customize icon scroll behavior"
+msgstr "아이콘 스크롤 동작 사용자 정의"
+
+#: prefs.js:1880
+msgid "Advanced hotkeys options"
+msgstr "고급 단축키 옵션"
+
+#: prefs.js:1898
+msgid "Secondary Menu Options"
+msgstr "보조 메뉴 옵션"
+
+#: prefs.js:1924 ui/SettingsFineTune.ui.h:22
+msgid "Advanced Options"
+msgstr "고급 옵션"
+
+#: prefs.js:2040
+msgid "App icon animation options"
+msgstr "앱 아이콘 애니메이션 옵션"
+
+#: prefs.js:2088
+msgid "Export settings"
+msgstr "설정 내보내기"
+
+#: prefs.js:2104
+msgid "Import settings"
+msgstr "설정 불러오기"
+
+#: appIcons.js:1503 appIcons.js:1513 appIcons.js:1515
+#: ui/BoxMiddleClickOptions.ui.h:10
+msgid "Quit"
+msgstr "종료"
+
+#: appIcons.js:1515
+msgid "Windows"
+msgstr "창"
+
+#: appIcons.js:1786
+msgid "Power options"
+msgstr "전원 옵션"
+
+#: appIcons.js:1791
+msgid "Event logs"
+msgstr "이벤트 로그"
+
+#: appIcons.js:1796
+msgid "System"
+msgstr "시스템"
+
+#: appIcons.js:1801
+msgid "Device Management"
+msgstr "장치 관리자"
+
+#: appIcons.js:1806
+msgid "Disk Management"
+msgstr "디스크"
+
+#: appIcons.js:1819
+msgid "Terminal"
+msgstr "터미널"
+
+#: appIcons.js:1824
 msgid "System Monitor"
 msgstr "시스템 정보"
 
+#: appIcons.js:1829
 msgid "Files"
 msgstr "파일"
 
+#: appIcons.js:1834
+msgid "Extensions"
+msgstr "확장자"
+
+#: appIcons.js:1839
 msgid "Settings"
 msgstr "설정"
+
+#: appIcons.js:1850
+msgid "Unlock taskbar"
+msgstr "작업표시줄 잠금 해제"
+
+#: appIcons.js:1850
+msgid "Lock taskbar"
+msgstr "작업표시줄 잠금"
+
+#: appIcons.js:1855
+msgid "Taskbar Settings"
+msgstr "패널 설정"
+
+#: appIcons.js:1860
+msgid "Restore Windows"
+msgstr "창 복원"
+
+#: appIcons.js:1860
+msgid "Show Desktop"
+msgstr "바탕화면 표시"
+
+#: ui/BoxAdvancedOptions.ui.h:1
+msgid "Nothing yet!"
+msgstr "아직 없음!"
+
+#: ui/BoxAdvancedOptions.ui.h:2
+msgid "For real..."
+msgstr ""
+
+#: ui/BoxAnimateAppIconHoverOptions.ui.h:1
+msgid "Animation type"
+msgstr "애니메이션 종류"
+
+#: ui/BoxAnimateAppIconHoverOptions.ui.h:2
+msgid "Simple"
+msgstr "단순"
+
+#: ui/BoxAnimateAppIconHoverOptions.ui.h:3
+msgid "Ripple"
+msgstr "잔물결"
+
+#: ui/BoxAnimateAppIconHoverOptions.ui.h:4
+msgid "Plank"
+msgstr "감추기"
+
+#: ui/BoxAnimateAppIconHoverOptions.ui.h:5
+msgid "Duration"
+msgstr "지속시간"
+
+#: ui/BoxAnimateAppIconHoverOptions.ui.h:6
+msgid "Rotation"
+msgstr "회전"
+
+#: ui/BoxAnimateAppIconHoverOptions.ui.h:7
+msgid "Travel"
+msgstr "이동하기"
+
+#: ui/BoxAnimateAppIconHoverOptions.ui.h:8
+msgid "Zoom"
+msgstr "확대/축소"
+
+#: ui/BoxAnimateAppIconHoverOptions.ui.h:9
+msgid "Convexity"
+msgstr "볼록함"
+
+#: ui/BoxAnimateAppIconHoverOptions.ui.h:10
+msgid "Extent"
+msgstr "확대하기"
+
+#: ui/BoxDotOptions.ui.h:1
+msgid "Highlight focused application"
+msgstr "초점을 맞춘 프로그램 강조표시"
+
+#: ui/BoxDotOptions.ui.h:2
+msgid "Icon dominant color"
+msgstr "아이콘 지배적 인 색상"
+
+#: ui/BoxDotOptions.ui.h:3
+msgid "Custom color"
+msgstr "사용자 지정 색상"
+
+#: ui/BoxDotOptions.ui.h:4
+msgid "Highlight opacity"
+msgstr "불투명도 강조표시"
+
+#: ui/BoxDotOptions.ui.h:5
+msgid "Indicator size (px)"
+msgstr "표시기 크기 (px)"
+
+#: ui/BoxDotOptions.ui.h:6
+msgid "Indicator color - Icon Dominant"
+msgstr "표시기 색상 - 아이콘 지배적"
+
+#: ui/BoxDotOptions.ui.h:7
+msgid "Indicator color - Override Theme"
+msgstr "표시기 색상 - 테마 재정의"
+
+#: ui/BoxDotOptions.ui.h:8
+msgid "1 window open (or ungrouped)"
+msgstr "창 1개 열기"
+
+#: ui/BoxDotOptions.ui.h:9
+msgid "Apply to all"
+msgstr "모두 적용"
+
+#: ui/BoxDotOptions.ui.h:10
+msgid "2 windows open"
+msgstr "창 2개 열기"
+
+#: ui/BoxDotOptions.ui.h:11
+msgid "3 windows open"
+msgstr "창 3개 열기"
+
+#: ui/BoxDotOptions.ui.h:12
+msgid "4+ windows open"
+msgstr "창 4개 이상 열기"
+
+#: ui/BoxDotOptions.ui.h:13
+msgid "Use different for unfocused"
+msgstr "초점을 안 맞춘 경우 다르게 사용"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:1
+msgid "The panel background opacity is affected by"
+msgstr "패널 배경 불투명도는 다음의 영향을 받습니다"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:2 ui/BoxIntellihideOptions.ui.h:3
+msgid "All windows"
+msgstr "모든 창"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:3 ui/BoxIntellihideOptions.ui.h:4
+msgid "Focused windows"
+msgstr "초점을 맞춘 창"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:4 ui/BoxIntellihideOptions.ui.h:5
+msgid "Maximized windows"
+msgstr "최대화된 창"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:5
+msgid "Change opacity when a window gets closer than (px)"
+msgstr "창이 (px)보다 가까워지면 불투명도 변경"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:7
+#, no-c-format
+msgid "Change opacity to (%)"
+msgstr "불투명도를 (%)로 변경"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:8 ui/BoxShowApplicationsOptions.ui.h:3
+#: ui/BoxWindowPreviewOptions.ui.h:57 ui/SettingsStyle.ui.h:27
+msgid "0"
+msgstr "0"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:9
+msgid "Opacity change animation duration (ms)"
+msgstr "불투명도 변경 애니메이션 지속시간 (ms)"
+
+#: ui/BoxGroupAppsOptions.ui.h:1
+msgid "Font size (px) of the application titles (default is 14)"
+msgstr "프로그램 제목의 글꼴 크기(px)(기본값은 14)"
+
+#: ui/BoxGroupAppsOptions.ui.h:2
+msgid "Font weight of application titles"
+msgstr "프로그램 제목의 글꼴 두께"
+
+#: ui/BoxGroupAppsOptions.ui.h:3 ui/BoxWindowPreviewOptions.ui.h:44
+msgid "inherit from theme"
+msgstr "테마에서 물려받기"
+
+#: ui/BoxGroupAppsOptions.ui.h:4 ui/BoxWindowPreviewOptions.ui.h:45
+msgid "normal"
+msgstr "보통"
+
+#: ui/BoxGroupAppsOptions.ui.h:5 ui/BoxWindowPreviewOptions.ui.h:46
+msgid "lighter"
+msgstr "더 얇게"
+
+#: ui/BoxGroupAppsOptions.ui.h:6 ui/BoxWindowPreviewOptions.ui.h:47
+msgid "bold"
+msgstr "굵게"
+
+#: ui/BoxGroupAppsOptions.ui.h:7 ui/BoxWindowPreviewOptions.ui.h:48
+msgid "bolder"
+msgstr "더 굵게"
+
+#: ui/BoxGroupAppsOptions.ui.h:8
+msgid "Font color of the application titles"
+msgstr "프로그램 제목의 글꼴 색상"
+
+#: ui/BoxGroupAppsOptions.ui.h:9
+msgid "Font color of the minimized application titles"
+msgstr "최소화된 프로그램 제목의 글꼴 색상"
+
+#: ui/BoxGroupAppsOptions.ui.h:10
+#, fuzzy
+msgid "Maximum width (px) of the application titles"
+msgstr "프로그램 제목의 최대 너비 (px) (기본값은 160)"
+
+#: ui/BoxGroupAppsOptions.ui.h:11
+#, fuzzy
+msgid "(default is 160)"
+msgstr ""
+"패널 길이 (%)\n"
+"(기본값은 100)"
+
+#: ui/BoxGroupAppsOptions.ui.h:12
+msgid "Use a fixed width for the application titles"
+msgstr "프로그램 제목에 고정 너비 사용"
+
+#: ui/BoxGroupAppsOptions.ui.h:13
+msgid ""
+"The application titles all have the same width, even if their texts are "
+"shorter than the maximum width. The maximum width value is used as the fixed "
+"width."
+msgstr ""
+"프로그램 제목은 텍스트가 최대 너비보다 짧더라도, 동일한 너비를 갖습니다. 최"
+"대 너비 값이 고정 너비로 사용됩니다."
+
+#: ui/BoxGroupAppsOptions.ui.h:14
+msgid "Display running indicators on unfocused applications"
+msgstr "초점을 안 맞춘 프로그램에서 실행중인 표시기화면표시"
+
+#: ui/BoxGroupAppsOptions.ui.h:15
+msgid "Use the favorite icons as application launchers"
+msgstr "즐겨찾는 아이콘을 응용프로그램 실행기로 사용"
+
+#: ui/BoxIntellihideOptions.ui.h:1
+#, fuzzy
+msgid "Only hide the panel when it is obstructed by windows"
+msgstr "창에 가려질 때만 패널 숨김 "
+
+#: ui/BoxIntellihideOptions.ui.h:2
+msgid "The panel hides from"
+msgstr "패널이 다음에서 숨음"
+
+#: ui/BoxIntellihideOptions.ui.h:6
+msgid "Require pressure at the edge of the screen to reveal the panel"
+msgstr "패널을 드러내려면화면 가장자리에 압력을 가해야 합니다"
+
+#: ui/BoxIntellihideOptions.ui.h:7
+msgid "Required pressure threshold (px)"
+msgstr "필요한 압력 임계값 (px)"
+
+#: ui/BoxIntellihideOptions.ui.h:8
+msgid "Required pressure timeout (ms)"
+msgstr "필요한 압력 제한시간 (ms)"
+
+#: ui/BoxIntellihideOptions.ui.h:9
+msgid "Allow the panel to be revealed while in fullscreen mode"
+msgstr "전체화면 모드에서 패널을 드러내도록 허용"
+
+#: ui/BoxIntellihideOptions.ui.h:10
+#, fuzzy
+msgid "Only hide secondary panels"
+msgstr "보조 패널만 숨김 (다중 모니터 옵션 필요)"
+
+#: ui/BoxIntellihideOptions.ui.h:11
+#, fuzzy
+msgid "(requires multi-monitors option)"
+msgstr "보조 패널만 숨김 (다중 모니터 옵션 필요)"
+
+#: ui/BoxIntellihideOptions.ui.h:12
+msgid "Keyboard shortcut to reveal and hold the panel"
+msgstr "패널을 드러내고 유지하는 키보드 단축키"
+
+#: ui/BoxIntellihideOptions.ui.h:13 ui/BoxOverlayShortcut.ui.h:12
+msgid "Syntax: <Shift>, <Ctrl>, <Alt>, <Super>"
+msgstr "문법: <Shift>, <Ctrl>, <Alt>, <Super>"
+
+#: ui/BoxIntellihideOptions.ui.h:14
+msgid "e.g. <Super>i"
+msgstr "예: <Super>i"
+
+#: ui/BoxIntellihideOptions.ui.h:15
+msgid "Hide and reveal animation duration (ms)"
+msgstr "애니메이션 지속시간 숨김 및 드러내기 (ms)"
+
+#: ui/BoxIntellihideOptions.ui.h:16
+msgid "Delay before hiding the panel (ms)"
+msgstr "패널 숨기기 전 지연시간 (ms)"
+
+#: ui/BoxIntellihideOptions.ui.h:17
+msgid "Delay before enabling intellihide on start (ms)"
+msgstr "시작 시 지능적 숨김을 활성화하기 전 지연시간 (ms)"
+
+#: ui/BoxMiddleClickOptions.ui.h:1
+msgid "Shift+Click action"
+msgstr "Shift+클릭 동작"
+
+#: ui/BoxMiddleClickOptions.ui.h:2
+msgid ""
+"When set to minimize, double clicking minimizes all the windows of the "
+"application."
+msgstr "최소화로 지정할때, 두 번 클릭하면 프로그램의 모든 창이 최소화됩니다."
+
+#: ui/BoxMiddleClickOptions.ui.h:3 ui/SettingsAction.ui.h:8
+msgid "Raise windows"
+msgstr "창 올리기"
+
+#: ui/BoxMiddleClickOptions.ui.h:4
+msgid "Minimize window"
+msgstr "창 최소화"
+
+#: ui/BoxMiddleClickOptions.ui.h:5 ui/SettingsAction.ui.h:9
+msgid "Launch new instance"
+msgstr "새 인스턴스 실행"
+
+#: ui/BoxMiddleClickOptions.ui.h:6 ui/SettingsAction.ui.h:4
+msgid "Cycle through windows"
+msgstr "창을 통해 순환"
+
+#: ui/BoxMiddleClickOptions.ui.h:7 ui/SettingsAction.ui.h:3
+msgid "Cycle windows + minimize"
+msgstr "창 전환 및 최소화"
+
+#: ui/BoxMiddleClickOptions.ui.h:8 ui/SettingsAction.ui.h:5
+msgid "Toggle single / Preview multiple"
+msgstr "단일 전환하기 / 다중 미리보기"
+
+#: ui/BoxMiddleClickOptions.ui.h:9 ui/SettingsAction.ui.h:6
+msgid "Toggle single / Cycle multiple"
+msgstr "단일 전환하기 / 다중 순환하기"
+
+#: ui/BoxMiddleClickOptions.ui.h:11
+msgid "Middle-Click action"
+msgstr "가운데 클릭 동작"
+
+#: ui/BoxMiddleClickOptions.ui.h:12
+msgid "Behavior for Middle-Click."
+msgstr "가운데 클릭 동작입니다."
+
+#: ui/BoxMiddleClickOptions.ui.h:13
+msgid "Shift+Middle-Click action"
+msgstr "Shift+가운데 클릭 동작"
+
+#: ui/BoxMiddleClickOptions.ui.h:14
+msgid "Behavior for Shift+Middle-Click."
+msgstr "Shift+가운데 클릭에 대한 동작입니다."
+
+#: ui/BoxOverlayShortcut.ui.h:1
+msgid "Hotkeys prefix"
+msgstr "단축키 접두사"
+
+#: ui/BoxOverlayShortcut.ui.h:2
+msgid "Hotkeys will either be Super+Number or Super+Alt+Num"
+msgstr "단축키는 Super+숫자키 또는 Super+Alt+숫자키 입니다"
+
+#: ui/BoxOverlayShortcut.ui.h:3
+msgid "Super"
+msgstr "Super"
+
+#: ui/BoxOverlayShortcut.ui.h:4
+msgid "Super + Alt"
+msgstr "Super + Alt"
+
+#: ui/BoxOverlayShortcut.ui.h:5
+msgid "Number overlay"
+msgstr "숫자 덮어씌우기"
+
+#: ui/BoxOverlayShortcut.ui.h:6
+msgid ""
+"Temporarily show the application numbers over the icons when using the "
+"hotkeys."
+msgstr ""
+"단축키를 사용할 때 아이콘 위에 응용프로그램 번호를 일시적으로 표시합니다."
+
+#: ui/BoxOverlayShortcut.ui.h:7
+msgid "Never"
+msgstr "안함"
+
+#: ui/BoxOverlayShortcut.ui.h:8
+msgid "Show temporarily"
+msgstr "임시로 표시"
+
+#: ui/BoxOverlayShortcut.ui.h:9
+msgid "Always visible"
+msgstr "항상 보임"
+
+#: ui/BoxOverlayShortcut.ui.h:10
+msgid "Hide timeout (ms)"
+msgstr "시간초과 숨김 (ms)"
+
+#: ui/BoxOverlayShortcut.ui.h:11
+msgid "Shortcut to show the overlay for 2 seconds"
+msgstr "2초 동안 오버레이를 표시하는 바로가기"
+
+#: ui/BoxOverlayShortcut.ui.h:13
+msgid "e.g. <Super>q"
+msgstr "예: <Super>q"
+
+#: ui/BoxOverlayShortcut.ui.h:14
+msgid "Show window previews on hotkey"
+msgstr "단축키에 창 미리보기 표시"
+
+#: ui/BoxOverlayShortcut.ui.h:15
+msgid "Show previews when the application have multiple instances"
+msgstr "프로그램에 여러 인스턴스가 있는 경우 미리보기 표시"
+
+#: ui/BoxOverlayShortcut.ui.h:16
+msgid "Hotkeys are activated with"
+msgstr "단축키는 다음으로 활성화됩니다"
+
+#: ui/BoxOverlayShortcut.ui.h:17
+msgid "Select which keyboard number keys are used to activate the hotkeys"
+msgstr "단축키를 활성화하는 데 사용할 키보드 숫자 키 선택"
+
+#: ui/BoxOverlayShortcut.ui.h:18
+msgid "Number row"
+msgstr "숫자 행"
+
+#: ui/BoxOverlayShortcut.ui.h:19
+msgid "Numeric keypad"
+msgstr "숫자 키패드"
+
+#: ui/BoxOverlayShortcut.ui.h:20
+msgid "Both"
+msgstr "둘 다"
+
+#: ui/BoxScrollIconOptions.ui.h:1 ui/BoxScrollPanelOptions.ui.h:1
+msgid "Delay between mouse scroll events (ms)"
+msgstr "마우스 스크롤 이벤트 간 지연시간 (ms)"
+
+#: ui/BoxScrollIconOptions.ui.h:2 ui/BoxScrollPanelOptions.ui.h:2
+msgid "Use this value to limit the number of captured mouse scroll events."
+msgstr "캡처된 마우스 스크롤 이벤트의 수를 제한하려면 이 값을 사용합니다."
+
+#: ui/BoxScrollPanelOptions.ui.h:3
+msgid "Show popup when changing workspace"
+msgstr "작업공간 변경 시 팝업 표시"
+
+#: ui/BoxScrollPanelOptions.ui.h:4
+msgid "This affects workspace popup when scrolling on the panel only."
+msgstr "이는 패널에서 스크롤할 때만 작업공간 팝업에 영향을 줍니다."
+
+#: ui/BoxSecondaryMenuOptions.ui.h:1
+msgid "Integrate <i>AppMenu</i> items"
+msgstr "<i>AppMenu</i> 항목 통합"
+
+#: ui/BoxSecondaryMenuOptions.ui.h:2
+msgid "<i>Show Details</i> menu item"
+msgstr "<i>세부정보 표시</i> 메뉴 항목"
+
+#: ui/BoxShowApplicationsOptions.ui.h:1
+#, fuzzy
+msgid "Show Applications icon"
+msgstr "응용프로그램 표시 옵션"
+
+#: ui/BoxShowApplicationsOptions.ui.h:2
+msgid "Show Applications icon side padding (px)"
+msgstr "프로그램 아이콘 측면 패딩 표시 (px)"
+
+#: ui/BoxShowApplicationsOptions.ui.h:4
+msgid "Override escape key and return to desktop"
+msgstr "Esc 키를 재정의하고 데스크톱으로 돌아가기"
+
+#: ui/BoxShowDesktopOptions.ui.h:1
+msgid "Override Show Desktop line color"
+msgstr "바탕화면 표시 선 색상 재정의"
+
+#: ui/BoxShowDesktopOptions.ui.h:2
+msgid "Reveal the desktop when hovering the Show Desktop button"
+msgstr "바탕화면 표시 단추를 마우스로 가르킬때 바탕화면 드러내기"
+
+#: ui/BoxShowDesktopOptions.ui.h:3
+msgid "Delay before revealing the desktop (ms)"
+msgstr "바탕화면을 드러내기 전 지연시간 (ms)"
+
+#: ui/BoxShowDesktopOptions.ui.h:4
+msgid "Fade duration (ms)"
+msgstr "페이드 지속시간 (ms)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:1
+#, fuzzy
+msgid "Time (ms) before showing"
+msgstr "표시하기 전 시간 (ms) (400이 기본값)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:2
+msgid "(400 is default)"
+msgstr ""
+
+#: ui/BoxWindowPreviewOptions.ui.h:3
+#, fuzzy
+msgid "Time (ms) before hiding"
+msgstr "숨기기 전 시간 (ms) (100이 기본값)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:4
+msgid "(100 is default)"
+msgstr ""
+
+#: ui/BoxWindowPreviewOptions.ui.h:5
+msgid "Immediate on application icon click"
+msgstr "프로그램 아이콘을 누르면 즉시 실행"
+
+#: ui/BoxWindowPreviewOptions.ui.h:6
+msgid "Animation time (ms)"
+msgstr "애니메이션 시간 (ms)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:7
+msgid "Middle click on the preview to close the window"
+msgstr "창을 닫으려면 미리보기에서 마우스 가운데 누르기"
+
+#: ui/BoxWindowPreviewOptions.ui.h:8
+msgid "Window previews preferred size (px)"
+msgstr "선호하는 창 미리보기 크기 (픽셀)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:9
+msgid "Window previews aspect ratio X (width)"
+msgstr "창 미리보기 가로 세로 비율 X (너비)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:10
+msgid "1"
+msgstr "1"
+
+#: ui/BoxWindowPreviewOptions.ui.h:11
+msgid "2"
+msgstr "2"
+
+#: ui/BoxWindowPreviewOptions.ui.h:12
+msgid "3"
+msgstr "3"
+
+#: ui/BoxWindowPreviewOptions.ui.h:13
+msgid "4"
+msgstr "4"
+
+#: ui/BoxWindowPreviewOptions.ui.h:14
+msgid "5"
+msgstr "5"
+
+#: ui/BoxWindowPreviewOptions.ui.h:15
+msgid "6"
+msgstr "6"
+
+#: ui/BoxWindowPreviewOptions.ui.h:16
+msgid "7"
+msgstr "7"
+
+#: ui/BoxWindowPreviewOptions.ui.h:17
+msgid "8"
+msgstr "8"
+
+#: ui/BoxWindowPreviewOptions.ui.h:18
+msgid "9"
+msgstr "9"
+
+#: ui/BoxWindowPreviewOptions.ui.h:19
+msgid "10"
+msgstr "10"
+
+#: ui/BoxWindowPreviewOptions.ui.h:20
+msgid "11"
+msgstr "11"
+
+#: ui/BoxWindowPreviewOptions.ui.h:21
+msgid "12"
+msgstr "12"
+
+#: ui/BoxWindowPreviewOptions.ui.h:22
+msgid "13"
+msgstr "13"
+
+#: ui/BoxWindowPreviewOptions.ui.h:23
+msgid "14"
+msgstr "14"
+
+#: ui/BoxWindowPreviewOptions.ui.h:24
+msgid "15"
+msgstr "15"
+
+#: ui/BoxWindowPreviewOptions.ui.h:25
+msgid "16"
+msgstr "16"
+
+#: ui/BoxWindowPreviewOptions.ui.h:26
+msgid "17"
+msgstr "17"
+
+#: ui/BoxWindowPreviewOptions.ui.h:27
+msgid "18"
+msgstr "18"
+
+#: ui/BoxWindowPreviewOptions.ui.h:28
+msgid "19"
+msgstr "19"
+
+#: ui/BoxWindowPreviewOptions.ui.h:29
+msgid "20"
+msgstr "20"
+
+#: ui/BoxWindowPreviewOptions.ui.h:30
+msgid "21"
+msgstr "21"
+
+#: ui/BoxWindowPreviewOptions.ui.h:31
+msgid "Fixed"
+msgstr "고정됨"
+
+#: ui/BoxWindowPreviewOptions.ui.h:32
+msgid "Window previews aspect ratio Y (height)"
+msgstr "창 미리보기 가로 세로 비율 Y (높이)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:33
+msgid "Window previews padding (px)"
+msgstr "창 미리보기 위치 (픽셀"
+
+#: ui/BoxWindowPreviewOptions.ui.h:34
+msgid "Use custom opacity for the previews background"
+msgstr "미리보기 배경에 사용자 지정 불투명도 사용"
+
+#: ui/BoxWindowPreviewOptions.ui.h:35
+#, fuzzy
+msgid ""
+"If disabled, the previews background have the same opacity as the panel."
+msgstr "비활성화된 경우, 미리보기 배경은 패널과 동일한 불투명도를 갖습니다"
+
+#: ui/BoxWindowPreviewOptions.ui.h:36
+msgid "Close button and header position"
+msgstr "제목 및 닫기 단추 위치"
+
+#: ui/BoxWindowPreviewOptions.ui.h:39
+msgid "Display window preview headers"
+msgstr "창 미리보기 헤더화면표시"
+
+#: ui/BoxWindowPreviewOptions.ui.h:40
+msgid "Icon size (px) of the window preview"
+msgstr "창 미리보기 아이콘 크기 (px)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:41
+msgid "If disabled, the previews icon size will be based on headerbar size"
+msgstr ""
+"비활성화된 경우, 미리보기 아이콘 크기는 헤더 표시줄 크기를 기반으로 합니다"
+
+#: ui/BoxWindowPreviewOptions.ui.h:42
+msgid "Font size (px) of the preview titles"
+msgstr "미리보기 제목의 글꼴 크기 (px)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:43
+msgid "Font weight of the preview titles"
+msgstr "미리보기 제목의 글꼴 두께"
+
+#: ui/BoxWindowPreviewOptions.ui.h:49
+msgid "Font color of the preview titles"
+msgstr "미리보기 제목의 글꼴 색상"
+
+#: ui/BoxWindowPreviewOptions.ui.h:50
+msgid "Enable window peeking"
+msgstr "창 엿보기 활성화"
+
+#: ui/BoxWindowPreviewOptions.ui.h:51
+msgid ""
+"When hovering over a window preview for some time, the window gets "
+"distinguished."
+msgstr "일정 시간 동안 창 미리보기 위로 마우스로 가리키면, 창이 구분됩니다."
+
+#: ui/BoxWindowPreviewOptions.ui.h:52
+msgid "Enter window peeking mode timeout (ms)"
+msgstr "창 엿보기 모드 시작 시간초과 (ms)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:53
+msgid ""
+"Time of inactivity while hovering over a window preview needed to enter the "
+"window peeking mode."
+msgstr ""
+"창 엿보기 모드로 들어가는 데 필요한 창 미리보기 위로 마우스로 가르키는 동안 "
+"비활성 시간입니다."
+
+#: ui/BoxWindowPreviewOptions.ui.h:54
+msgid "50"
+msgstr "50"
+
+#: ui/BoxWindowPreviewOptions.ui.h:55
+msgid "Window peeking mode opacity"
+msgstr "창 엿보기 모드 불투명도"
+
+#: ui/BoxWindowPreviewOptions.ui.h:56
+msgid ""
+"All windows except for the peeked one have their opacity set to the same "
+"value."
+msgstr "엿보기 창을 제외한 모든 창의 불투명도는 동일한 값으로 설정됩니다."
+
+#: ui/SettingsAbout.ui.h:1
+msgid "Info"
+msgstr ""
+
+#: ui/SettingsAbout.ui.h:2
+#, fuzzy
+msgid "Version"
+msgstr "버전: "
+
+#: ui/SettingsAbout.ui.h:3
+msgid "Source"
+msgstr ""
+
+#: ui/SettingsAbout.ui.h:4
+msgid "GitHub"
+msgstr "GitHub"
+
+#: ui/SettingsAbout.ui.h:5
+#, fuzzy
+msgid "Export and Import"
+msgstr "설정 백업 및 복원"
+
+#: ui/SettingsAbout.ui.h:6
+msgid "Export and import settings"
+msgstr "설정 백업 및 복원"
+
+#: ui/SettingsAbout.ui.h:7
+msgid ""
+"Use the buttons below to create a settings file from your current "
+"preferences that can be imported on a different machine."
+msgstr ""
+"아래 단추을 사용하여 다른 컴퓨터에서 가져올 수 있는 현재 기본 설정에서 설정 "
+"파일을 만듭니다."
+
+#: ui/SettingsAbout.ui.h:8
+msgid "Export to file"
+msgstr "파일로 내보내기"
+
+#: ui/SettingsAbout.ui.h:9
+msgid "Import from file"
+msgstr "파일에서 불러오기"
+
+#: ui/SettingsAbout.ui.h:10
+msgid ""
+"<span size=\"small\">This program comes with ABSOLUTELY NO WARRANTY.\n"
+"See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0."
+"html\">GNU General Public License, version 2 or later</a> for details.</span>"
+msgstr ""
+"<span size=\"small\">이 프로그램은 절대 보증하지 않습니다.\n"
+"자세한 내용은 <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0."
+"html\">GNU 일반 공중 라이선스 버전 2 이상</a>을 참조하십시오.</span>"
+
+#: ui/SettingsAction.ui.h:1
+msgid "Click action"
+msgstr "누르기 동작"
+
+#: ui/SettingsAction.ui.h:2
+msgid "Behaviour when clicking on the icon of a running application."
+msgstr "실행중인 프로그램의 아이콘을 누를 때의 동작입니다."
+
+#: ui/SettingsAction.ui.h:7
+msgid "Toggle windows"
+msgstr "창 전환하기"
+
+#: ui/SettingsAction.ui.h:10
+#, fuzzy
+msgid "Scroll action"
+msgstr "스크롤 아이콘 동작"
+
+#: ui/SettingsAction.ui.h:11
+msgid "Scroll panel action"
+msgstr "스크롤 패널 동작"
+
+#: ui/SettingsAction.ui.h:12
+msgid "Behavior when mouse scrolling over the panel."
+msgstr "마우스를 패널 위로 스크롤할 때의 동작입니다."
+
+#: ui/SettingsAction.ui.h:13
+msgid "Do nothing"
+msgstr "아무것도 안함"
+
+#: ui/SettingsAction.ui.h:14
+msgid "Switch workspace"
+msgstr "작업공간 전환하기"
+
+#: ui/SettingsAction.ui.h:15
+msgid "Cycle windows"
+msgstr "창 전환"
+
+#: ui/SettingsAction.ui.h:16
+msgid "Change volume"
+msgstr "볼륨 조절"
+
+#: ui/SettingsAction.ui.h:17
+msgid "Scroll icon action"
+msgstr "스크롤 아이콘 동작"
+
+#: ui/SettingsAction.ui.h:18
+msgid "Behavior when mouse scrolling over an application icon."
+msgstr "프로그램 아이콘 위로 마우스를 스크롤할 때의 동작입니다."
+
+#: ui/SettingsAction.ui.h:19
+msgid "Same as panel"
+msgstr "패널과 동일"
+
+#: ui/SettingsAction.ui.h:20
+#, fuzzy
+msgid "Hotkey overlay"
+msgstr "숫자 덮어씌우기"
+
+#: ui/SettingsAction.ui.h:21
+msgid "Use hotkeys to activate apps"
+msgstr "앱을 활성화하는 단축키 사용"
+
+#: ui/SettingsAction.ui.h:22
+msgid ""
+"Enable Super+(0-9) as shortcuts to activate apps. It can also be used "
+"together with Shift and Ctrl."
+msgstr ""
+"Super+(0-9)를 앱을 활성화하는 바로가기로 활성화합니다. Shift 및 Ctrl과 함께 "
+"사용할 수도 있습니다."
+
+#: ui/SettingsBehavior.ui.h:1
+#, fuzzy
+msgid "Applications"
+msgstr "실행중인 프로그램 표시"
+
+#: ui/SettingsBehavior.ui.h:2
+msgid "Show favorite applications"
+msgstr "즐겨찾는 프로그램 표시"
+
+#: ui/SettingsBehavior.ui.h:3
+msgid "Show favorite applications on secondary panels"
+msgstr "두 번째 패널에 즐겨찾는 프로그램 표시"
+
+#: ui/SettingsBehavior.ui.h:4
+msgid "Show running applications"
+msgstr "실행중인 프로그램 표시"
+
+#: ui/SettingsBehavior.ui.h:5
+msgid "Show <i>AppMenu</i> button"
+msgstr "<i>AppMenu</i> 버튼 표시"
+
+#: ui/SettingsBehavior.ui.h:6
+msgid "Ungroup applications"
+msgstr "프로그램 그룹 해제"
+
+#: ui/SettingsBehavior.ui.h:7
+msgid "Show notification counter badge"
+msgstr "알림 카운터 배지 표시"
+
+#: ui/SettingsBehavior.ui.h:8
+msgid "Show window previews on hover"
+msgstr "마우스 가리킬 때 창 미리보기 표시"
+
+#: ui/SettingsBehavior.ui.h:9
+msgid "Show tooltip on hover"
+msgstr "마우스 가리킬 때 도구 설명 표시"
+
+#: ui/SettingsBehavior.ui.h:10
+#, fuzzy
+msgid "Isolate"
+msgstr "모니터 분리하기"
+
+#: ui/SettingsBehavior.ui.h:11
+msgid "Isolate Workspaces"
+msgstr "작업공간 분리하기"
+
+#: ui/SettingsBehavior.ui.h:12
+msgid "Isolate monitors"
+msgstr "모니터 분리하기"
+
+#: ui/SettingsBehavior.ui.h:13
+msgid "Overview"
+msgstr ""
+
+#: ui/SettingsBehavior.ui.h:14
+msgid "Click empty space to close overview"
+msgstr "개요를 닫으려면 빈 공간 누르기"
+
+#: ui/SettingsBehavior.ui.h:15
+msgid "Disable show overview on startup"
+msgstr "시작 시 개요 표시 비활성화"
+
+#: ui/SettingsFineTune.ui.h:1
+msgid "Font size"
+msgstr ""
+
+#: ui/SettingsFineTune.ui.h:2
+msgid "Tray Font Size"
+msgstr ""
+
+#: ui/SettingsFineTune.ui.h:3
+#, fuzzy
+msgid "(0 = theme default)"
+msgstr ""
+"트레이 글꼴 크기\n"
+"(0 = 테마 기본값)"
+
+#: ui/SettingsFineTune.ui.h:4
+#, fuzzy
+msgid "LeftBox Font Size"
+msgstr ""
+"왼쪽상자 글꼴 크기\n"
+"(0 = 테마 기본값)"
+
+#: ui/SettingsFineTune.ui.h:5
+msgid "Padding"
+msgstr ""
+
+#: ui/SettingsFineTune.ui.h:6
+#, fuzzy
+msgid "Tray Item Padding"
+msgstr ""
+"트레이 항목 패딩\n"
+"(-1 = 테마 기본값)"
+
+#: ui/SettingsFineTune.ui.h:7
+#, fuzzy
+msgid "(-1 = theme default)"
+msgstr ""
+"왼쪽상자 패딩\n"
+"(-1 = 테마 기본값)"
+
+#: ui/SettingsFineTune.ui.h:8
+#, fuzzy
+msgid "Status Icon Padding"
+msgstr ""
+"상태 아이콘 패딩\n"
+"(-1 = 테마 기본값)"
+
+#: ui/SettingsFineTune.ui.h:9
+msgid "LeftBox Padding"
+msgstr ""
+
+#: ui/SettingsFineTune.ui.h:10
+#, fuzzy
+msgid "Animate"
+msgstr "애니메이션 종류"
+
+#: ui/SettingsFineTune.ui.h:11
+msgid "Animate switching applications"
+msgstr "전환하는 응용프로그램 애니메이션 적용션"
+
+#: ui/SettingsFineTune.ui.h:12
+msgid "Animate launching new windows"
+msgstr "실행하는 새 창 애니메이션 적용"
+
+#: ui/SettingsFineTune.ui.h:13
+msgid "Gnome functionality"
+msgstr ""
+
+#: ui/SettingsFineTune.ui.h:14
+#, fuzzy
+msgid "Keep original gnome-shell dash"
+msgstr "원래 gnome-shell 대시 유지 (개관)"
+
+#: ui/SettingsFineTune.ui.h:15
+msgid "(overview)"
+msgstr ""
+
+#: ui/SettingsFineTune.ui.h:16
+msgid "Keep original gnome-shell top panel"
+msgstr "원래 gnome-shell 상단 패널 유지"
+
+#: ui/SettingsFineTune.ui.h:17
+#, fuzzy
+msgid "Activate panel menu buttons on click only"
+msgstr "누를 때에만 패널 메뉴 단추 활성화 (예: 날짜 메뉴)"
+
+#: ui/SettingsFineTune.ui.h:18
+#, fuzzy
+msgid "(e.g. date menu)"
+msgstr "날짜 메뉴"
+
+#: ui/SettingsFineTune.ui.h:19
+msgid "Force Activities hot corner on primary monitor"
+msgstr "기본 모니터의 활동 핫 코너 강제하기"
+
+#: ui/SettingsFineTune.ui.h:20
+#, fuzzy
+msgid "App icon secondary menu"
+msgstr "앱 아이콘 보조(오른쪽 클릭) 메뉴"
+
+#: ui/SettingsFineTune.ui.h:21
+#, fuzzy
+msgid "(right-click menu)"
+msgstr "앱 아이콘 보조(오른쪽 클릭) 메뉴"
+
+#: ui/SettingsPosition.ui.h:1
+msgid "Panel"
+msgstr ""
+
+#: ui/SettingsPosition.ui.h:2
+msgid "Display the main panel on"
+msgstr "기본 패널 위치 화면표시"
+
+#: ui/SettingsPosition.ui.h:3
+msgid "Display panels on all monitors"
+msgstr "모든 모니터의 패널화면표시"
+
+#: ui/SettingsPosition.ui.h:4
+msgid "Panel Intellihide"
+msgstr "패널 지능적 숨김"
+
+#: ui/SettingsPosition.ui.h:5
+msgid "Hide and reveal the panel according to preferences"
+msgstr "기본 설정에 따라 패널 숨김 및 드러내기"
+
+#: ui/SettingsPosition.ui.h:6
+#, fuzzy
+msgid "Order and Position on monitors"
+msgstr "모니터의 순서 및 위치"
+
+#: ui/SettingsPosition.ui.h:7
+#, fuzzy
+msgid "Monitor"
+msgstr "모니터 "
+
+#: ui/SettingsPosition.ui.h:8
+msgid "Apply changes to all monitors"
+msgstr "모든 모니터에 변경사항 적용"
+
+#: ui/SettingsPosition.ui.h:9
+msgid "Panel screen position"
+msgstr "화면 내 패널 위치"
+
+#: ui/SettingsPosition.ui.h:14
+#, fuzzy
+msgid "Panel thickness"
+msgstr ""
+"패널 두께\n"
+"(기본값은 48)"
+
+#: ui/SettingsPosition.ui.h:15
+#, fuzzy
+msgid "(default is 48)"
+msgstr ""
+"패널 두께\n"
+"(기본값은 48)"
+
+#: ui/SettingsPosition.ui.h:17
+#, fuzzy, no-c-format
+msgid "Panel length (%)"
+msgstr ""
+"패널 길이 (%)\n"
+"(기본값은 100)"
+
+#: ui/SettingsPosition.ui.h:18
+#, fuzzy
+msgid "(default is 100)"
+msgstr ""
+"패널 길이 (%)\n"
+"(기본값은 100)"
+
+#: ui/SettingsPosition.ui.h:19
+msgid "Anchor"
+msgstr "앵커"
+
+#: ui/SettingsPosition.ui.h:23
+#, fuzzy
+msgid "Taskbar Display"
+msgstr "작업 표시줄"
+
+#: ui/SettingsStyle.ui.h:1
+msgid "AppIcon style"
+msgstr ""
+
+#: ui/SettingsStyle.ui.h:2
+#, fuzzy
+msgid "App Icon Margin"
+msgstr ""
+"앱 아이콘 여백\n"
+"(기본값은 8)"
+
+#: ui/SettingsStyle.ui.h:3
+#, fuzzy
+msgid "(default is 8)"
+msgstr ""
+"앱 아이콘 여백\n"
+"(기본값은 8)"
+
+#: ui/SettingsStyle.ui.h:4
+#, fuzzy
+msgid "App Icon Padding"
+msgstr ""
+"앱 아이콘 패딩\n"
+"(기본값은 4)"
+
+#: ui/SettingsStyle.ui.h:5
+#, fuzzy
+msgid "(default is 4)"
+msgstr ""
+"앱 아이콘 패딩\n"
+"(기본값은 4)"
+
+#: ui/SettingsStyle.ui.h:6
+msgid "Animate hovering app icons"
+msgstr "마우스로 가르키는 앱 아이콘 애니메이션 적용"
+
+#: ui/SettingsStyle.ui.h:7
+#, fuzzy
+msgid "Running indicator"
+msgstr "실행중인 표시기 위치"
+
+#: ui/SettingsStyle.ui.h:8
+msgid "Running indicator position"
+msgstr "실행중인 표시기 위치"
+
+#: ui/SettingsStyle.ui.h:13
+msgid "Running indicator style (Focused app)"
+msgstr "실행중인 표시기 스타일 (초점을 맞춘 앱)"
+
+#: ui/SettingsStyle.ui.h:14
+msgid "Dots"
+msgstr "점"
+
+#: ui/SettingsStyle.ui.h:15
+msgid "Squares"
+msgstr "사각형"
+
+#: ui/SettingsStyle.ui.h:16
+msgid "Dashes"
+msgstr "대시"
+
+#: ui/SettingsStyle.ui.h:17
+msgid "Segmented"
+msgstr "분할됨"
+
+#: ui/SettingsStyle.ui.h:18
+msgid "Solid"
+msgstr "솔리드"
+
+#: ui/SettingsStyle.ui.h:19
+msgid "Ciliora"
+msgstr "실리오라"
+
+#: ui/SettingsStyle.ui.h:20
+msgid "Metro"
+msgstr "메트로"
+
+#: ui/SettingsStyle.ui.h:21
+msgid "Running indicator style (Unfocused apps)"
+msgstr "실행중인 표시기 스타일 (초점을 안 맞춘 앱)"
+
+#: ui/SettingsStyle.ui.h:22
+#, fuzzy
+msgid "Panel style"
+msgstr "패널 지능적 숨김"
+
+#: ui/SettingsStyle.ui.h:23
+#, fuzzy
+msgid "Override panel theme background color"
+msgstr "패널 테마 배경색 재정의 "
+
+#: ui/SettingsStyle.ui.h:24
+msgid "Override panel theme background opacity"
+msgstr "패널 테마 배경 불투명도 재정의"
+
+#: ui/SettingsStyle.ui.h:26
+#, no-c-format
+msgid "Panel background opacity (%)"
+msgstr "패널 배경 불투명도(%)"
+
+#: ui/SettingsStyle.ui.h:28
+msgid "Dynamic background opacity"
+msgstr "동적 배경 불투명도"
+
+#: ui/SettingsStyle.ui.h:29
+msgid "Change opacity when a window gets close to the panel"
+msgstr "창이 패널에 가까워지면 불투명도 변경"
+
+#: ui/SettingsStyle.ui.h:30
+#, fuzzy
+msgid "Override panel theme gradient"
+msgstr "패널 테마 그라디언트 재정의 "
+
+#: ui/SettingsStyle.ui.h:32
+#, no-c-format
+msgid "Gradient top color and opacity (%)"
+msgstr "그라디언트 상단 색상 및 불투명도 (%)"
+
+#: ui/SettingsStyle.ui.h:34
+#, no-c-format
+msgid "Gradient bottom color and opacity (%)"
+msgstr "그라디언트 하단 색상 및 불투명도 (%)"
 
 msgid "Show Desktop icon"
 msgstr "바탕 화면 아이콘 표시"
@@ -24,3 +1471,363 @@ msgstr "바탕 화면 버튼 표시 패딩(px)"
 
 msgid "Floating rounded theme"
 msgstr "떠 다니는 둥근 테마"
+
+#~ msgid "Current Show Applications icon"
+#~ msgstr "현재 프로그램 표시 아이콘"
+
+#~ msgid "Custom Show Applications image icon"
+#~ msgstr "사용자 지정 프로그램 표시 이미지 아이콘"
+
+#~ msgid "Position"
+#~ msgstr "위치"
+
+#~ msgid "Style"
+#~ msgstr "스타일"
+
+#~ msgid "Top Bar > Show App Menu must be enabled in Tweak Tool"
+#~ msgstr "트윅 도구에서 상단 표시줄 > 앱 메뉴 표시를 활성화해야 합니다"
+
+#~ msgid "Behavior"
+#~ msgstr "동작"
+
+#~ msgid "Action"
+#~ msgstr "동작"
+
+#~ msgid "Fine-Tune"
+#~ msgstr "미세 조정"
+
+#~ msgid "About"
+#~ msgstr "정보"
+
+#, fuzzy
+#~| msgid "Show trash can"
+#~ msgid "Show Details"
+#~ msgstr "휴지통 표시"
+
+#, fuzzy
+#~| msgid "All Windows"
+#~ msgid "New Window"
+#~ msgstr "모든 창"
+
+#, fuzzy
+#~| msgid "Position on screen"
+#~ msgid "Positions along screen edge"
+#~ msgstr "화면상의 위치"
+
+#, fuzzy
+#~| msgid "Customize running indicators"
+#~ msgid "Style of the running indicator (focused)"
+#~ msgstr "실행중인 표시기 사용자 정의"
+
+#, fuzzy
+#~| msgid "Use dominant color"
+#~ msgid "Running indicator dominant color"
+#~ msgstr "지배적인 색상 사용"
+
+#, fuzzy
+#~| msgid "Customize running indicators"
+#~ msgid "Color of running indicator (1 window)"
+#~ msgstr "실행중인 표시기 사용자 정의"
+
+#, fuzzy
+#~| msgid "Use dominant color"
+#~ msgid "Highlight icon dominant color"
+#~ msgstr "지배적인 색상 사용"
+
+#, fuzzy
+#~| msgid "Force straight corner"
+#~ msgid "Force hot corner"
+#~ msgstr "직진 모서리 강제하기"
+
+#, fuzzy
+#~| msgid "Set the background color for the dash."
+#~ msgid "Override theme background color"
+#~ msgstr "대시의 배경색을 지정합니다."
+
+#, fuzzy
+#~| msgid "Set the background color for the dash."
+#~ msgid "Replace current theme background color for the panel"
+#~ msgstr "대시의 배경색을 지정합니다."
+
+#, fuzzy
+#~| msgid "Set the background color for the dash."
+#~ msgid "Custom background color for the panel"
+#~ msgstr "대시의 배경색을 지정합니다."
+
+#, fuzzy
+#~| msgid "Minimum opacity"
+#~ msgid "Dynamic opacity"
+#~ msgstr "최소 불투명도"
+
+#, fuzzy
+#~| msgid "Customize opacity"
+#~ msgid "Custom opacity for the panel"
+#~ msgstr "불투명도 사용자 정의"
+
+#, fuzzy
+#~| msgid "Customize the dash color"
+#~ msgid "Custom gradient top color"
+#~ msgstr "대시 색상 사용자 정의"
+
+#, fuzzy
+#~| msgid "Intelligent autohide"
+#~ msgid "Intellihide"
+#~ msgstr "지능형 자동숨김"
+
+#, fuzzy
+#~| msgid "Only maximized windows"
+#~ msgid "Only hide from windows"
+#~ msgstr "최대화된 창만"
+
+#, fuzzy
+#~| msgid "Pressure threshold"
+#~ msgid "Intellihide pressure threshold"
+#~ msgstr "압력 임계값"
+
+#, fuzzy
+#~| msgid "Intelligent autohide"
+#~ msgid "Intellihide animation time"
+#~ msgstr "지능형 자동숨김"
+
+#, fuzzy
+#~| msgid "Show <i>Applications</i> icon"
+#~ msgid "Custom Show Applications icon"
+#~ msgstr "<i>응용프로그램</i> 아이콘 표시"
+
+#, fuzzy
+#~| msgid "Show the dock by mouse hover on the screen edge."
+#~ msgid "Show the desktop on mouse hover"
+#~ msgstr "화면 가장자리에 마우스 가리키기로 도크를 표시합니다."
+
+#, fuzzy
+#~| msgid "Show dock and application numbers"
+#~ msgid "Show desktop animation time"
+#~ msgstr "도크 및 프로그램 번호 표시"
+
+#, fuzzy
+#~| msgid "Show window previews"
+#~ msgid "Show window preview"
+#~ msgstr "창 미리보기 표시"
+
+#, fuzzy
+#~| msgid "Show running applications"
+#~ msgid "Show running apps"
+#~ msgstr "실행중인 프로그램 표시"
+
+#, fuzzy
+#~| msgid "Enable in fullscreen mode"
+#~ msgid "Enable peek mode"
+#~ msgstr "전체 화면 모드에서 활성화"
+
+#, fuzzy
+#~| msgid "Show window previews"
+#~ msgid "The padding of the window previews"
+#~ msgstr "창 미리보기 표시"
+
+#, fuzzy
+#~| msgid "Show favorite applications"
+#~ msgid "Use favorite icons as application launchers"
+#~ msgstr "즐겨찾는 프로그램 표시"
+
+#, fuzzy
+#~| msgid "Primary monitor"
+#~ msgid "Primary monitor index"
+#~ msgstr "기본 모니터"
+
+#, fuzzy
+#~| msgid "Isolate monitors."
+#~ msgid "Available monitors"
+#~ msgstr "모니터를 분리합니다."
+
+#, fuzzy
+#~| msgid "Show on all monitors."
+#~ msgid "Display the favorites on all monitors"
+#~ msgstr "모든 모니터에 표시합니다."
+
+#, fuzzy
+#~| msgid "Customize middle-click behavior"
+#~ msgid "Customize click behaviour"
+#~ msgstr "가운데 클릭 동작 사용자 정의"
+
+#, fuzzy
+#~| msgid "Behaviour when clicking on the icon of a running application."
+#~ msgid ""
+#~ "Set the action that is executed when shift+middle-clicking on the icon of "
+#~ "a running application"
+#~ msgstr "실행중인 애플리케이션의 아이콘을 누를 때의 동작입니다."
+
+#, fuzzy
+#~| msgid "Tune the dash background opacity."
+#~ msgid "Window previews background opacity"
+#~ msgstr "대시 배경 불투명도를 조정합니다."
+
+#, fuzzy
+#~| msgid "Tune the dash background opacity."
+#~ msgid "Window previews use this custom background opacity."
+#~ msgstr "대시 배경 불투명도를 조정합니다."
+
+#~ msgid "Show window previews"
+#~ msgstr "창 미리보기 표시"
+
+#, fuzzy
+#~| msgid "Show running applications"
+#~ msgid "Show badge count on app icon"
+#~ msgstr "실행중인 프로그램 표시"
+
+#, javascript-format
+#~ msgid "Quit %d Windows"
+#~ msgstr "%d개 창 종료"
+
+#, javascript-format
+#~ msgid "Dash to Dock %s"
+#~ msgstr "대시에서 도크로 %s"
+
+#~ msgid "Trash"
+#~ msgstr "휴지통"
+
+#~ msgid "Empty Trash"
+#~ msgstr "휴지통 비우기"
+
+#~ msgid "Mount"
+#~ msgstr "마운트"
+
+#~ msgid "Eject"
+#~ msgstr "꺼내기"
+
+#~ msgid "Unmount"
+#~ msgstr "마운트 해제"
+
+#~ msgid "Minimize or overview"
+#~ msgstr "최소화 또는 개관"
+
+#~ msgid "Minimize or show previews"
+#~ msgstr "미리보기 최소화 또는 표시"
+
+#~ msgid "Focus or show previews"
+#~ msgstr "미리보기에 초점을 맞추거나 표시"
+
+#~ msgid "Focus, minimize or show previews"
+#~ msgstr "미리보기에 초점을 맞추고, 최소화 또는 표시"
+
+#~ msgid "Enable Unity7 like glossy backlit items"
+#~ msgstr "광택이 있는 백라이트 아이템처럼 Unity7 활성화"
+
+#~ msgid "Customize indicator style"
+#~ msgstr "표시기 스타일 사용자 정의"
+
+#~ msgid "Color"
+#~ msgstr "색상"
+
+#~ msgid "Border color"
+#~ msgstr "테두리 색상"
+
+#~ msgid "Border width"
+#~ msgstr "테두리 너비"
+
+#~ msgid "Show the dock on"
+#~ msgstr "도크에 표시"
+
+#~ msgid ""
+#~ "Hide the dock when it obstructs a window of the current application. More "
+#~ "refined settings are available."
+#~ msgstr ""
+#~ "현재 프로그램의 창을 가리는 도크를 숨깁니다. 보다 세련된 설정이 가능합니"
+#~ "다."
+
+#~ msgid "Dock size limit"
+#~ msgstr "도크 크기 제한"
+
+#~ msgid "Panel mode: extend to the screen edge"
+#~ msgstr "패널 모드: 화면 가장자리로 확장"
+
+#~ msgid "Icon size limit"
+#~ msgstr "아이콘 크기 제한"
+
+#~ msgid "Fixed icon size: scroll to reveal other icons"
+#~ msgstr "고정 아이콘 크기: 스크롤하여 다른 아이콘 표시"
+
+#~ msgid ""
+#~ "If disabled, these settings are accessible from gnome-tweak-tool or the "
+#~ "extension website."
+#~ msgstr ""
+#~ "비활성화된 경우, 이 설정은 gnome-tweak-tool 또는 확장 웹사이트에서 액세스"
+#~ "할 수 있습니다."
+
+#~ msgid "Move the applications button at the beginning of the dock."
+#~ msgstr "도크의 시작 부분에서 응용프로그램 버튼을 이동합니다."
+
+#~ msgid "Show mounted volumes and devices"
+#~ msgstr "마운트된 볼륨 및 장치 표시"
+
+#~ msgid "Launchers"
+#~ msgstr "실행프로그램"
+
+#~ msgid "Minimize"
+#~ msgstr "최소화"
+
+#~ msgid ""
+#~ "Few customizations meant to integrate the dock with the default GNOME "
+#~ "theme. Alternatively, specific options can be enabled below."
+#~ msgstr ""
+#~ "도크를 기본 그놈 테마와 통합하기 위한 몇 가지 사용자화입니다. 또는 아래에"
+#~ "서 특정 옵션을 활성화할 수 있습니다."
+
+#~ msgid "Use built-in theme"
+#~ msgstr "내장된 테마 사용"
+
+#~ msgid "Save space reducing padding and border radius."
+#~ msgstr "패딩과 테두리 반경을 줄여 공간을 절약합니다."
+
+#~ msgid "Shrink the dash"
+#~ msgstr "대시 수축하기"
+
+#~ msgid "Customize windows counter indicators"
+#~ msgstr "창 카운터 표시기 사용자 정의"
+
+#~ msgid "Default"
+#~ msgstr "기본"
+
+#~ msgid "Dynamic"
+#~ msgstr "역동적"
+
+#~ msgid "Opacity"
+#~ msgstr "불투명도"
+
+#~ msgid "Appearance"
+#~ msgstr "모양새"
+
+#~ msgid "Moves the dash out of the overview transforming it in a dock"
+#~ msgstr "도크에서 변환하는 개관 밖으로 대시 이동"
+
+#~ msgid "Created by"
+#~ msgstr "만든이: "
+
+#~ msgid "Webpage"
+#~ msgstr "웹페이지"
+
+#~ msgid "Customize minimum and maximum opacity values"
+#~ msgstr "최소 및 최대 불투명도 값 사용자 정의"
+
+#~ msgid "Maximum opacity"
+#~ msgstr "최대 불투명도"
+
+#~ msgid "Show the dock if it is hidden"
+#~ msgstr "도크가 숨겨져 있는 경우 표시"
+
+#~ msgid ""
+#~ "If using autohide, the dock will appear for a short time when triggering "
+#~ "the shortcut."
+#~ msgstr ""
+#~ "자동숨김을 사용하는 경우, 바로가기를 실행할 때 도크가 잠시 나타납니다."
+
+#~ msgid "Shortcut for the options above"
+#~ msgstr "위의 옵션에 대한 바로가기"
+
+#~ msgid "Autohide"
+#~ msgstr "자동숨김"
+
+#~ msgid "Push to show: require pressure to show the dock"
+#~ msgstr "누르면 표시됨: 도크가 표시되도록 압력을 가해야 합니다"
+
+#~ msgid "Show timeout (s)"
+#~ msgstr "시간초과 표시"

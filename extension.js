@@ -21,7 +21,6 @@ const Main = imports.ui.main;
 const Meta = imports.gi.Meta;
 const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
-const Lang = imports.lang;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 const WindowManager = imports.ui.windowManager;
@@ -30,20 +29,21 @@ const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
 const Me = ExtensionUtils.getCurrentExtension();
-const Convenience = Me.imports.convenience;
-const PanelManager = Me.imports.panelManager;
+const { PanelManager } = Me.imports.panelManager;
 const Utils = Me.imports.utils;
+const AppIcons = Me.imports.appIcons;
 
 const ZORIN_DASH_UUID = 'zorin-dash@zorinos.com';
 
 let panelManager;
-let oldDash;
 let extensionChangedHandler;
 let disabledZorinDash;
 let extensionSystem = (Main.extensionManager || imports.ui.extensionSystem);
 
 function init() {
-    Convenience.initTranslations(Utils.TRANSLATION_DOMAIN);
+    this._realHasOverview = Main.sessionMode.hasOverview;
+
+    ExtensionUtils.initTranslations(Utils.TRANSLATION_DOMAIN);
     
     //create an object that persists until gnome-shell is restarted, even if the extension is disabled
     Me.persistentStorage = {};
@@ -66,8 +66,8 @@ function enable() {
 
 function _enable() {
     let zorinDash = Main.extensionManager ?
-                     Main.extensionManager.lookup(ZORIN_DASH_UUID) : //gnome-shell >= 3.33.4
-                     ExtensionUtils.extensions[ZORIN_DASH_UUID];
+                    Main.extensionManager.lookup(ZORIN_DASH_UUID) : //gnome-shell >= 3.33.4
+                    ExtensionUtils.extensions[ZORIN_DASH_UUID];
 
     if (zorinDash && zorinDash.stateObj && zorinDash.stateObj.dockManager) {
         // Disable Zorin Dash
@@ -79,7 +79,7 @@ function _enable() {
         zorinDash.state = 2; //ExtensionState.DISABLED
         extensionOrder.splice(extensionOrder.indexOf(ZORIN_DASH_UUID), 1);
 
-        //reset to prevent conflicts with the zorin-dash
+        //reset to prevent conflicts with the Zorin Dash
         if (panelManager) {
             disable(true);
         }
@@ -87,10 +87,19 @@ function _enable() {
 
     if (panelManager) return; //already initialized
 
-    Me.settings = Convenience.getSettings('org.gnome.shell.extensions.zorin-taskbar');
-    Me.desktopSettings = Convenience.getSettings('org.gnome.desktop.interface');
+    Me.settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.zorin-taskbar');
+    Me.desktopSettings = ExtensionUtils.getSettings('org.gnome.desktop.interface');
 
-    panelManager = new PanelManager.dtpPanelManager();
+    Main.layoutManager.startInOverview = false;
+
+    if (Main.layoutManager._startingUp) {
+        Main.sessionMode.hasOverview = false;
+        Main.layoutManager.connect('startup-complete', () => {
+            Main.sessionMode.hasOverview = this._realHasOverview
+        });
+    }
+
+    panelManager = new PanelManager();
 
     panelManager.enable();
     
@@ -98,33 +107,26 @@ function _enable() {
     Utils.addKeybinding(
         'open-application-menu',
         new Gio.Settings({ schema_id: WindowManager.SHELL_KEYBINDINGS_SCHEMA }),
-        Lang.bind(this, function() {
+        () => {
             panelManager.primaryPanel.taskbar.popupFocusedAppSecondaryMenu();
-        }),
+        },
         Shell.ActionMode.NORMAL | Shell.ActionMode.POPUP
     );
-
-    // Pretend I'm the dash: meant to make appgrd swarm animation come from the
-    // right position of the appShowButton.
-    oldDash = Main.overview._dash;
-    Main.overview._dash = panelManager.primaryPanel.taskbar;
 }
 
 function disable(reset) {
     panelManager.disable();
-    Main.overview._dash = oldDash;
     Me.settings.run_dispose();
     Me.desktopSettings.run_dispose();
 
     delete Me.settings;
-    oldDash = null;
     panelManager = null;
     
     Utils.removeKeybinding('open-application-menu');
     Utils.addKeybinding(
         'open-application-menu',
         new Gio.Settings({ schema_id: WindowManager.SHELL_KEYBINDINGS_SCHEMA }),
-        Lang.bind(Main.wm, Main.wm._toggleAppMenu),
+        Main.wm._toggleAppMenu.bind(Main.wm),
         Shell.ActionMode.NORMAL | Shell.ActionMode.POPUP
     );
 
@@ -132,9 +134,13 @@ function disable(reset) {
         extensionSystem.disconnect(extensionChangedHandler);
         delete global.zorinTaskbar;
 
-        // Re-enable Zorin Dash if it was disabled by Zorin Taskbar
+        // Re-enable Zorin Dash if it was disabled by dash to panel
         if (disabledZorinDash && Main.sessionMode.allowExtensions) {
             (extensionSystem._callExtensionEnable || extensionSystem.enableExtension).call(extensionSystem, ZORIN_DASH_UUID);
         }
+
+        AppIcons.resetRecentlyClickedApp();
     }
+
+    Main.sessionMode.hasOverview = this._realHasOverview;
 }

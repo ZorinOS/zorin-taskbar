@@ -1,3 +1,95 @@
+gnome-shell-extension-zorin-taskbar (56.9) jammy; urgency=medium
+
+  * Increased window preview leave timeout to 250ms
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 03 Sep 2024 14:04:19 +0100
+
+gnome-shell-extension-zorin-taskbar (56.8) jammy; urgency=medium
+
+  * Fixed barrier code
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Mon, 12 Aug 2024 23:38:18 +0100
+
+gnome-shell-extension-zorin-taskbar (56.7) jammy; urgency=medium
+
+  * Added link to Application Switching settings to set workspace and
+    monitor isolation behaviour
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 15 May 2024 19:21:08 +0100
+
+gnome-shell-extension-zorin-taskbar (56.6) jammy; urgency=medium
+
+  * Correctly handle desktop icons when calculating proximity
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 27 Feb 2024 20:11:37 +0000
+
+gnome-shell-extension-zorin-taskbar (56.5) jammy; urgency=medium
+
+  * Fixed show desktop functionality
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 13 Dec 2023 17:22:08 +0000
+
+gnome-shell-extension-zorin-taskbar (56.4) jammy; urgency=medium
+
+  * Fixed regression with shortcuts overlay
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 13 Dec 2023 16:21:07 +0000
+
+gnome-shell-extension-zorin-taskbar (56.3) jammy; urgency=medium
+
+  * Adjusted shortcut-num-keys default setting
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 12 Dec 2023 22:21:55 +0000
+
+gnome-shell-extension-zorin-taskbar (56.2) jammy; urgency=medium
+
+  * Fixed floating theme centering bug
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 10 Dec 2023 18:41:12 +0000
+
+gnome-shell-extension-zorin-taskbar (56.1) jammy; urgency=medium
+
+  * Moved isolate settings to GNOME Control Center
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 18 Nov 2023 19:23:50 +0000
+
+gnome-shell-extension-zorin-taskbar (56.0.2) jammy; urgency=medium
+
+  * Removed blue background on favorite apps when dragging app icons
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 01 Nov 2023 12:39:55 +0000
+
+gnome-shell-extension-zorin-taskbar (56.0.1) jammy; urgency=medium
+
+  * Corrected Makefile
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 31 May 2023 01:23:02 +0100
+
+gnome-shell-extension-zorin-taskbar (56) jammy; urgency=medium
+
+  * Re-based on upstream version 56 as at commit
+    9274982189f2d5306afaf29f274d007f0cd12d48
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 31 May 2023 00:14:18 +0100
+
+gnome-shell-extension-zorin-taskbar (40.23) focal; urgency=medium
+
+  * Changed default window preview size to 200px
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 16 Oct 2021 12:44:27 +0100
+
+gnome-shell-extension-zorin-taskbar (40.22) focal; urgency=medium
+
+  * Fixed Spanish translations
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 22 Aug 2021 16:45:29 +0100
+
+gnome-shell-extension-zorin-taskbar (40.21) focal; urgency=medium
+
+  * Updated Spanish translations
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 22 Aug 2021 15:49:06 +0100
+
 gnome-shell-extension-zorin-taskbar (40.20) focal; urgency=medium
 
   * Corrected translation string

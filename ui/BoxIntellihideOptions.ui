@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+
+  <object class="GtkBox" id="box_intellihide_options">
+    <property name="orientation">vertical</property>
+    <property name="width-request">600</property>
+    <property name="spacing">24</property>
+    <property name="margin-top">32</property>
+    <property name="margin-bottom">32</property>
+    <property name="margin-start">32</property>
+    <property name="margin-end">32</property>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Floating rounded theme</property>
+            <child>
+              <object class="GtkSwitch" id="intellihide_floating_rounded_theme_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Only hide the panel when it is obstructed by windows</property>
+            <child>
+              <object class="GtkSwitch" id="intellihide_window_hide_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow" id="intellihide_behaviour_options">
+            <property name="title" translatable="yes">The panel hides from</property>
+            <child>
+              <object class="GtkComboBoxText" id="intellihide_behaviour_combo">
+                <property name="valign">center</property>
+                <items>
+                  <item id="ALL_WINDOWS" translatable="yes">All windows</item>
+                  <item id="FOCUSED_WINDOWS" translatable="yes">Focused windows</item>
+                  <item id="MAXIMIZED_WINDOWS" translatable="yes">Maximized windows</item>
+                </items>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Require pressure at the edge of the screen to reveal the panel</property>
+            <child>
+              <object class="GtkSwitch" id="intellihide_use_pressure_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Allow the panel to be revealed while in fullscreen mode</property>
+            <child>
+              <object class="GtkSwitch" id="intellihide_show_in_fullscreen_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow" id="grid_intellihide_only_secondary">
+            <property name="title" translatable="yes">Only hide secondary panels</property>
+            <property name="subtitle" translatable="yes">(requires multi-monitors option)</property>
+            <child>
+              <object class="GtkSwitch" id="intellihide_only_secondary_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Keyboard shortcut to reveal and hold the panel</property>
+            <property name="subtitle" translatable="yes">Syntax: &lt;Shift&gt;, &lt;Ctrl&gt;, &lt;Alt&gt;, &lt;Super&gt;</property>
+            <child>
+              <object class="GtkEntry" id="intellihide_toggle_entry">
+                <property name="valign">center</property>
+                <property name="width_chars">12</property>
+                <property name="placeholder_text" translatable="yes">e.g. &lt;Super&gt;i</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </object>
+
+</interface>

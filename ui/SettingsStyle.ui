@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+
+  <object class="GtkAdjustment" id="trans_opacity_adjustment">
+    <property name="upper">100</property>
+    <property name="step_increment">5</property>
+    <property name="page_increment">10</property>
+  </object>
+
+  <object class="AdwPreferencesPage" id="style">
+    <property name="title">Style</property>
+    <property name="icon_name">applications-graphics-symbolic</property>
+
+    <!-- group panel intellihide -->
+    <child>
+      <object class="AdwPreferencesGroup" id="position_group_panel2">
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Panel Intellihide</property>
+            <property name="subtitle" translatable="yes">Hide and reveal the panel according to preferences</property>
+            <child>
+              <object class="GtkButton" id="intellihide_options_button">
+                <property name="receives_default">True</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkImage" id="image_intellihide_options">
+                    <property name="icon_name">emblem-system-symbolic</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="circular"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="intellihide_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+    <!-- group dynamic trans2 -->
+    <child>
+      <object class="AdwPreferencesGroup" id="style_group_dynamic_trans2">
+        <property name="title" translatable="yes">Panel style</property>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Override panel theme background opacity</property>
+            <child>
+              <object class="GtkSwitch" id="trans_opacity_override_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow" id="trans_opacity_box">
+            <property name="title" translatable="yes">Panel background opacity (%)</property>
+            <child>
+              <object class="GtkSpinButton" id="trans_opacity_spinbutton">
+                <property name="valign">center</property>
+                <property name="text" translatable="yes">0</property>
+                <property name="adjustment">trans_opacity_adjustment</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow" id="trans_opacity_box2">
+            <property name="title" translatable="yes">Dynamic background opacity</property>
+            <property name="subtitle" translatable="yes">Change opacity when a window gets close to the panel</property>
+            <child>
+              <object class="GtkButton" id="trans_dyn_options_button">
+                <property name="receives_default">True</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkImage" id="image_trans_dyn_options">
+                    <property name="icon_name">emblem-system-symbolic</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="circular"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="trans_dyn_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </object>
+</interface>

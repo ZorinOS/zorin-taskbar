@@ -22,118 +22,45 @@
  */
 
 const Clutter = imports.gi.Clutter;
-const Config = imports.misc.config;
-const GdkPixbuf = imports.gi.GdkPixbuf
+const GdkPixbuf = imports.gi.GdkPixbuf;
 const Gi = imports._gi;
 const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
-const GObject = imports.gi.GObject;
 const Gtk = imports.gi.Gtk;
 const Meta = imports.gi.Meta;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 const Mainloop = imports.mainloop;
+const Config = imports.misc.config;
+const Util = imports.misc.util;
 const Main = imports.ui.main;
 const MessageTray = imports.ui.messageTray;
-const Util = imports.misc.util;
 
 var TRANSLATION_DOMAIN = imports.misc.extensionUtils.getCurrentExtension().metadata['gettext-domain'];
 var SCROLL_TIME = Util.SCROLL_TIME / (Util.SCROLL_TIME > 1 ? 1000 : 1);
 
-//Clutter implicit animations are available since 3.34
-//prefer those over Tweener if available
-if (Config.PACKAGE_VERSION < '3.34') {
-    var Tweener = imports.ui.tweener;
-}
-
-var defineClass = function (classDef) {
-    let parentProto = classDef.Extends ? classDef.Extends.prototype : null;
-    
-    if (Config.PACKAGE_VERSION < '3.31.9') {
-        if (parentProto && (classDef.Extends.name || classDef.Extends.toString()).indexOf('ZorinTaskbar.') < 0) {
-            classDef.callParent = function() {
-                let args = Array.prototype.slice.call(arguments);
-                let func = args.shift();
-
-                classDef.Extends.prototype[func].apply(this, args);
-            };
-        }
-
-        return new imports.lang.Class(classDef);
-    }
-
-    let isGObject = parentProto instanceof GObject.Object;
-    let needsSuper = parentProto && !isGObject;
-    let getParentArgs = function(args) {
-        let parentArgs = [];
-
-        (classDef.ParentConstrParams || parentArgs).forEach(p => {
-            if (p.constructor === Array) {
-                let param = args[p[0]];
-                
-                parentArgs.push(p[1] ? param[p[1]] : param);
-            } else {
-                parentArgs.push(p);
-            }
-        });
-
-        return parentArgs;
-    };
-    
-    let C = eval(
-        '(class C ' + (needsSuper ? 'extends Object' : '') + ' { ' +
-        '     constructor(...args) { ' +
-                  (needsSuper ? 'super(...getParentArgs(args));' : '') +
-                  (needsSuper || !parentProto ? 'this._init(...args);' : '') +
-        '     }' +
-        '     callParent(...args) { ' +
-        '         let func = args.shift(); ' +
-        '         if (!(func === \'_init\' && needsSuper))' +
-        '             super[func](...args); ' +
-        '     }' +    
-        '})'
-    );
-
-    if (parentProto) {
-        Object.setPrototypeOf(C.prototype, parentProto);
-        Object.setPrototypeOf(C, classDef.Extends);
-    } 
-    
-    Object.defineProperty(C, 'name', { value: classDef.Name });
-    Object.keys(classDef)
-          .filter(k => classDef.hasOwnProperty(k) && classDef[k] instanceof Function)
-          .forEach(k => C.prototype[k] = classDef[k]);
-
-    if (isGObject) { 
-        C = GObject.registerClass({ Signals: classDef.Signals || {} }, C);
-    }
-    
-    return C;
-};
-
 // simplify global signals and function injections handling
 // abstract class
-var BasicHandler = defineClass({
-    Name: 'ZorinTaskbar.BasicHandler',
+var  BasicHandler = class {
 
-    _init: function(){
+    constructor() {
         this._storage = new Object();
-    },
+    }
 
-    add: function(/*unlimited 3-long array arguments*/){
+    add(/*unlimited 3-long array arguments*/){
 
         // convert arguments object to array, concatenate with generic
         let args = [].concat('generic', [].slice.call(arguments));
         // call addWithLabel with ags as if they were passed arguments
         this.addWithLabel.apply(this, args);
-    },
+    }
 
-    destroy: function() {
+    destroy() {
         for( let label in this._storage )
             this.removeWithLabel(label);
-    },
+    }
 
-    addWithLabel: function( label /* plus unlimited 3-long array arguments*/) {
+    addWithLabel( label /* plus unlimited 3-long array arguments*/) {
 
         if(this._storage[label] == undefined)
             this._storage[label] = new Array();
@@ -148,9 +75,9 @@ var BasicHandler = defineClass({
             }
         }
 
-    },
+    }
 
-    removeWithLabel: function(label){
+    removeWithLabel(label){
 
         if(this._storage[label]) {
             for( let i = 0; i < this._storage[label].length; i++ ) {
@@ -159,26 +86,24 @@ var BasicHandler = defineClass({
 
             delete this._storage[label];
         }
-    },
+    }
 
     /* Virtual methods to be implemented by subclass */
     // create single element to be stored in the storage structure
-    _create: function(item){
+    _create(item){
       throw new Error('no implementation of _create in ' + this);
-    },
+    }
 
     // correctly delete single element
-    _remove: function(item){
+    _remove(item){
       throw new Error('no implementation of _remove in ' + this);
     }
-});
+}
 
 // Manage global signals
-var GlobalSignalsHandler = defineClass({
-    Name: 'ZorinTaskbar.GlobalSignalsHandler',
-    Extends: BasicHandler,
+var GlobalSignalsHandler = class extends BasicHandler {
 
-    _create: function(item) {
+    _create(item) {
         let handlers = [];
 
         item[1] = [].concat(item[1]);
@@ -187,28 +112,31 @@ var GlobalSignalsHandler = defineClass({
             let object = item[0];
             let event = item[1][i];
             let callback = item[2]
-            let id = object.connect(event, callback);
+            try {
+                let id = object.connect(event, callback);
 
-            handlers.push([object, id]);
+                handlers.push([object, id]);
+            } catch (e) 
+            {
+
+            }
         }
 
         return handlers;
-    },
+    }
 
-    _remove: function(item){
+    _remove(item){
        item[0].disconnect(item[1]);
     }
-});
+};
 
 /**
  * Manage function injection: both instances and prototype can be overridden
  * and restored
  */
-var InjectionsHandler = defineClass({
-    Name: 'ZorinTaskbar.InjectionsHandler',
-    Extends: BasicHandler,
+var InjectionsHandler = class extends BasicHandler {
 
-    _create: function(item) {
+    _create(item) {
         let object = item[0];
         let name = item[1];
         let injectedFunction = item[2];
@@ -216,24 +144,22 @@ var InjectionsHandler = defineClass({
 
         object[name] = injectedFunction;
         return [[object, name, injectedFunction, original]];
-    },
+    }
 
-    _remove: function(item) {
+    _remove(item) {
         let object = item[0];
         let name = item[1];
         let original = item[3];
         object[name] = original;
     }
-});
+};
 
 /**
  * Manage timeouts: the added timeouts have their id reset on completion
  */
-var TimeoutsHandler = defineClass({
-    Name: 'ZorinTaskbar.TimeoutsHandler',
-    Extends: BasicHandler,
+var TimeoutsHandler = class extends BasicHandler {
 
-    _create: function(item) {
+    _create(item) {
         let name = item[0];
         let delay = item[1];
         let timeoutHandler = item[2];
@@ -246,41 +172,64 @@ var TimeoutsHandler = defineClass({
         });
 
         return [[name]];
-    },
+    }
 
-    remove: function(name) {
+    remove(name) {
         this._remove([name])
-    },
+    }
 
-    _remove: function(item) {
+    _remove(item) {
         let name = item[0];
 
         if (this[name]) {
             Mainloop.source_remove(this[name]);
             this[name] = 0;
         }
-    },
+    }
 
-    getId: function(name) {
+    getId(name) {
         return this[name] ? this[name] : 0;
     }
-});
+};
 
 // This is wrapper to maintain compatibility with GNOME-Shell 3.30+ as well as
 // previous versions.
 var DisplayWrapper = {
-    getScreen: function() {
+    getScreen() {
         return global.screen || global.display;
     },
 
-    getWorkspaceManager: function() {
+    getWorkspaceManager() {
         return global.screen || global.workspace_manager;
     },
 
-    getMonitorManager: function() {
-        return global.screen || Meta.MonitorManager.get();
+    getMonitorManager() {
+        return global.screen || global.backend.get_monitor_manager();
     }
 };
+
+let unredirectEnabled = true
+var setDisplayUnredirect = (enable) => {
+    if (enable && !unredirectEnabled)
+        Meta.enable_unredirect_for_display(global.display);
+    else if (!enable && unredirectEnabled)
+        Meta.disable_unredirect_for_display(global.display);
+
+    unredirectEnabled = enable;
+};
+
+var getSystemMenuInfo = function() {
+    if (Config.PACKAGE_VERSION < '43')
+        return {
+            name: 'aggregateMenu',
+            constructor: imports.ui.panel.AggregateMenu
+        };
+
+    return {
+        name: 'quickSettings',
+        constructor: imports.ui.panel.QuickSettings
+    };
+}
 
 var getCurrentWorkspace = function() {
     return DisplayWrapper.getWorkspaceManager().get_active_workspace();
@@ -302,19 +251,16 @@ var getScaleFactor = function() {
     return getStageTheme().scale_factor || 1;
 };
 
-var getAppDisplayViews = function() {
-    //gnome-shell 3.38 only has one view and it is now the appDisplay
-    return Main.overview.viewSelector.appDisplay._views || [{ view: Main.overview.viewSelector.appDisplay }];
-};
-
 var findIndex = function(array, predicate) {
-    if (Array.prototype.findIndex) {
-        return array.findIndex(predicate);
-    }
+    if (array) {
+        if (Array.prototype.findIndex) {
+            return array.findIndex(predicate);
+        }
 
-    for (let i = 0, l = array.length; i < l; ++i) {
-        if (predicate(array[i])) {
-            return i;
+        for (let i = 0, l = array.length; i < l; ++i) {
+            if (predicate(array[i])) {
+                return i;
+            }
         }
     }
 
@@ -340,54 +286,28 @@ var mergeObjects = function(main, bck) {
 };
 
 var hookVfunc = function(proto, symbol, func) {
-    if (Gi.hook_up_vfunc_symbol) {
-        //gjs > 1.53.3
-        proto[Gi.hook_up_vfunc_symbol](symbol, func);
+    if (!func) return
+
+    if (Gi.gobject_prototype_symbol && proto[Gi.gobject_prototype_symbol]) {
+        proto[Gi.gobject_prototype_symbol][Gi.hook_up_vfunc_symbol] (symbol, func);
     } else {
-        //On older gjs, this is how to hook vfunc. It is buggy and can't be used reliably to replace
-        //already hooked functions. Since it's our only use for it, disabled for now (and probably forever) 
-        //Gi.hook_up_vfunc(proto, symbol, func);
+        proto[Gi.hook_up_vfunc_symbol] (symbol, func);
     }
 };
 
-var wrapActor = function(actor) {
-    if (actor) {
-        Object.defineProperty(actor, 'actor', {
-            value: actor instanceof Clutter.Actor ? actor : actor.actor
-        });
-    }
-};
+var getTrackedActorData = (actor) => {
+    let trackedIndex = Main.layoutManager._findActor(actor);
+    
+    if (trackedIndex >= 0)
+        return Main.layoutManager._trackedActors[trackedIndex]
+}
 
 var getTransformedAllocation = function(actor) {
-    if (Config.PACKAGE_VERSION < '3.37') {
-        return Shell.util_get_transformed_allocation(actor);
-    }
-
     let extents = actor.get_transformed_extents();
     let topLeft = extents.get_top_left();
     let bottomRight = extents.get_bottom_right();
 
     return { x1: topLeft.x, x2: bottomRight.x, y1: topLeft.y, y2: bottomRight.y };
-};
-
-var allocate = function(actor, box, flags, useParent) {
-    let allocateObj = useParent ? actor.__proto__ : actor;
-
-    allocateObj.allocate.apply(actor, getAllocationParams(box, flags));
-};
-
-var setAllocation = function(actor, box, flags) {
-    actor.set_allocation.apply(actor, getAllocationParams(box, flags));
-};
-
-var getAllocationParams = function(box, flags) {
-    let params = [box];
-
-    if (Config.PACKAGE_VERSION < '3.37') {
-        params.push(flags);
-    }
-
-    return params;
 };
 
 var setClip = function(actor, x, y, width, height) {
@@ -476,7 +396,7 @@ var activateSiblingWindow = function(windows, direction, startWindow) {
     let windowIndex = windows.indexOf(global.display.focus_window);
     let nextWindowIndex = windowIndex < 0 ?
                           startWindow ? windows.indexOf(startWindow) : 0 : 
-                          windowIndex + (direction == 'up' ? 1 : -1);
+                          windowIndex + (direction == 'up' ? -1 : 1);
 
     if (nextWindowIndex == windows.length) {
         nextWindowIndex = 0;
@@ -493,45 +413,35 @@ var animateWindowOpacity = function(window, tweenOpts) {
     //there currently is a mutter bug with the windowactor opacity, starting with 3.34
     //https://gitlab.gnome.org/GNOME/mutter/issues/836
 
-    if (Config.PACKAGE_VERSION > '3.35') {
-        //on 3.36, a workaround is to use the windowactor's child for the fade animation
-        //this leaves a "shadow" on the desktop, so the windowactor needs to be hidden
-        //when the animation is complete
-        let visible = tweenOpts.opacity > 0;
-        let windowActor = window;
-        
-        window = windowActor.get_first_child() || windowActor;
+    //since 3.36, a workaround is to use the windowactor's child for the fade animation
+    //this leaves a "shadow" on the desktop, so the windowactor needs to be hidden
+    //when the animation is complete
+    let visible = tweenOpts.opacity > 0;
+    let windowActor = window;
+    let initialOpacity = window.opacity;
 
-        if (!windowActor.visible && visible) {
-            window.opacity = 0;
-            windowActor.visible = visible;
-        }
-        
-        if (!visible) {
-            let initialOpacity = window.opacity;
+    window = windowActor.get_first_child() || windowActor;
 
-            tweenOpts.onComplete = () => { 
-                windowActor.visible = visible; 
-                window.opacity = initialOpacity; 
-            };
-        }
-    } else if (Config.PACKAGE_VERSION > '3.33') {
-        //the workaround only works on 3.35+, so on 3.34, let's just hide the 
-        //window without animation
-        return window.visible = (tweenOpts.opacity == 255);
+    if (!windowActor.visible && visible) {
+        window.opacity = 0;
+        windowActor.visible = visible;
+        tweenOpts.opacity = Math.min(initialOpacity, tweenOpts.opacity);
+    }
+    
+    if (!visible) {
+        tweenOpts.onComplete = () => { 
+            windowActor.visible = visible; 
+            window.opacity = initialOpacity; 
+        };
     }
 
     animate(window, tweenOpts);
 };
 
 var animate = function(actor, options) {
-    if (Tweener) {
-        return Tweener.addTween(actor, options);
-    }
-
-    //to support both Tweener and Clutter animations, we use Tweener "time" 
-    //and "delay" properties defined in seconds, as opposed to Clutter animations 
-    //"duration" and "delay" which are defined in milliseconds
+    //the original animations used Tweener instead of Clutter animations, so we
+    //use "time" and "delay" properties defined in seconds, as opposed to Clutter 
+    //animations "duration" and "delay" which are defined in milliseconds
     if (options.delay) {
         options.delay = options.delay * 1000;
     }
@@ -562,18 +472,10 @@ var animate = function(actor, options) {
 }
 
 var isAnimating = function(actor, prop) {
-    if (Tweener) {
-        return Tweener.isTweening(actor);
-    }
-
     return !!actor.get_transition(prop);
 }
 
 var stopAnimations = function(actor) {
-    if (Tweener) {
-        return Tweener.removeTweens(actor);
-    }
-    
     actor.remove_all_transitions();
 }
 
@@ -586,19 +488,7 @@ var getIndicators = function(delegate) {
 }
 
 var getPoint = function(coords) {
-    if (Config.PACKAGE_VERSION > '3.35.1') {
-        return new imports.gi.Graphene.Point(coords);
-    }
-
-    return new Clutter.Point(coords);
-}
-
-var getPanelGhost = function() {
-    if (!Main.overview._panelGhost) {
-        return Main.overview._overview.get_first_child();
-    }
-
-    return Main.overview._panelGhost;
+    return new imports.gi.Graphene.Point(coords);
 }
 
 var notify = function(text, iconName, action, isTransient) {
@@ -690,7 +580,7 @@ var ensureActorVisibleInScrollView = function(scrollView, actor, fadeSize, onCom
  *  ColorUtils is adapted from https://github.com/micheleg/dash-to-dock
  */
 var ColorUtils = {
-    colorLuminance: function(r, g, b, dlum) {
+    colorLuminance(r, g, b, dlum) {
         // Darken or brighten color by a fraction dlum
         // Each rgb value is modified by the same fraction.
         // Return "#rrggbb" strin
@@ -704,7 +594,7 @@ var ColorUtils = {
         return rgbString;
     },
 
-    _decimalToHex: function(d, padding) {
+    _decimalToHex(d, padding) {
         // Convert decimal to an hexadecimal string adding the desired padding
 
         let hex = d.toString(16);
@@ -713,7 +603,7 @@ var ColorUtils = {
         return hex;
     },
 
-    HSVtoRGB: function(h, s, v) {
+    HSVtoRGB(h, s, v) {
         // Convert hsv ([0-1, 0-1, 0-1]) to rgb ([0-255, 0-255, 0-255]).
         // Following algorithm in https://en.wikipedia.org/wiki/HSL_and_HSV
         // here with h = [0,1] instead of [0, 360]
@@ -752,7 +642,7 @@ var ColorUtils = {
         };
     },
 
-    RGBtoHSV: function(r, g, b) {
+    RGBtoHSV(r, g, b) {
         // Convert rgb ([0-255, 0-255, 0-255]) to hsv ([0-1, 0-1, 0-1]).
         // Following algorithm in https://en.wikipedia.org/wiki/HSL_and_HSV
         // here with h = [0,1] instead of [0, 360]
@@ -800,24 +690,25 @@ const MAX_CACHED_ITEMS = 1000;
 const BATCH_SIZE_TO_DELETE = 50;
 const DOMINANT_COLOR_ICON_SIZE = 64;
 
-var DominantColorExtractor = defineClass({
-    Name: 'ZorinTaskbar.DominantColorExtractor',
+var DominantColorExtractor = class {
 
-    _init: function(app){
+    constructor(app){
         this._app = app;
-    },
+    }
 
     /**
      * Try to get the pixel buffer for the current icon, if not fail gracefully
      */
-    _getIconPixBuf: function() {
+    _getIconPixBuf() {
         let iconTexture = this._app.create_icon_texture(16);
+        let isGtk3 = !!Gtk.IconTheme.prototype.set_custom_theme;
 
         if (themeLoader === null) {
             let ifaceSettings = new Gio.Settings({ schema: "org.gnome.desktop.interface" });
+            let themeFunc = isGtk3 ? 'set_custom_theme' : 'set_theme_name';
 
             themeLoader = new Gtk.IconTheme(),
-            themeLoader.set_custom_theme(ifaceSettings.get_string('icon-theme')); // Make sure the correct theme is loaded
+            themeLoader[themeFunc](ifaceSettings.get_string('icon-theme')); // Make sure the correct theme is loaded
         }
 
         // Unable to load the icon texture, use fallback
@@ -838,12 +729,25 @@ var DominantColorExtractor = defineClass({
         }
 
         // Get the pixel buffer from the icon theme
-        let icon_info = themeLoader.lookup_icon(iconTexture.get_names()[0], DOMINANT_COLOR_ICON_SIZE, 0);
-        if (icon_info !== null)
-            return icon_info.load_icon();
-        else
-            return null;
-    },
+        if (iconTexture instanceof Gio.ThemedIcon) {
+            let params = [iconTexture.get_names()[0], DOMINANT_COLOR_ICON_SIZE, 0];
+            
+            if (!isGtk3) {
+                params.splice(1, 0, null);
+                params.splice(3, 1, 1, 1, 1);
+            }
+            
+            let icon_info = themeLoader.lookup_icon.apply(themeLoader, params);
+            
+            if (icon_info !== null) {
+                if (isGtk3) return icon_info.load_icon();
+
+                return GdkPixbuf.Pixbuf.new_from_file(icon_info.get_file().get_path());
+            }
+        }
+
+        return null;
+    }
 
     /**
      * The backlight color choosing algorithm was mostly ported to javascript from the
@@ -851,7 +755,7 @@ var DominantColorExtractor = defineClass({
      * https://bazaar.launchpad.net/~unity-team/unity/trunk/view/head:/launcher/LauncherIcon.cpp
      * so it more or less works the same way.
      */
-    _getColorPalette: function() {
+    _getColorPalette() {
         if (iconCacheMap.get(this._app.get_id())) {
             // We already know the answer
             return iconCacheMap.get(this._app.get_id());
@@ -944,7 +848,7 @@ var DominantColorExtractor = defineClass({
         iconCacheMap.set(this._app.get_id(), backgroundColor);
 
         return backgroundColor;
-    },
+    }
 
     /**
      * Downsample large icons before scanning for the backlight color to
@@ -957,7 +861,7 @@ var DominantColorExtractor = defineClass({
      *
      * @return [];
      */
-    _resamplePixels: function (pixels, resampleX, resampleY) {
+    _resamplePixels(pixels, resampleX, resampleY) {
         let resampledPixels = [];
         // computing the limit outside the for (where it would be repeated at each iteration)
         // for performance reasons
@@ -974,7 +878,7 @@ var DominantColorExtractor = defineClass({
         return resampledPixels;
     }
 
-});
+};
 
 var drawRoundedLine = function(cr, x, y, width, height, isRoundLeft, isRoundRight, stroke, fill) {
     if (height > width) {

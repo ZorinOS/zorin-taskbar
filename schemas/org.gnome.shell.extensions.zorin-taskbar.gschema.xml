@@ -17,6 +17,7 @@
     <value value='4' nick='CYCLE-MIN'/>
     <value value='5' nick='QUIT'/>
     <value value='6' nick='TOGGLE-SHOWPREVIEW'/>
+    <value value='7' nick='TOGGLE-CYCLE'/>
   </enum>
   <enum id='org.gnome.shell.extensions.zorin-taskbar.scrollAction'>
     <value value='0' nick='NOTHING'/>
@@ -42,13 +43,6 @@
     <value value='1' nick='FOCUSED_WINDOWS'/>
     <value value='2' nick='MAXIMIZED_WINDOWS'/>
   </enum>
-  <enum id='org.gnome.shell.extensions.zorin-taskbar.fontWeight'>
-    <value value='0' nick='inherit'/>
-    <value value='1' nick='normal'/>
-    <value value='2' nick='lighter'/>
-    <value value='3' nick='bold'/>
-    <value value='4' nick='bolder'/>
-  </enum>
   <enum id='org.gnome.shell.extensions.zorin-taskbar.hotkeyNumberKeys'>
     <value value='0' nick='NUM_ROW'/>
     <value value='1' nick='NUM_KEYPAD'/>
@@ -57,7 +51,7 @@
   <schema path="/org/gnome/shell/extensions/zorin-taskbar/" id="org.gnome.shell.extensions.zorin-taskbar">
     <key name="panel-position" enum="org.gnome.shell.extensions.zorin-taskbar.position">
       <default>'BOTTOM'</default>
-      <summary>Panel position</summary>
+      <summary>Panel position (Deprecated)</summary>
       <description>Panel is shown on the Bottom or Top of the screen.</description>
     </key>
     <key name="panel-element-positions-monitors-sync" type="b">
@@ -75,9 +69,24 @@
       <summary>Panel element positions</summary>
       <description>Panel element positions (JSON).</description>
     </key>
+    <key type="s" name="panel-lengths">
+      <default>'{}'</default>
+      <summary>Percentages of screen edge for panel to span</summary>
+      <description>Length of the panels, in percent (JSON).</description>
+    </key>
+    <key type="s" name="panel-anchors">
+      <default>'{}'</default>
+      <summary>Positions along screen edge</summary>
+      <description>Where to show the panels if it is not the full length of the screen edge (JSON).</description>
+    </key>
+    <key type="s" name="panel-sizes">
+      <default>'{}'</default>
+      <summary>Panel sizes</summary>
+      <description>Sizes of panels, in pixels.</description>
+    </key>
     <key type="i" name="panel-size">
       <default>48</default>
-      <summary>Panel size</summary>
+      <summary>Panel size (Deprecated)</summary>
       <description>Set the size of the panel.</description>
     </key>
     <key name="dot-style-focused" enum="org.gnome.shell.extensions.zorin-taskbar.dotStyle">
@@ -95,6 +104,16 @@
       <summary>Running indicator dominant color</summary>
       <description>Whether to use the app icon's dominant color for .app-well-running-dot</description>
     </key>
+    <key type="b" name="stockgs-keep-top-panel">
+      <default>false</default>
+      <summary>Keep top panel</summary>
+      <description>Whether to keep the stock gnome-shell top panel</description>
+    </key>
+    <key type="b" name="stockgs-panelbtn-click-only">
+      <default>false</default>
+      <summary>Panel menu buttons require click</summary>
+      <description>Whether to activate the panel menu buttons on hover or on click</description>
+    </key>
     <key type="b" name="taskbar-locked">
       <default>false</default>
       <summary>Lock the taskbar</summary>
@@ -105,10 +124,30 @@
       <summary>Custom background color</summary>
       <description>Replace current theme background color for the panel</description>
     </key>
+    <key type="b" name="trans-use-dynamic-opacity">
+      <default>false</default>
+      <summary>Dynamic opacity</summary>
+      <description>Enable dynamic opacity</description>
+    </key>
     <key type="d" name="trans-panel-opacity">
       <default>0.4</default>
       <summary>Panel opacity</summary>
       <description>Custom opacity for the panel</description>
+    </key>
+    <key name="trans-dynamic-behavior" enum="org.gnome.shell.extensions.zorin-taskbar.proximityBehavior">
+      <default>'ALL_WINDOWS'</default>
+      <summary>Dynamic opacity behavior</summary>
+      <description>Dictates which window type affects the panel opacity</description>
+    </key>
+    <key type="i" name="trans-dynamic-distance">
+      <default>20</default>
+      <summary>Distance to change opacity</summary>
+      <description>The distance a window needs to be from the panel to change opacity</description>
+    </key>
+    <key type="d" name="trans-dynamic-anim-target">
+      <default>0.8</default>
+      <summary>Modified panel opacity</summary>
+      <description>Modified opacity for the panel when a window is near</description>
     </key>
     <key type="b" name="intellihide">
       <default>false</default>
@@ -154,16 +193,6 @@
       <default>true</default>
       <summary>Floating rounded theme</summary>
       <description>Display the panel with a floating rounded theme while in intellihide mode</description>
-    </key>
-    <key type="b" name="show-apps-override-escape">
-      <default>true</default>
-      <summary>Override escape key</summary>
-      <description>Override the escape key to return to the desktop when entering the overview using the Show Applications button</description>
-    </key>
-    <key type="b" name="animate-show-apps">
-      <default>true</default>
-      <summary>Animate Show Applications from the desktop</summary>
-      <description>Animate Show Applications from the desktop</description>
     </key>
     <key type="as" name="panel-context-menu-commands">
      <default>[]</default>
@@ -216,7 +245,7 @@
       <description>Peek a window upon hover for some time</description>
     </key>
     <key type="i" name="window-preview-size">
-      <default>250</default>
+      <default>200</default>
       <summary>Window previews size</summary>
       <description>Preferred window previews size</description>
     </key>
@@ -339,7 +368,7 @@
       <description>When multiple instances of the application are available, show their window previews</description>
     </key>
     <key name="shortcut-num-keys" enum="org.gnome.shell.extensions.zorin-taskbar.hotkeyNumberKeys">
-      <default>'BOTH'</default>
+      <default>'NUM_ROW'</default>
       <summary>Hotkeys number keys</summary>
       <description>Which number keys are used for the hotkeys</description>
     </key>

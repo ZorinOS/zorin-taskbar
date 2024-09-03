@@ -31,19 +31,20 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Clutter = imports.gi.Clutter;
 const Config = imports.misc.config;
 const Gtk = imports.gi.Gtk;
+const GObject = imports.gi.GObject;
 const Gi = imports._gi;
 const Gio = imports.gi.Gio;
 const AppIcons = Me.imports.appIcons;
 const Utils = Me.imports.utils;
-const Taskbar = Me.imports.taskbar;
+const { Taskbar, TaskbarItemContainer } = Me.imports.taskbar;
 const Pos = Me.imports.panelPositions;
-const PanelStyle = Me.imports.panelStyle;
-const Lang = imports.lang;
+const PanelSettings = Me.imports.panelSettings;
+const { PanelStyle } = Me.imports.panelStyle;
 const Main = imports.ui.main;
 const Mainloop = imports.mainloop;
 const Dash = imports.ui.dash;
 const CtrlAltTab = imports.ui.ctrlAltTab;
-const Panel = imports.ui.panel;
+const GSPanel = imports.ui.panel;
 const PanelMenu = imports.ui.panelMenu;
 const St = imports.gi.St;
 const GLib = imports.gi.GLib;
@@ -53,7 +54,6 @@ const DND = imports.ui.dnd;
 const Shell = imports.gi.Shell;
 const PopupMenu = imports.ui.popupMenu;
 const IconGrid = imports.ui.iconGrid;
-const ViewSelector = imports.ui.viewSelector;
 const DateMenu = imports.ui.dateMenu;
 const Volume = imports.ui.status.volume;
 const Progress = Me.imports.progress;
@@ -68,9 +68,7 @@ var panelBoxes = ['_leftBox', '_centerBox', '_rightBox'];
 var SHOW_DESKTOP_ICON = Me.path + '/img/show-desktop-symbolic.svg';
 
 //timeout names
-const T1 = 'startDynamicTransparencyTimeout';
 const T2 = 'startIntellihideTimeout';
-const T3 = 'allocationThrottleTimeout';
 const T4 = 'showDesktopTimeout';
 const T5 = 'trackerFocusAppTimeout';
 const T6 = 'waitPanelBoxAllocation';
@@ -78,18 +76,19 @@ const T6 = 'waitPanelBoxAllocation';
 const SHOW_SHOWDESKTOP_DELAY = 1000;
 const SHOW_SHOWDESKTOP_TIME = 200;
 
-var dtpPanel = Utils.defineClass({
-    Name: 'ZorinTaskbar-Panel',
-    Extends: St.Widget,
+const FLOATING_MARGIN = 8;
 
-    _init: function(panelManager, monitor, panelBox, isStandalone) {
-        this.callParent('_init', { layout_manager: new Clutter.BinLayout() });
+var Panel = GObject.registerClass({
+}, class Panel extends St.Widget {
+
+    _init(panelManager, monitor, panelBox, isStandalone) {
+        super._init({ layout_manager: new Clutter.BinLayout() });
 
         this._timeoutsHandler = new Utils.TimeoutsHandler();
         this._signalsHandler = new Utils.GlobalSignalsHandler();
 
         this.panelManager = panelManager;
-        this.panelStyle = new PanelStyle.dtpPanelStyle();
+        this.panelStyle = new PanelStyle();
 
         this.monitor = monitor;
         this.panelBox = panelBox;
@@ -98,20 +97,18 @@ var dtpPanel = Utils.defineClass({
         // so in this case use isPrimary to get the panel on the primary dtp monitor, which
         // might be different from the system's primary monitor.
         this.isStandalone = isStandalone;
-        this.isPrimary = !isStandalone;
+        this.isPrimary = !isStandalone || (Me.settings.get_boolean('stockgs-keep-top-panel') && 
+                                           monitor == panelManager.dtpPrimaryMonitor);
 
         this._sessionStyle = null;
         this._unmappedButtons = [];
         this._elementGroups = [];
-        this.cornerSize = 0;
 
-        let position = this.getPosition();
+        let systemMenuInfo = Utils.getSystemMenuInfo();
 
         if (isStandalone) {
-            this.panel = new dtpSecondaryPanel({ name: 'panel', reactive: true });
+            this.panel = new SecondaryPanel({ name: 'panel', reactive: true });
             this.statusArea = this.panel.statusArea = {};
-
-            Utils.wrapActor(this.panel);
 
             //next 3 functions are needed by other extensions to add elements to the secondary panel
             this.panel.addToStatusArea = function(role, indicator, position, box) {
@@ -132,9 +129,9 @@ var dtpPanel = Utils.defineClass({
 
             this.menuManager = this.panel.menuManager = new PopupMenu.PopupMenuManager(this.panel);
 
-            this._setPanelMenu('aggregateMenu', dtpSecondaryAggregateMenu, this.panel.actor);
-            this._setPanelMenu('dateMenu', DateMenu.DateMenuButton, this.panel.actor);
-            this._setPanelMenu('activities', Panel.ActivitiesButton, this.panel.actor);
+            this._setPanelMenu(systemMenuInfo.name, systemMenuInfo.constructor, this.panel);
+            this._setPanelMenu('dateMenu', DateMenu.DateMenuButton, this.panel);
+            this._setPanelMenu('activities', GSPanel.ActivitiesButton, this.panel);
 
             this.panel.add_child(this._leftBox);
             this.panel.add_child(this._centerBox);
@@ -146,30 +143,28 @@ var dtpPanel = Utils.defineClass({
 
             panelBoxes.forEach(p => this[p] = Main.panel[p]);
 
-            ['activities', 'aggregateMenu', 'dateMenu'].forEach(b => {
+            ['activities', systemMenuInfo.name, 'dateMenu'].forEach(b => {
                 let container = this.statusArea[b].container;
                 let parent = container.get_parent();
 
                 container._dtpOriginalParent = parent;
                 parent ? parent.remove_child(container) : null;
-                this.panel.actor.add_child(container);
+                this.panel.add_child(container);
             });
         }
 
         // Create a wrapper around the real showAppsIcon in order to add a popupMenu. Most of 
         // its behavior is handled by the taskbar, but its positioning is done at the panel level
         this.showAppsIconWrapper = new AppIcons.ShowAppsIconWrapper(this);
-        this.panel.actor.add_child(this.showAppsIconWrapper.realShowAppsIcon);
+        this.panel.add_child(this.showAppsIconWrapper.realShowAppsIcon);
 
-        this.panel.actor._delegate = this;
+        this.panel._delegate = this;
         
-        Utils.wrapActor(this.statusArea.activities);
-
-        this.add_child(this.panel.actor);
+        this.add_child(this.panel);
 
         if (Main.panel._onButtonPress || Main.panel._tryDragWindow) {
             this._signalsHandler.add([
-                this.panel.actor, 
+                this.panel, 
                 [
                     'button-press-event', 
                     'touch-event'
@@ -179,75 +174,26 @@ var dtpPanel = Utils.defineClass({
         }
 
         if (Main.panel._onKeyPress) {
-            this._signalsHandler.add([this.panel.actor, 'key-press-event', Main.panel._onKeyPress.bind(this)]);
+            this._signalsHandler.add([this.panel, 'key-press-event', Main.panel._onKeyPress.bind(this)]);
         }
        
         Main.ctrlAltTabManager.addGroup(this, _("Top Bar")+" "+ monitor.index, 'focus-top-bar-symbolic',
                                         { sortGroup: CtrlAltTab.SortGroup.TOP });
-    },
+    }
 
-    enable : function() {
-        let position = this.getPosition();
+    enable () {
+        let { name: systemMenuName } = Utils.getSystemMenuInfo();
 
-        if (this.statusArea.aggregateMenu) {
-            Utils.getIndicators(this.statusArea.aggregateMenu._volume)._dtpIgnoreScroll = 1;
+        if (this.statusArea[systemMenuName]) {
+            Utils.getIndicators(this.statusArea[systemMenuName]._volume)._dtpIgnoreScroll = 1;
         }
 
         this.geom = this.getGeometry();
         
-        // The overview uses the panel height as a margin by way of a "ghost" transparent Clone
-        // This pushes everything down, which isn't desired when the panel is moved to the bottom
-        // I'm adding a 2nd ghost panel and will resize the top or bottom ghost depending on the panel position
-        this._myPanelGhost = new Clutter.Actor({ 
-            x: this.geom.x,
-            y: this.geom.y ,
-            reactive: false, 
-            opacity: 0
-        });
-
-        let isTop = this.geom.position == St.Side.TOP;
-
-        if (isTop) {
-            this.panel._leftCorner = this.panel._leftCorner || new Panel.PanelCorner(St.Side.LEFT);
-            this.panel._rightCorner = this.panel._rightCorner || new Panel.PanelCorner(St.Side.RIGHT);
-
-            Main.overview._overview.insert_child_at_index(this._myPanelGhost, 0);
-        } else {
-            let overviewControls = Main.overview._overview._controls || Main.overview._controls;
-            
-             if (this.geom.position == St.Side.BOTTOM) {
-                Main.overview._overview.add_actor(this._myPanelGhost);
-            } else if (this.geom.position == St.Side.LEFT) {
-                overviewControls._group.insert_child_at_index(this._myPanelGhost, 0);
-            } else {
-                overviewControls._group.add_actor(this._myPanelGhost);
-            }
-        }
-
-        if (this.panel._leftCorner) {
-            Utils.wrapActor(this.panel._leftCorner);
-            Utils.wrapActor(this.panel._rightCorner);
-
-            if (isTop) {
-                if (this.isStandalone) {
-                    this.panel.actor.add_child(this.panel._leftCorner.actor);
-                    this.panel.actor.add_child(this.panel._rightCorner.actor);
-                }
-            } else if (Config.PACKAGE_VERSION >= '3.32') {
-                this.panel.actor.remove_child(this.panel._leftCorner.actor);
-                this.panel.actor.remove_child(this.panel._rightCorner.actor);
-            }
-        }
-
         this._setPanelPosition();
 
         if (!this.isStandalone) {
-            if (this.panel.vfunc_allocate) {
-                this._panelConnectId = 0;
-                Utils.hookVfunc(this.panel.__proto__, 'allocate', (box, flags) => this._mainPanelAllocate(0, box, flags));
-            } else {
-                this._panelConnectId = this.panel.actor.connect('allocate', (actor, box, flags) => this._mainPanelAllocate(actor, box, flags));
-            }
+            Utils.hookVfunc(Object.getPrototypeOf(this.panel), 'allocate', (box) => this._mainPanelAllocate(box));
 
             // remove the extra space before the clock when the message-indicator is displayed
             if (DateMenu.IndicatorPad) {
@@ -264,46 +210,25 @@ var dtpPanel = Utils.defineClass({
             indicatorPad.clear_constraints();
         }
 
-        // The main panel's connection to the "allocate" signal is competing with this extension
-        // trying to move the centerBox over to the right, creating a never-ending cycle.
-        // Since we don't have the ID to disconnect that handler, wrap the allocate() function 
-        // it calls instead. If the call didn't originate from this file, ignore it.
-        panelBoxes.forEach(b => {
-            this[b].allocate = (box, flags, isFromZorinTaskbar) => {
-                if (isFromZorinTaskbar) {
-                    Utils.allocate(this[b], box, flags, true);
-                }
-            }
-        });
-
         this.menuManager._oldChangeMenu = this.menuManager._changeMenu;
         this.menuManager._changeMenu = (menu) => {
-            this.menuManager._oldChangeMenu(menu);
+            if (!Me.settings.get_boolean('stockgs-panelbtn-click-only')) {
+                this.menuManager._oldChangeMenu(menu);
+            }
         };
-
-        if (this.statusArea.appMenu) {
-            this._leftBox.remove_child(this.statusArea.appMenu.container);
-        }
 
         this.dynamicTransparency = new Transparency.DynamicTransparency(this);
         
-        this.taskbar = new Taskbar.taskbar(this);
+        this.taskbar = new Taskbar(this);
 
-        this.panel.actor.add_child(this.taskbar.actor);
+        this.panel.add_child(this.taskbar.actor);
 
         this._setAppmenuVisible(false);
         this._setShowDesktopButton(true);
         
         this._setAllocationMap();
 
-        this.panel.actor.add_style_class_name('zorintaskbarMainPanel ' + this.getOrientation());
-
-        // Since Gnome 3.8 dragging an app without having opened the overview before cause the attemp to
-        //animate a null target since some variables are not initialized when the viewSelector is created
-        if(Main.overview.viewSelector._activePage == null)
-            Main.overview.viewSelector._activePage = Main.overview.viewSelector._workspacesPage;
-
-        this._setPanelGhostSize();
+        this.panel.add_style_class_name('zorintaskbarMainPanel ' + this.getOrientation());
 
         this._timeoutsHandler.add([T2, Intellihide.INTELLIHIDE_ENABLE_START_DELAY, () => this.intellihide = new Intellihide.Intellihide(this)]);
 
@@ -318,7 +243,7 @@ var dtpPanel = Utils.defineClass({
                 // sync hover after a popupmenu is closed
                 this.taskbar,
                 'menu-closed', 
-                Lang.bind(this, function(){this.panel.actor.sync_hover();})
+                () => this.panel.sync_hover()
             ],
             [
                 Main.overview,
@@ -334,17 +259,17 @@ var dtpPanel = Utils.defineClass({
                 () => {
                     if (this.isPrimary) {
                         //reset the primary monitor when exiting the overview
-                        this.panelManager.setFocusedMonitor(this.monitor, true);
+                        this.panelManager.setFocusedMonitor(this.monitor);
                     }
                 }
             ],
             [
-                this.statusArea.activities.actor,
+                this.statusArea.activities,
                 'captured-event', 
                 (actor, e) => {
                     if (e.type() == Clutter.EventType.BUTTON_PRESS || e.type() == Clutter.EventType.TOUCH_BEGIN) {
                         //temporarily use as primary the monitor on which the activities btn was clicked 
-                        this.panelManager.setFocusedMonitor(this.monitor, true);
+                        this.panelManager.setFocusedMonitor(this.monitor);
                     }
                 }
             ],
@@ -380,8 +305,6 @@ var dtpPanel = Utils.defineClass({
                 }
             ]);
 
-            this._setSearchEntryOffset(this.geom.w);
-
             if (this.statusArea.dateMenu) {
                 this._formatVerticalClock();
                 
@@ -399,16 +322,15 @@ var dtpPanel = Utils.defineClass({
         this.set_offscreen_redirect(Clutter.OffscreenRedirect.ALWAYS);
 
         this._initProgressManager();
-    },
+    }
 
-    disable: function () {
+    disable() {
         this.panelStyle.disable();
 
         this._timeoutsHandler.destroy();
         this._signalsHandler.destroy();
-        this._disablePanelCornerSignals();
         
-        this.panel.actor.remove_child(this.taskbar.actor);
+        this.panel.remove_child(this.taskbar.actor);
         this._setAppmenuVisible(false);
 
         if (this.intellihide) {
@@ -424,71 +346,61 @@ var dtpPanel = Utils.defineClass({
 
         this.menuManager._changeMenu = this.menuManager._oldChangeMenu;
 
-        this._myPanelGhost.get_parent().remove_actor(this._myPanelGhost);
-        this._setSearchEntryOffset(0);
-        
-        panelBoxes.forEach(b => delete this[b].allocate);
         this._unmappedButtons.forEach(a => this._disconnectVisibleId(a));
 
-        if (this._dateMenuIndicatorPadContraints && this.statusArea.dateMenu) {
-            let indicatorPad = this.statusArea.dateMenu.get_first_child().get_first_child();
+        if (this.statusArea.dateMenu) {
+            this.statusArea.dateMenu._clockDisplay.text = this.statusArea.dateMenu._clock.clock;
+            this.statusArea.dateMenu._clockDisplay.clutter_text.set_width(-1);
 
-            this._dateMenuIndicatorPadContraints.forEach(c => indicatorPad.add_constraint(c));
+            if (this._dateMenuIndicatorPadContraints) {
+                let indicatorPad = this.statusArea.dateMenu.get_first_child().get_first_child();
+
+                this._dateMenuIndicatorPadContraints.forEach(c => indicatorPad.add_constraint(c));
+            }
         }
 
-        this._setVertical(this.panel.actor, false);
+        this._setVertical(this.panel, false);
+        this._setVertical(this._centerBox, false);
+        this._setVertical(this._rightBox, false);
+
+        let { name: systemMenuName } = Utils.getSystemMenuInfo();
 
         if (!this.isStandalone) {
-            this.statusArea.dateMenu._clockDisplay.text = this.statusArea.dateMenu._clock.clock;
-
-            ['vertical', 'horizontal', 'zorintaskbarMainPanel'].forEach(c => this.panel.actor.remove_style_class_name(c));
+            ['vertical', 'horizontal', 'zorintaskbarMainPanel'].forEach(c => this.panel.remove_style_class_name(c));
 
             if (!Main.sessionMode.isLocked) {
-                [['activities', 0], ['aggregateMenu', -1], ['dateMenu', 0]].forEach(b => {
+                [['activities', 0], [systemMenuName, -1], ['dateMenu', 0]].forEach(b => {
                     let container = this.statusArea[b[0]].container;
                     let originalParent = container._dtpOriginalParent;
     
-                    this.panel.actor.remove_child(container);
+                    this.panel.remove_child(container);
                     originalParent ? originalParent.insert_child_at_index(container, b[1]) : null;
                     delete container._dtpOriginalParent;
                 });
-
-                if (this.statusArea.appMenu) {
-                    this._leftBox.add_child(this.statusArea.appMenu.container);
-                }
-            }
-
-            if (!this.panel._leftCorner.actor.mapped) {
-                this.panel.actor.add_child(this.panel._leftCorner.actor);
-                this.panel.actor.add_child(this.panel._rightCorner.actor);
             }
 
             this._setShowDesktopButton(false);
 
-            delete Utils.getIndicators(this.statusArea.aggregateMenu._volume)._dtpIgnoreScroll;
+            delete Utils.getIndicators(this.statusArea[systemMenuName]._volume)._dtpIgnoreScroll;
 
             if (DateMenu.IndicatorPad) {
                 Utils.hookVfunc(DateMenu.IndicatorPad.prototype, 'get_preferred_width', DateMenu.IndicatorPad.prototype.vfunc_get_preferred_width);
                 Utils.hookVfunc(DateMenu.IndicatorPad.prototype, 'get_preferred_height', DateMenu.IndicatorPad.prototype.vfunc_get_preferred_height);
             }
 
-            if (this._panelConnectId) {
-                this.panel.actor.disconnect(this._panelConnectId);
-            } else {
-                Utils.hookVfunc(this.panel.__proto__, 'allocate', this.panel.__proto__.vfunc_allocate);
-            }
+            Utils.hookVfunc(Object.getPrototypeOf(this.panel), 'allocate', Object.getPrototypeOf(this.panel).vfunc_allocate);
             
-            this.panel.actor._delegate = this.panel;
+            this.panel._delegate = this.panel;
         } else {
             this._removePanelMenu('dateMenu');
-            this._removePanelMenu('aggregateMenu');
+            this._removePanelMenu(systemMenuName);
             this._removePanelMenu('activities');
         }
 
         Main.ctrlAltTabManager.removeGroup(this);
-    },
+    }
 
-    handleDragOver: function(source, actor, x, y, time) {
+    handleDragOver(source, actor, x, y, time) {
         if (source == Main.xdndHandler) {
             
             // open overview so they can choose a window for focusing
@@ -498,11 +410,10 @@ var dtpPanel = Utils.defineClass({
         }
         
         return DND.DragMotionResult.CONTINUE;
-    },
+    }
 
-    getPosition: function() {
-        //for now, use the previous "global" position setting as default. The 'panel-position' should be deleted in the future 
-        let position = this.panelManager.panelPositions[this.monitor.index] || Me.settings.get_string('panel-position');
+    getPosition() {
+        let position = PanelSettings.getPanelPosition(Me.settings, this.monitor.index);
 
         if (position == Pos.TOP) {
             return St.Side.TOP;
@@ -513,48 +424,28 @@ var dtpPanel = Utils.defineClass({
         }
         
         return St.Side.LEFT;
-    },
+    }
 
-    checkIfVertical: function() {
+    checkIfVertical() {
         let position = this.getPosition();
     
         return (position == St.Side.LEFT || position == St.Side.RIGHT);
-    },
+    }
     
-    getOrientation: function() {
+    getOrientation() {
         return (this.checkIfVertical() ? 'vertical' : 'horizontal');
-    },
+    }
 
-    updateElementPositions: function() {
+    updateElementPositions() {
         let panelPositions = this.panelManager.panelsElementPositions[this.monitor.index] || Pos.defaults;
 
         this._updateGroupedElements(panelPositions);
-        
-        this._disablePanelCornerSignals();
 
-        if (this.getPosition() == St.Side.TOP) {
-            let visibleElements = panelPositions.filter(pp => pp.visible);
-            let connectCorner = (corner, button) => {
-                corner._button = button;
-                corner._buttonStyleChangedSignalId = button.connect('style-changed', () => {
-                    corner.set_style_pseudo_class(button.get_style_pseudo_class());
-                });
-            }
+        this.panel.hide();
+        this.panel.show();
+    }
 
-            if (visibleElements[0].element == Pos.ACTIVITIES_BTN) {
-                connectCorner(this.panel._leftCorner, this.statusArea.activities);
-            }
-
-            if (visibleElements[visibleElements.length - 1].element == Pos.SYSTEM_MENU) {
-                connectCorner(this.panel._rightCorner, this.statusArea.aggregateMenu);
-            }
-        }
-
-        this.panel.actor.hide();
-        this.panel.actor.show();
-    },
-
-    _updateGroupedElements: function(panelPositions) {
+    _updateGroupedElements(panelPositions) {
         let previousPosition = 0;
         let previousCenteredPosition = 0;
         let currentGroup = -1;
@@ -602,28 +493,16 @@ var dtpPanel = Utils.defineClass({
                 previousPosition = currentPosition;
             }
         });
-    },
+    }
 
-    _disablePanelCornerSignals: function() {
-        if (this.panel._rightCorner && this.panel._rightCorner._buttonStyleChangedSignalId) {
-            this.panel._rightCorner._button.disconnect(this.panel._rightCorner._buttonStyleChangedSignalId);
-            delete this.panel._rightCorner._buttonStyleChangedSignalId;
-        }
-
-        if (this.panel._leftCorner && this.panel._leftCorner._buttonStyleChangedSignalId) {
-            this.panel._leftCorner._button.disconnect(this.panel._leftCorner._buttonStyleChangedSignalId);
-            delete this.panel._leftCorner._buttonStyleChangedSignalId;
-        }
-    },
-
-    _bindSettingsChanges: function() {
+    _bindSettingsChanges() {
         let isVertical = this.checkIfVertical();
-        
+
         this._signalsHandler.add(
             [
                 Me.settings,
                 [
-                    'changed::panel-size',
+                    'changed::panel-sizes',
                     'changed::group-apps'
                 ],
                 () => this._resetGeometry()
@@ -662,17 +541,17 @@ var dtpPanel = Utils.defineClass({
         if (isVertical) {
             this._signalsHandler.add([Me.settings, 'changed::group-apps-label-max-width', () => this._resetGeometry()]);
         }
-    },
+    }
 
-    _setPanelMenu: function(propName, constr, container) {
+    _setPanelMenu(propName, constr, container) {
         if (!this.statusArea[propName]) {
             this.statusArea[propName] = this._getPanelMenu(propName, constr);
             this.menuManager.addMenu(this.statusArea[propName].menu);
             container.insert_child_at_index(this.statusArea[propName].container, 0);
         }
-    },
+    }
     
-    _removePanelMenu: function(propName) {
+    _removePanelMenu(propName) {
         if (this.statusArea[propName]) {
             let parent = this.statusArea[propName].container.get_parent();
 
@@ -691,9 +570,9 @@ var dtpPanel = Utils.defineClass({
             Me.persistentStorage[propName].push(panelMenu);
             this.statusArea[propName] = null;
         }
-    },
+    }
 
-    _getPanelMenu: function(propName, constr) {
+    _getPanelMenu(propName, constr) {
         Me.persistentStorage[propName] = Me.persistentStorage[propName] || [];
 
         if (!Me.persistentStorage[propName].length) {
@@ -701,47 +580,23 @@ var dtpPanel = Utils.defineClass({
         }
 
         return Me.persistentStorage[propName].pop();
-    },
+    }
 
-    _setPanelGhostSize: function() {
-        this._myPanelGhost.set_size(this.width, this.checkIfVertical() ? 1 : this.height); 
-    },
-
-    _setSearchEntryOffset: function(offset) {
-        if (this.isPrimary) {
-            //In the overview, when the panel is vertical the search-entry is the only element
-            //that doesn't natively take into account the size of a side dock, as it is always
-            //centered relatively to the monitor. This looks misaligned, adjust it here so it 
-            //is centered like the rest of the overview elements.
-            let paddingSide = this.getPosition() == St.Side.LEFT ? 'left' : 'right';
-            let scaleFactor = Utils.getScaleFactor();
-            let style = offset ? 'padding-' + paddingSide + ':' + (offset / scaleFactor) + 'px;' : null;
-            let searchEntry = Main.overview._searchEntry || Main.overview._overview._searchEntry;
-            
-            searchEntry.get_parent().set_style(style);
-        }
-    },
-
-    _adjustForOverview: function() {
+    _adjustForOverview() {
         let isFocusedMonitor = this.panelManager.checkIfFocusedMonitor(this.monitor);
         let isOverview = !!Main.overview.visibleTarget;
         let isOverviewFocusedMonitor = isOverview && isFocusedMonitor;
         let isShown = !isOverview || isOverviewFocusedMonitor;
+        let actorData = Utils.getTrackedActorData(this.panelBox)
+
+        // prevent the "chrome" to update the panelbox visibility while in overview
+        actorData.trackFullscreen = !isOverview
 
         this.panelBox[isShown ? 'show' : 'hide']();
+    }
 
-        if (isOverview) {
-            this._myPanelGhost[isOverviewFocusedMonitor ? 'show' : 'hide']();
-
-            if (isOverviewFocusedMonitor) {
-                Utils.getPanelGhost().set_size(1, this.geom.position == St.Side.TOP ? 0 : 32);
-            }
-        }
-    },
-
-    _resetGeometry: function() {
+    _resetGeometry() {
         this.geom = this.getGeometry();
-        this._setPanelGhostSize();
         this._setPanelPosition();
         this.taskbar.resetAppIcons(true);
         this.dynamicTransparency.updateExternalStyle();
@@ -753,22 +608,29 @@ var dtpPanel = Utils.defineClass({
         if (this.checkIfVertical()) {
             this.showAppsIconWrapper.realShowAppsIcon.toggleButton.set_width(this.geom.w);
             this._refreshVerticalAlloc();
-            this._setSearchEntryOffset(this.geom.w);
         }
-    },
+    }
 
-    getGeometry: function() {
+    getGeometry() {
         let scaleFactor = Utils.getScaleFactor();
         let panelBoxTheme = this.panelBox.get_theme_node();
         let lrPadding = panelBoxTheme.get_padding(St.Side.RIGHT) + panelBoxTheme.get_padding(St.Side.LEFT);
         let topPadding = panelBoxTheme.get_padding(St.Side.TOP);
         let tbPadding = topPadding + panelBoxTheme.get_padding(St.Side.BOTTOM);
         let position = this.getPosition();
+        let length = PanelSettings.getPanelLength(Me.settings, this.monitor.index) / 100;
+        let anchor = PanelSettings.getPanelAnchor(Me.settings, this.monitor.index);
+        let anchorPlaceOnMonitor = 0;
         let gsTopPanelOffset = 0;
         let x = 0, y = 0;
         let w = 0, h = 0;
 
-        this.dtpSize = Me.settings.get_int('panel-size') * scaleFactor;
+        const panelSize = PanelSettings.getPanelSize(Me.settings, this.monitor.index);
+        this.dtpSize = panelSize * scaleFactor;
+
+        if (Me.settings.get_boolean('stockgs-keep-top-panel') && Main.layoutManager.primaryMonitor == this.monitor) {
+            gsTopPanelOffset = Main.layoutManager.panelBox.height - topPadding;
+        }
 
         if (this.checkIfVertical()) {
             if (!Me.settings.get_boolean('group-apps')) {
@@ -777,17 +639,17 @@ var dtpPanel = Utils.defineClass({
             }
 
             this.sizeFunc = 'get_preferred_height',
-            this.fixedCoord = { c1: 'x1', c2: 'x2' },
+            this.fixedCoord = { c1: 'x1', c2: 'x2' }
             this.varCoord = { c1: 'y1', c2: 'y2' };
 
             w = this.dtpSize;
-            h = this.monitor.height - tbPadding - gsTopPanelOffset;
+            h = this.monitor.height * length - tbPadding - gsTopPanelOffset;
         } else {
             this.sizeFunc = 'get_preferred_width';
             this.fixedCoord = { c1: 'y1', c2: 'y2' };
             this.varCoord = { c1: 'x1', c2: 'x2' };
 
-            w = this.monitor.width - lrPadding;
+            w = this.monitor.width * length - lrPadding;
             h = this.dtpSize;
         }
 
@@ -798,44 +660,74 @@ var dtpPanel = Utils.defineClass({
             x = this.monitor.x + this.monitor.width - this.dtpSize - lrPadding;
             y = this.monitor.y + gsTopPanelOffset;
         } else { //BOTTOM
-            x = this.monitor.x; 
+            x = this.monitor.x;
             y = this.monitor.y + this.monitor.height - this.dtpSize - tbPadding;
         }
 
-        return {
-            x: x, y: y, 
-            w: w, h: h,
-            lrPadding: lrPadding,
-            tbPadding: tbPadding,
-            position: position
-        };
-    },
+        if (this.checkIfVertical()) {
+            let viewHeight = this.monitor.height - gsTopPanelOffset;
+            
+            if (anchor === Pos.MIDDLE) {
+                anchorPlaceOnMonitor = (viewHeight - h) / 2;
+            } else if (anchor === Pos.END) {
+                anchorPlaceOnMonitor = viewHeight - h;
+            } else { // Pos.START
+                anchorPlaceOnMonitor = 0;
+            }
+            y = y + anchorPlaceOnMonitor;
+        } else {
+            if (anchor === Pos.MIDDLE) {
+                anchorPlaceOnMonitor = (this.monitor.width - w) / 2;
+            } else if (anchor === Pos.END) {
+                anchorPlaceOnMonitor = this.monitor.width - w;
+            } else { // Pos.START
+                anchorPlaceOnMonitor = 0;
+            }
+            x = x + anchorPlaceOnMonitor;
+        }
 
-    _setAllocationMap: function() {
+        if (Me.settings.get_boolean('intellihide') &&
+            Me.settings.get_boolean('intellihide-floating-rounded-theme')) {
+            if (position == St.Side.BOTTOM || position == St.Side.TOP) {
+                x -= FLOATING_MARGIN;
+            } else { // LEFT or RIGHT
+                y -= FLOATING_MARGIN;
+            }
+        }
+
+        return {
+            x, y, 
+            w, h,
+            lrPadding,
+            tbPadding,
+            position
+        };
+    }
+
+    _setAllocationMap() {
         this.allocationMap = {};
-        let setMap = (name, actor, isBox) => this.allocationMap[name] = { 
+        let setMap = (name, actor) => this.allocationMap[name] = { 
             actor: actor,
-            isBox: isBox || 0,
             box: new Clutter.ActorBox() 
         };
         
         setMap(Pos.SHOW_APPS_BTN, this.showAppsIconWrapper.realShowAppsIcon);
         setMap(Pos.ACTIVITIES_BTN, this.statusArea.activities ? this.statusArea.activities.container : 0);
-        setMap(Pos.LEFT_BOX, this._leftBox, 1);
+        setMap(Pos.LEFT_BOX, this._leftBox);
         setMap(Pos.TASKBAR, this.taskbar.actor);
-        setMap(Pos.CENTER_BOX, this._centerBox, 1);
+        setMap(Pos.CENTER_BOX, this._centerBox);
         setMap(Pos.DATE_MENU, this.statusArea.dateMenu.container);
-        setMap(Pos.SYSTEM_MENU, this.statusArea.aggregateMenu.container);
-        setMap(Pos.RIGHT_BOX, this._rightBox, 1);
+        setMap(Pos.SYSTEM_MENU, this.statusArea[Utils.getSystemMenuInfo().name].container);
+        setMap(Pos.RIGHT_BOX, this._rightBox);
         setMap(Pos.DESKTOP_BTN, this._showDesktopButton);
-    },
+    }
 
-    _mainPanelAllocate: function(actor, box, flags) {
-        Utils.setAllocation(this.panel.actor, box, flags);
-    },
+    _mainPanelAllocate(box) {
+        this.panel.set_allocation(box);
+    }
 
-    vfunc_allocate: function(box, flags) {
-        Utils.setAllocation(this, box, flags);
+    vfunc_allocate(box) {
+        this.set_allocation(box);
 
         let fixed = 0;
         let centeredMonitorGroup;
@@ -854,7 +746,7 @@ var dtpPanel = Utils.defineClass({
 
                 if (!group.isCentered || Pos.checkIfCentered(element.position)) {
                     group.size += element.natSize;
-                } else if (element.position == Pos.STACKED_TL) { 
+                } else if (element.position == Pos.STACKED_TL) {
                     group.tlOffset += element.natSize;
                 } else { // Pos.STACKED_BR
                     group.brOffset += element.natSize;
@@ -908,7 +800,7 @@ var dtpPanel = Utils.defineClass({
                 }
             }
             
-            if (group.isCentered) {
+            if (group.isCentered) {
                 startPosition = tlLimit + (brLimit - tlLimit - group.size) * .5;
             } else if (group.position == Pos.STACKED_BR) {
                 startPosition = brLimit - group.size;
@@ -920,11 +812,7 @@ var dtpPanel = Utils.defineClass({
                 element.box[this.varCoord.c1] = Math.round(currentPosition);
                 element.box[this.varCoord.c2] = Math.round((currentPosition += element.natSize));
 
-                if (element.isBox) {
-                    return element.actor.allocate(element.box, flags, true);
-                } 
-
-                Utils.allocate(element.actor, element.box, flags, false);
+                element.actor.allocate(element.box);
             });
 
             group[this.varCoord.c1] = startPosition;
@@ -933,7 +821,7 @@ var dtpPanel = Utils.defineClass({
             ++fixed;
         };
 
-        Utils.allocate(this.panel.actor, panelAlloc, flags);
+        this.panel.allocate(panelAlloc);
 
         this._elementGroups.forEach(group => {
             group.fixed = 0;
@@ -974,72 +862,46 @@ var dtpPanel = Utils.defineClass({
                 }
             }
         }
+    }
 
-        if (this.geom.position == St.Side.TOP) {
-            let childBoxLeftCorner = new Clutter.ActorBox();
-            let childBoxRightCorner = new Clutter.ActorBox();
-            let currentCornerSize = this.cornerSize;
-            let panelAllocFixedSize = box[this.fixedCoord.c2] - box[this.fixedCoord.c1];
-            
-            [ , this.cornerSize] = this.panel._leftCorner.actor[this.sizeFunc](-1);
-            childBoxLeftCorner[this.varCoord.c1] = 0;
-            childBoxLeftCorner[this.varCoord.c2] = this.cornerSize;
-            childBoxLeftCorner[this.fixedCoord.c1] = panelAllocFixedSize;
-            childBoxLeftCorner[this.fixedCoord.c2] = panelAllocFixedSize + this.cornerSize;
-
-            childBoxRightCorner[this.varCoord.c1] = box[this.varCoord.c2] - this.cornerSize;
-            childBoxRightCorner[this.varCoord.c2] = box[this.varCoord.c2];
-            childBoxRightCorner[this.fixedCoord.c1] = panelAllocFixedSize;
-            childBoxRightCorner[this.fixedCoord.c2] = panelAllocFixedSize + this.cornerSize;
-
-            Utils.allocate(this.panel._leftCorner.actor, childBoxLeftCorner, flags);
-            Utils.allocate(this.panel._rightCorner.actor, childBoxRightCorner, flags);
-
-            if (this.cornerSize != currentCornerSize) {
-                this._setPanelClip();
-            }
-        }
-    },
-
-    _setPanelPosition: function() {
+    _setPanelPosition() {
         let clipContainer = this.panelBox.get_parent();
 
         this.set_size(this.geom.w, this.geom.h);
         clipContainer.set_position(this.geom.x, this.geom.y);
 
-        this._setVertical(this.panel.actor, this.checkIfVertical());
+        this._setVertical(this.panel, this.checkIfVertical());
 
         // styles for theming
         Object.keys(St.Side).forEach(p => {
             let cssName = 'zorintaskbar' + p.charAt(0) + p.slice(1).toLowerCase();
             
-            this.panel.actor[(St.Side[p] == this.geom.position ? 'add' : 'remove') + '_style_class_name'](cssName);
+            this.panel[(St.Side[p] == this.geom.position ? 'add' : 'remove') + '_style_class_name'](cssName);
         });
 
         this._setPanelClip(clipContainer);
 
         Main.layoutManager._updateHotCorners();
         Main.layoutManager._updatePanelBarrier(this);
-    },
+    }
 
-    _setPanelClip: function(clipContainer) {
+    _setPanelClip(clipContainer) {
         clipContainer = clipContainer || this.panelBox.get_parent();
-        this._timeoutsHandler.add([T6, 0, () => Utils.setClip(clipContainer, clipContainer.x, clipContainer.y, this.panelBox.width, this.panelBox.height + this.cornerSize)]);
-    },
+        this._timeoutsHandler.add([T6, 0, () => Utils.setClip(clipContainer, clipContainer.x, clipContainer.y, this.panelBox.width, this.panelBox.height)]);
+    }
 
-    _onButtonPress: function(actor, event) {
+    _onButtonPress(actor, event) {
         let type = event.type();
         let isPress = type == Clutter.EventType.BUTTON_PRESS;
         let button = isPress ? event.get_button() : -1;
         let [stageX, stageY] = event.get_coords();
 
-        if (button == 3 && global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE, stageX, stageY) == this.panel.actor) {
+        if (button == 3 && global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE, stageX, stageY) == this.panel) {
             //right click on an empty part of the panel, temporarily borrow and display the showapps context menu
             Main.layoutManager.setDummyCursorGeometry(stageX, stageY, 0, 0);
 
             this.showAppsIconWrapper.createMenu();
-            this.showAppsIconWrapper._menu.sourceActor = Main.layoutManager.dummyCursor;
-            this.showAppsIconWrapper.popupMenu();
+            this.showAppsIconWrapper.popupMenu(Main.layoutManager.dummyCursor);
 
             return Clutter.EVENT_STOP;
         } else if (Main.modalCount > 0 || event.get_source() != actor || 
@@ -1064,9 +926,9 @@ var dtpPanel = Utils.defineClass({
                                      stageX, stageY);
 
         return Clutter.EVENT_STOP;
-    },
+    }
 
-    _getDraggableWindowForPosition: function(stageCoord, coord, dimension, maximizedProp) {
+    _getDraggableWindowForPosition(stageCoord, coord, dimension, maximizedProp) {
         let workspace = Utils.getCurrentWorkspace();
         let allWindowsByStacking = global.display.sort_windows_by_stacking(
             workspace.list_windows()
@@ -1081,23 +943,23 @@ var dtpPanel = Utils.defineClass({
                    metaWindow[maximizedProp] &&
                    stageCoord > rect[coord] && stageCoord < rect[coord] + rect[dimension];
         });
-    },
+    }
 
-    _onBoxActorAdded: function(box) {
+    _onBoxActorAdded(box) {
         if (this.checkIfVertical()) {
             this._setVertical(box, true);
         }
-    },
+    }
 
-    _refreshVerticalAlloc: function() {
+    _refreshVerticalAlloc() {
         this._setVertical(this._centerBox, true);
         this._setVertical(this._rightBox, true);
         this._formatVerticalClock();
-    },
+    }
 
-    _setVertical: function(actor, isVertical) {
+    _setVertical(actor, isVertical) {
         let _set = (actor, isVertical) => {
-            if (!actor || actor instanceof Dash.DashItemContainer) {
+            if (!actor || actor instanceof Dash.DashItemContainer || actor instanceof TaskbarItemContainer) {
                 return;
             }
 
@@ -1129,10 +991,12 @@ var dtpPanel = Utils.defineClass({
         };
 
         _set(actor, false);
-        _set(actor, isVertical);
-    },
+        
+        if (isVertical)
+            _set(actor, isVertical);
+    }
 
-    _disconnectVisibleId: function(actor) {
+    _disconnectVisibleId(actor) {
         actor.disconnect(actor._dtpVisibleId);
         actor.disconnect(actor._dtpDestroyId);
 
@@ -1140,9 +1004,9 @@ var dtpPanel = Utils.defineClass({
         delete actor._dtpDestroyId;
         
         this._unmappedButtons.splice(this._unmappedButtons.indexOf(actor), 1);
-    },
+    }
 
-    _setAppmenuVisible: function(isVisible) {
+    _setAppmenuVisible(isVisible) {
         let parent;
         let appMenu = this.statusArea.appMenu;
 
@@ -1156,18 +1020,18 @@ var dtpPanel = Utils.defineClass({
         if (isVisible && appMenu) {
             this._leftBox.insert_child_above(appMenu.container, null);
         }
-    },
+    }
 
-    _formatVerticalClock: function() {
+    _formatVerticalClock() {
         // https://github.com/GNOME/gnome-desktop/blob/master/libgnome-desktop/gnome-wall-clock.c#L310
         if (this.statusArea.dateMenu) {
             let datetime = this.statusArea.dateMenu._clock.clock;
             let datetimeParts = datetime.split(' ');
             let time = datetimeParts[1];
             let clockText = this.statusArea.dateMenu._clockDisplay.clutter_text;
-            let setClockText = text => {
+            let setClockText = (text, useTimeSeparator) => {
                 let stacks = text instanceof Array;
-                let separator = '\n<span size="xx-small">‧‧</span>\n';
+                let separator = `\n<span size="8192"> ${useTimeSeparator ? '‧‧' : '—' } </span>\n`;
         
                 clockText.set_text((stacks ? text.join(separator) : text).trim());
                 clockText.set_use_markup(stacks);
@@ -1180,6 +1044,8 @@ var dtpPanel = Utils.defineClass({
                 //on gnome-shell 3.36.4, the clockdisplay isn't ellipsize anymore, so set it back 
                 clockText.ellipsize = Pango.EllipsizeMode.END;
             }
+
+            clockText.natural_width = this.dtpSize;
 
             if (!time) {
                 datetimeParts = datetime.split(' ');
@@ -1200,23 +1066,23 @@ var dtpPanel = Utils.defineClass({
                     timeParts.push.apply(timeParts, timeParts.pop().split(' '));
                 }
 
-                setClockText(timeParts);
+                setClockText(timeParts, true);
             }
         }
-    },
+    }
 
-    _setShowDesktopButton: function (add) {
+    _setShowDesktopButton(add) {
         if (add) {
             if(this._showDesktopButton)
                 return;
-                
+
             this._showDesktopButton = new St.Bin({ style_class: 'panel-button',
                             reactive: true,
                             can_focus: true,
                             // x_fill: true,
                             // y_fill: true,
                             track_hover: true });
-                            
+
             this._showDesktopButton.icon = new St.Icon({ gicon: Gio.icon_new_for_string(SHOW_DESKTOP_ICON), style_class: 'system-status-icon' });
 
             this._setShowDesktopButtonStyle();
@@ -1238,21 +1104,21 @@ var dtpPanel = Utils.defineClass({
                     } else if (this._hiddenDesktopWorkspace) {
                         this._toggleWorkspaceWindows(false, this._hiddenDesktopWorkspace);
                     }
-                 }
+                }
             });
 
-            this.panel.actor.add_child(this._showDesktopButton);
+            this.panel.add_child(this._showDesktopButton);
         } else {
             if(!this._showDesktopButton)
                 return;
 
-            this.panel.actor.remove_child(this._showDesktopButton);
+            this.panel.remove_child(this._showDesktopButton);
             this._showDesktopButton.destroy();
             this._showDesktopButton = null;
         }
-    },
+    }
 
-    _setShowDesktopButtonStyle: function() {
+    _setShowDesktopButtonStyle() {
         let rgb = this._getBackgroundBrightness() ? "rgba(55, 55, 55, .2)" : "rgba(200, 200, 200, .2)";
                
         for (let i = 0; i < this._showDesktopButton.get_children().length; i++) {
@@ -1281,30 +1147,30 @@ var dtpPanel = Utils.defineClass({
                 this._showDesktopButton[(isVertical ? 'x' : 'y') + '_expand'] = true;
             }
         }
-    },
+    }
 
     // _getBackgroundBrightness: return true if panel has a bright background color
-    _getBackgroundBrightness: function() {
+    _getBackgroundBrightness() {
         return Utils.checkIfColorIsBright(this.dynamicTransparency.backgroundColorRgb);
-    },
+    }
 
-    _toggleWorkspaceWindows: function(hide, workspace) {
+    _toggleWorkspaceWindows(hide, workspace) {
         let time = SHOW_SHOWDESKTOP_TIME * .001;
 
         workspace.list_windows().forEach(w => {
-            if (!w.minimized) {
+            if (!w.minimized && !w.customJS_ding && w.window_type != Meta.WindowType.DESKTOP) {
                 let tweenOpts = {
                     opacity: hide ? 0 : 255,
                     time: time,
                     transition: 'easeOutQuad'
                 };
-
+                
                 Utils.animateWindowOpacity(w.get_compositor_private(), tweenOpts);
             }
         });
-    },
+    }
 
-    _onShowDesktopButtonPress: function() {
+    _onShowDesktopButtonPress() {
         let label = 'trackerFocusApp';
 
         this._signalsHandler.removeWithLabel(label);
@@ -1344,103 +1210,28 @@ var dtpPanel = Utils.defineClass({
         }
 
         Main.overview.hide();
-    },
+    }
 
-    _initProgressManager: function() {
-        if(!this.progressManager && (Me.settings.get_boolean('progress-show-bar') || Me.settings.get_boolean('progress-show-count')))
+    _initProgressManager() {
+        const progressVisible = Me.settings.get_boolean('progress-show-bar');
+        const countVisible = Me.settings.get_boolean('progress-show-count');
+        const pm = this.progressManager;
+
+        if(!pm && (progressVisible || countVisible))
             this.progressManager = new Progress.ProgressManager();
-    },
-});
-
-var dtpSecondaryPanel = Utils.defineClass({
-    Name: 'ZorinTaskbar-SecondaryPanel',
-    Extends: St.Widget,
-
-    _init: function(params) {
-        this.callParent('_init', params);
-    },
-
-    vfunc_allocate: function(box, flags) {
-        Utils.setAllocation(this, box, flags);
+        else if (pm)
+            Object.keys(pm._entriesByDBusName).forEach((k) => pm._entriesByDBusName[k].setCountVisible(countVisible));
     }
 });
 
-var dtpSecondaryAggregateMenu = Utils.defineClass({
-    Name: 'ZorinTaskbar-SecondaryAggregateMenu',
-    Extends: PanelMenu.Button,
+var SecondaryPanel = GObject.registerClass({
+}, class SecondaryPanel extends St.Widget {
 
-    _init: function() {
-        this.callParent('_init', 0.0, C_("System menu in the top bar", "System"), false);
+    _init(params) {
+        super._init(params);
+    }
 
-        Utils.wrapActor(this);
-
-        this.menu.actor.add_style_class_name('aggregate-menu');
-
-        let menuLayout = new Panel.AggregateLayout();
-        this.menu.box.set_layout_manager(menuLayout);
-
-        this._indicators = new St.BoxLayout({ style_class: 'panel-status-indicators-box' });
-        this.actor.add_child(this._indicators);
-
-        this._power = new imports.ui.status.power.Indicator();
-        this._volume = new imports.ui.status.volume.Indicator();
-        this._brightness = new imports.ui.status.brightness.Indicator();
-        this._system = new imports.ui.status.system.Indicator();
-        
-        if (Config.PACKAGE_VERSION >= '3.28') {
-            this._thunderbolt = new imports.ui.status.thunderbolt.Indicator();
-            this._indicators.add_child(Utils.getIndicators(this._thunderbolt));
-        }
-
-        if (Config.PACKAGE_VERSION < '3.37') {
-            this._screencast = new imports.ui.status.screencast.Indicator();
-            this._indicators.add_child(Utils.getIndicators(this._screencast));
-        }
-        
-        if (Config.PACKAGE_VERSION >= '3.24') {
-            this._nightLight = new imports.ui.status.nightLight.Indicator();
-            this._indicators.add_child(Utils.getIndicators(this._nightLight));
-        }
-
-        if (Config.HAVE_NETWORKMANAGER && Config.PACKAGE_VERSION >= '3.24') {
-            this._network = new imports.ui.status.network.NMApplet();
-            this._indicators.add_child(Utils.getIndicators(this._network));
-        }
-
-        if (Config.HAVE_BLUETOOTH) {
-            this._bluetooth = new imports.ui.status.bluetooth.Indicator();
-            this._indicators.add_child(Utils.getIndicators(this._bluetooth));
-        }
-
-        this._indicators.add_child(Utils.getIndicators(this._volume));
-        this._indicators.add_child(Utils.getIndicators(this._power));
-
-        this.menu.addMenuItem(this._volume.menu);
-        this._volume._volumeMenu._readOutput();
-        this._volume._volumeMenu._readInput();
-        
-        this.menu.addMenuItem(this._brightness.menu);
-        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-
-        if (this._network) {
-            this.menu.addMenuItem(this._network.menu);
-        }
-
-        if (this._bluetooth) {
-            this.menu.addMenuItem(this._bluetooth.menu);
-        }
-        
-        this.menu.addMenuItem(this._power.menu);
-        this._power._sync();
-
-        if (this._nightLight) {
-            this.menu.addMenuItem(this._nightLight.menu);
-        }
-
-        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        this.menu.addMenuItem(this._system.menu);
-
-        menuLayout.addSizeChild(this._power.menu.actor);
-        menuLayout.addSizeChild(this._system.menu.actor);
-    },
+    vfunc_allocate(box) {
+        this.set_allocation(box);
+    }
 });

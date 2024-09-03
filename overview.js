@@ -25,7 +25,6 @@ const Intellihide = Me.imports.intellihide;
 const Utils = Me.imports.utils;
 
 const Clutter = imports.gi.Clutter;
-const Lang = imports.lang;
 const Main = imports.ui.main;
 const Shell = imports.gi.Shell;
 const Gtk = imports.gi.Gtk;
@@ -33,7 +32,10 @@ const Gdk = imports.gi.Gdk;
 const Gio = imports.gi.Gio;
 const Mainloop = imports.mainloop;
 const IconGrid = imports.ui.iconGrid;
-const ViewSelector = imports.ui.viewSelector;
+const { OverviewActor } = imports.ui.overview;
+const Workspace = imports.ui.workspace;
+const St = imports.gi.St;
+const WorkspaceThumbnail = imports.ui.workspaceThumbnail;
 
 const Meta = imports.gi.Meta;
 
@@ -41,87 +43,115 @@ const GS_HOTKEYS_KEY = 'switch-to-application-';
 const OVERLAY_TIMEOUT = 750;
 const SHORTCUT_TIMEOUT = 2000;
 
+// When the dash is shown, workspace window preview bottom labels go over it (default
+// gnome-shell behavior), but when the extension hides the dash, leave some space
+// so those labels don't go over a bottom panel
+const LABEL_MARGIN = 60;
+
 //timeout names
 const T1 = 'swipeEndTimeout';
+const T2 = 'numberOverlayTimeout';
 
-var dtpOverview = Utils.defineClass({
-    Name: 'ZorinTaskbar.Overview',
+var Overview = class {
 
-    _init: function() {
+    constructor() {
         this._numHotkeys = 10;
-        this._timeoutsHandler = new Utils.TimeoutsHandler();
-    },
+    }
 
-    enable : function(panel) {
-        this._panel = panel;
-        this.taskbar = panel.taskbar;
+    enable (primaryPanel) {
+        this._panel = primaryPanel;
+        this.taskbar = primaryPanel.taskbar;
 
         this._injectionsHandler = new Utils.InjectionsHandler();
         this._signalsHandler = new Utils.GlobalSignalsHandler();
+        this._timeoutsHandler = new Utils.TimeoutsHandler();
 
         this._optionalWorkspaceIsolation();
         this._optionalHotKeys();
         this._optionalNumberOverlay();
-        this._toggleDash();
-    },
 
-    disable: function () {
+        this._toggleDash();
+        this._adaptAlloc(true);
+
+        this._signalsHandler.add([
+            Me.settings,
+            [
+                'changed::panel-sizes'
+            ], 
+            () => this._toggleDash()
+        ]);
+    }
+
+    disable() {
         this._signalsHandler.destroy();
         this._injectionsHandler.destroy();
-        
+        this._timeoutsHandler.destroy();
+
         this._toggleDash(true);
+        this._adaptAlloc();
 
         // Remove key bindings
         this._disableHotKeys();
         this._disableExtraShortcut();
-    },
+    }
 
-    _toggleDash: function(visible) {
-        // To hide the dash, set its width to 1, so it's almost not taken into account by code
-        // calculaing the reserved space in the overview. The reason to keep it at 1 is
-        // to allow its visibility change to trigger an allocaion of the appGrid which
-        // in turn is triggergin the appsIcon spring animation, required when no other
-        // actors has this effect, i.e in horizontal mode and without the workspaceThumnails
-        // 1 static workspace only)
-
+    _toggleDash(visible) {
         if (visible === undefined) {
             visible = false;
         }
 
         let visibilityFunc = visible ? 'show' : 'hide';
-        let width = visible ? -1 : 1;
-        let overviewControls = Main.overview._overview._controls || Main.overview._controls;
+        let height = visible ? -1 : LABEL_MARGIN * Utils.getScaleFactor();
+        let overviewControls = Main.overview._overview._controls;
 
-        overviewControls.dash.actor[visibilityFunc]();
-        overviewControls.dash.actor.set_width(width);
+        overviewControls.dash[visibilityFunc]();
+        overviewControls.dash.set_height(height);
+    }
 
-        // This force the recalculation of the icon size
-        overviewControls.dash._maxHeight = -1;
-    },
+    _adaptAlloc(enable) {
+        let overviewControls = Main.overview._overview._controls
+        let proto = Object.getPrototypeOf(overviewControls)
+        let allocFunc = null
+
+        if (enable)
+            allocFunc = (box) => {
+                let focusedPanel = this._panel.panelManager.focusedMonitorPanel
+                
+                if (focusedPanel) {
+                    let position = focusedPanel.geom.position
+                    let isBottom = position == St.Side.BOTTOM
+
+                    if (focusedPanel.intellihide?.enabled) {
+                        // Panel intellihide is enabled (struts aren't taken into account on overview allocation),
+                        // dynamically modify the overview box to follow the reveal/hide animation
+                        let { transitioning, finalState, progress } = overviewControls._stateAdjustment.getStateTransitionParams()
+                        let size = focusedPanel.geom[focusedPanel.checkIfVertical() ? 'w' : 'h'] * 
+                                   (transitioning ? Math.abs((finalState != 0 ? 0 : 1) - progress) : 1)
+
+                        if (isBottom || position == St.Side.RIGHT)
+                            box[focusedPanel.fixedCoord.c2] -= size
+                        else
+                            box[focusedPanel.fixedCoord.c1] += size
+                    } else if (isBottom)
+                        // The default overview allocation is very good and takes into account external 
+                        // struts, everywhere but the bottom where the dash is usually fixed anyway.
+                        // If there is a bottom panel under the dash location, give it some space here
+                        box.y2 -= focusedPanel.geom.h
+                }
+                
+                proto.vfunc_allocate.call(overviewControls, box)
+            }
+
+        Utils.hookVfunc(proto, 'allocate', allocFunc)
+    }
 
     /**
      * Isolate overview to open new windows for inactive apps
      */
-    _optionalWorkspaceIsolation: function() {
+    _optionalWorkspaceIsolation() {
         let label = 'optionalWorkspaceIsolation';
         
-        this._signalsHandler.add([
-            Me.settings,
-            'changed::isolate-workspaces',
-            Lang.bind(this, function() {
-                this._panel.panelManager.allPanels.forEach(p => p.taskbar.resetAppIcons());
-
-                if (Me.settings.get_boolean('isolate-workspaces'))
-                    Lang.bind(this, enable)();
-                else
-                    Lang.bind(this, disable)();
-            })
-        ]);
-
-        if (Me.settings.get_boolean('isolate-workspaces'))
-            Lang.bind(this, enable)();
-
-        function enable() {
+        let enable = () => {
             this._injectionsHandler.removeWithLabel(label);
 
             this._injectionsHandler.addWithLabel(label, [
@@ -139,7 +169,7 @@ var dtpOverview = Utils.defineClass({
             ]);
         }
 
-        function disable() {
+        let disable = () => {
             this._signalsHandler.removeWithLabel(label);
             this._injectionsHandler.removeWithLabel(label);
         }
@@ -156,15 +186,31 @@ var dtpOverview = Utils.defineClass({
             
             return this.open_new_window(-1);
         }
-    },
+
+        this._signalsHandler.add([
+            Me.settings,
+            'changed::isolate-workspaces',
+            () => {
+                this._panel.panelManager.allPanels.forEach(p => p.taskbar.resetAppIcons());
+
+                if (Me.settings.get_boolean('isolate-workspaces'))
+                    enable();
+                else
+                    disable();
+            }
+        ]);
+
+        if (Me.settings.get_boolean('isolate-workspaces'))
+            enable();
+    }
 
     // Hotkeys
-    _activateApp: function(appIndex) {
+    _activateApp(appIndex, modifiers) {
         let seenApps = {};
         let apps = [];
         
-        this.taskbar._getAppIcons().forEach(function(appIcon) {
-            if (!seenApps[appIcon.app]) {
+        this.taskbar._getAppIcons().forEach(appIcon => {
+            if (!seenApps[appIcon.app] || this.taskbar.allowSplitApps) {
                 apps.push(appIcon);
             }
 
@@ -179,7 +225,7 @@ var dtpOverview = Utils.defineClass({
             let windowCount = appIcon.window || appIcon._hotkeysCycle ? seenAppCount : appIcon._nWindows;
 
             if (Me.settings.get_boolean('shortcut-previews') && windowCount > 1 && 
-                !(Clutter.get_current_event().get_state() & ~(Clutter.ModifierType.MOD1_MASK | Clutter.ModifierType.MOD4_MASK))) { //ignore the alt (MOD1_MASK) and super key (MOD4_MASK)
+                !(modifiers & ~(Clutter.ModifierType.MOD1_MASK | Clutter.ModifierType.SUPER_MASK))) { //ignore the alt (MOD1_MASK) and super key (SUPER_MASK)
                 if (this._hotkeyPreviewCycleInfo && this._hotkeyPreviewCycleInfo.appIcon != appIcon) {
                     this._endHotkeyPreviewCycle();
                 }
@@ -188,7 +234,7 @@ var dtpOverview = Utils.defineClass({
                     this._hotkeyPreviewCycleInfo = {
                         appIcon: appIcon,
                         currentWindow: appIcon.window,
-                        keyFocusOutId: appIcon.actor.connect('key-focus-out', () => appIcon.actor.grab_key_focus()),
+                        keyFocusOutId: appIcon.connect('key-focus-out', () => appIcon.grab_key_focus()),
                         capturedEventId: global.stage.connect('captured-event', (actor, e) => {
                             if (e.type() == Clutter.EventType.KEY_RELEASE && e.get_key_symbol() == (Clutter.KEY_Super_L || Clutter.Super_L)) {
                                 this._endHotkeyPreviewCycle(true);
@@ -200,8 +246,8 @@ var dtpOverview = Utils.defineClass({
 
                     appIcon._hotkeysCycle = appIcon.window;
                     appIcon.window = null;
-                    appIcon._previewMenu.open(appIcon);
-                    appIcon.actor.grab_key_focus();
+                    appIcon._previewMenu.open(appIcon, true);
+                    appIcon.grab_key_focus();
                 }
                 
                 appIcon._previewMenu.focusNext();
@@ -209,27 +255,28 @@ var dtpOverview = Utils.defineClass({
                 // Activate with button = 1, i.e. same as left click
                 let button = 1;
                 this._endHotkeyPreviewCycle();
-                appIcon.activate(button, true);
+                appIcon.activate(button, modifiers, !this.taskbar.allowSplitApps);
             }
         }
-    },
+    }
 
-    _endHotkeyPreviewCycle: function(focusWindow) {
+    _endHotkeyPreviewCycle(focusWindow) {
         if (this._hotkeyPreviewCycleInfo) {
             global.stage.disconnect(this._hotkeyPreviewCycleInfo.capturedEventId);
-            this._hotkeyPreviewCycleInfo.appIcon.actor.disconnect(this._hotkeyPreviewCycleInfo.keyFocusOutId);
+            this._hotkeyPreviewCycleInfo.appIcon.disconnect(this._hotkeyPreviewCycleInfo.keyFocusOutId);
 
             if (focusWindow) {
                 this._hotkeyPreviewCycleInfo.appIcon._previewMenu.activateFocused();
-            }
+            } else
+                this._hotkeyPreviewCycleInfo.appIcon._previewMenu.close()
 
             this._hotkeyPreviewCycleInfo.appIcon.window = this._hotkeyPreviewCycleInfo.currentWindow;
             delete this._hotkeyPreviewCycleInfo.appIcon._hotkeysCycle;
             this._hotkeyPreviewCycleInfo = 0;
         }
-    },
+    }
 
-    _optionalHotKeys: function() {
+    _optionalHotKeys() {
         this._hotKeysEnabled = false;
         if (Me.settings.get_boolean('hot-keys'))
             this._enableHotKeys();
@@ -237,21 +284,21 @@ var dtpOverview = Utils.defineClass({
         this._signalsHandler.add([
             Me.settings,
             'changed::hot-keys',
-            Lang.bind(this, function() {
-                    if (Me.settings.get_boolean('hot-keys'))
-                        Lang.bind(this, this._enableHotKeys)();
-                    else
-                        Lang.bind(this, this._disableHotKeys)();
-            })
+            () => {
+                if (Me.settings.get_boolean('hot-keys'))
+                    this._enableHotKeys();
+                else
+                    this._disableHotKeys();
+            }
         ]);
-    },
+    }
 
-    _resetHotkeys: function() {
+    _resetHotkeys() {
         this._disableHotKeys();
         this._enableHotKeys();
-    },
+    }
 
-    _enableHotKeys: function() {
+    _enableHotKeys() {
         if (this._hotKeysEnabled)
             return;
 
@@ -266,6 +313,10 @@ var dtpOverview = Utils.defineClass({
         let shortcutNumKeys = Me.settings.get_string('shortcut-num-keys');
         let bothNumKeys = shortcutNumKeys == 'BOTH';
         let keys = [];
+        let prefixModifiers = Clutter.ModifierType.SUPER_MASK
+
+        if (Me.settings.get_string('hotkey-prefix-text') == 'SuperAlt')
+            prefixModifiers |= Clutter.ModifierType.MOD1_MASK
         
         if (bothNumKeys || shortcutNumKeys == 'NUM_ROW') {
             keys.push('app-hotkey-', 'app-shift-hotkey-', 'app-ctrl-hotkey-'); // Regular numbers
@@ -276,10 +327,17 @@ var dtpOverview = Utils.defineClass({
         }
 
         keys.forEach( function(key) {
+            let modifiers = prefixModifiers
+            
+            // for some reason, in gnome-shell >= 40 Clutter.get_current_event() is now empty
+            // for keyboard events. Create here the modifiers that are needed in appicon.activate 
+            modifiers |= (key.indexOf('-shift-') >= 0 ? Clutter.ModifierType.SHIFT_MASK : 0)
+            modifiers |= (key.indexOf('-ctrl-') >= 0 ? Clutter.ModifierType.CONTROL_MASK : 0)
+
             for (let i = 0; i < this._numHotkeys; i++) {
                 let appNum = i;
 
-                Utils.addKeybinding(key + (i + 1), Me.settings, () => this._activateApp(appNum));
+                Utils.addKeybinding(key + (i + 1), Me.settings, () => this._activateApp(appNum, modifiers));
             }
         }, this);
 
@@ -287,9 +345,9 @@ var dtpOverview = Utils.defineClass({
 
         if (Me.settings.get_string('hotkeys-overlay-combo') === 'ALWAYS')
             this.taskbar.toggleNumberOverlay(true);
-    },
+    }
 
-    _disableHotKeys: function() {
+    _disableHotKeys() {
         if (!this._hotKeysEnabled)
             return;
 
@@ -312,9 +370,9 @@ var dtpOverview = Utils.defineClass({
         this._hotKeysEnabled = false;
 
         this.taskbar.toggleNumberOverlay(false);
-    },
+    }
 
-    _optionalNumberOverlay: function() {
+    _optionalNumberOverlay() {
         // Enable extra shortcut
         if (Me.settings.get_boolean('hot-keys'))
             this._enableExtraShortcut();
@@ -322,50 +380,45 @@ var dtpOverview = Utils.defineClass({
         this._signalsHandler.add([
             Me.settings,
             'changed::hot-keys',
-            Lang.bind(this, this._checkHotkeysOptions)
+            this._checkHotkeysOptions.bind(this)
         ], [
             Me.settings,
             'changed::hotkeys-overlay-combo',
-            Lang.bind(this, function() {
+            () => {
                 if (Me.settings.get_boolean('hot-keys') && Me.settings.get_string('hotkeys-overlay-combo') === 'ALWAYS')
                     this.taskbar.toggleNumberOverlay(true);
                 else
                     this.taskbar.toggleNumberOverlay(false);
-            })
+            }
         ], [
             Me.settings,
             'changed::shortcut-num-keys',
             () =>  this._resetHotkeys()
         ]);
-    },
+    }
 
-    _checkHotkeysOptions: function() {
+    _checkHotkeysOptions() {
         if (Me.settings.get_boolean('hot-keys'))
             this._enableExtraShortcut();
         else
             this._disableExtraShortcut();
-    },
+    }
 
-    _enableExtraShortcut: function() {
+    _enableExtraShortcut() {
         Utils.addKeybinding('shortcut', Me.settings, () => this._showOverlay(true));
-    },
+    }
 
-    _disableExtraShortcut: function() {
+    _disableExtraShortcut() {
         Utils.removeKeybinding('shortcut');
-    },
+    }
 
-    _showOverlay: function(overlayFromShortcut) {
+    _showOverlay(overlayFromShortcut) {
         //wait for intellihide timeout initialization
         if (!this._panel.intellihide) {
             return;
         }
 
         // Restart the counting if the shortcut is pressed again
-        if (this._numberOverlayTimeoutId) {
-            Mainloop.source_remove(this._numberOverlayTimeoutId);
-            this._numberOverlayTimeoutId = 0;
-        }
-
         let hotkey_option = Me.settings.get_string('hotkeys-overlay-combo');
 
         if (hotkey_option === 'NEVER')
@@ -383,14 +436,27 @@ var dtpOverview = Utils.defineClass({
         }
 
         // Hide the overlay/dock after the timeout
-        this._numberOverlayTimeoutId = Mainloop.timeout_add(timeout, Lang.bind(this, function() {
-            this._numberOverlayTimeoutId = 0;
-            
+        this._timeoutsHandler.add([T2, timeout, () => {
             if (hotkey_option != 'ALWAYS') {
                 this.taskbar.toggleNumberOverlay(false);
             }
             
             this._panel.intellihide.release(Intellihide.Hold.TEMPORARY);
-        }));
+        }]);
     }
-});
+
+    _onSwipeBegin() {
+        this._swiping = true;
+        return true;
+    }
+
+    _onSwipeEnd() {
+        this._timeoutsHandler.add([
+            T1,
+            0, 
+            () => this._swiping = false
+        ]);
+        return true;
+    }
+
+}

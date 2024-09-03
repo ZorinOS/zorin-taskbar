@@ -24,7 +24,6 @@
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const ExtensionUtils = imports.misc.extensionUtils;
-const Lang = imports.lang;
 const Main = imports.ui.main;
 const Mainloop = imports.mainloop;
 const St = imports.gi.St;
@@ -34,26 +33,21 @@ const Panel = Me.imports.panel;
 const Taskbar = Me.imports.taskbar;
 const Utils = Me.imports.utils;
 
-var dtpPanelStyle = Utils.defineClass({
-    Name: 'ZorinTaskbar.PanelStyle',
+var PanelStyle = class {
 
-    _init: function() {
-
-    },
-
-    enable : function(panel) {
+    enable(panel) {
         this.panel = panel;
 
         this._applyStyles();
-    },
+    }
 
-    disable: function () {
+    disable() {
         this._removeStyles();
-    },
+    }
 
-    _applyStyles: function() {
+    _applyStyles() {
         this._rightBoxOperations = [];
-      
+
         // center box has been moved next to the right box and will be treated the same
         this._centerBoxOperations = this._rightBoxOperations;
 
@@ -63,30 +57,30 @@ var dtpPanelStyle = Utils.defineClass({
         
         /* connect signal */
         this._rightBoxActorAddedID = this.panel._rightBox.connect('actor-added',
-            Lang.bind(this, function (container, actor) {
+            (container, actor) => {
                 if(this._rightBoxOperations.length && !this._ignoreAddedChild)
                     this._recursiveApply(actor, this._rightBoxOperations);
 
                 this._ignoreAddedChild = 0;
-            })
+            }
         );
         this._centerBoxActorAddedID = this.panel._centerBox.connect('actor-added',
-            Lang.bind(this, function (container, actor) {
+            (container, actor) => {
                 if(this._centerBoxOperations.length && !this._ignoreAddedChild)
                     this._recursiveApply(actor, this._centerBoxOperations);
 
                 this._ignoreAddedChild = 0;
-            })
+            }
         );
         this._leftBoxActorAddedID = this.panel._leftBox.connect('actor-added',
-            Lang.bind(this, function (container, actor) {
+            (container, actor) => {
                 if(this._leftBoxOperations.length)
                     this._recursiveApply(actor, this._leftBoxOperations);
-            })
+            }
         );
-    },
+    }
 
-    _removeStyles: function() {
+    _removeStyles() {
         /* disconnect signal */
         if (this._rightBoxActorAddedID) 
             this.panel._rightBox.disconnect(this._rightBoxActorAddedID);
@@ -100,13 +94,13 @@ var dtpPanelStyle = Utils.defineClass({
         this._restoreOriginalStyle(this.panel._leftBox);
 
         this._applyStylesRecursively(true);
-    },
+    }
 
-    _applyStylesRecursively: function(restore) {
+    _applyStylesRecursively(restore) {
         /*recurse actors */
         if(this._rightBoxOperations.length) {
             // add the system menu as we move it from the rightbox to the panel to position it independently
-            let children = this.panel._rightBox.get_children().concat([this.panel.statusArea.aggregateMenu.container]);
+            let children = this.panel._rightBox.get_children().concat([this.panel.statusArea[Utils.getSystemMenuInfo().name].container]);
             for(let i in children)
                 this._recursiveApply(children[i], this._rightBoxOperations, restore);
         }
@@ -123,9 +117,9 @@ var dtpPanelStyle = Utils.defineClass({
             for(let i in children)
                 this._recursiveApply(children[i], this._leftBoxOperations, restore);
         }
-    },
+    }
 
-    _recursiveApply: function(actor, operations, restore) {
+    _recursiveApply(actor, operations, restore) {
         for(let i in operations) {
             let o = operations[i];
             if(o.compareFn(actor))
@@ -141,9 +135,9 @@ var dtpPanelStyle = Utils.defineClass({
                 this._recursiveApply(children[i], operations, restore);
             }
         }
-    },
-    
-    _restoreOriginalStyle: function(actor) {
+    }
+
+    _restoreOriginalStyle(actor) {
         if (actor._dtp_original_inline_style !== undefined) {
             actor.set_style(actor._dtp_original_inline_style);
             delete actor._dtp_original_inline_style;
@@ -153,10 +147,10 @@ var dtpPanelStyle = Utils.defineClass({
         if (actor.has_style_class_name('panel-button')) {
             this._refreshPanelButton(actor);
         }
-    },
+    }
 
-    _refreshPanelButton: function(actor) {
-        if (actor.visible && imports.misc.config.PACKAGE_VERSION >= '3.34.0') {
+    _refreshPanelButton(actor) {
+        if (actor.visible) {
             //force gnome 3.34+ to refresh (having problem with the -natural-hpadding)
             let parent = actor.get_parent();
             let children = parent.get_children();
@@ -173,4 +167,4 @@ var dtpPanelStyle = Utils.defineClass({
         }
     }
     
-});
+}

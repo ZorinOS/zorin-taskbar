@@ -24,3 +24,6 @@ msgstr "Tampilkan tombol desktop padding (px)"
 
 msgid "Floating rounded theme"
 msgstr "Tema bulat mengambang"
+
+msgid "Isolate Workspaces and Monitors in Application Switching settings"
+msgstr "Isolasi Ruang Kerja dan Monitor dalam pengaturan Pengalihan Aplikasi"
