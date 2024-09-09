@@ -386,9 +386,13 @@ var PreviewMenu = GObject.registerClass({
     _onHoverChanged() {
         this._endOpenCloseTimeouts();
 
-        if (this.currentAppIcon && !this.menu.hover) {
-            this._addCloseTimeout();
-            this._endPeek();
+        if (this.currentAppIcon) {
+            this.menu.sync_hover(); // See dash-to-panel issue #2169
+			
+            if (!this.menu.hover) {
+                this._addCloseTimeout();
+                this._endPeek();
+            }
         }
     }
 

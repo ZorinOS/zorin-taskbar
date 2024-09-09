@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (56.10) jammy; urgency=medium
+
+  * Bug fix for window previews
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Mon, 09 Sep 2024 17:44:12 +0100
+
 gnome-shell-extension-zorin-taskbar (56.9) jammy; urgency=medium
 
   * Increased window preview leave timeout to 250ms
