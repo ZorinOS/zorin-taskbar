@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (56.11) jammy; urgency=medium
+
+  * Updated French translations
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 20 Oct 2024 17:58:19 +0100
+
 gnome-shell-extension-zorin-taskbar (56.10) jammy; urgency=medium
 
   * Bug fix for window previews
