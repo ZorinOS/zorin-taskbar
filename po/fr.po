@@ -148,7 +148,7 @@ msgstr "Plus d'options"
 
 #: prefs.js:497
 msgid "Reset to defaults"
-msgstr "Restaurer paramètres"
+msgstr "Restaurer les paramètres par défaut"
 
 #: prefs.js:520
 msgid "Show Applications options"
@@ -478,11 +478,11 @@ msgstr "plus légere"
 
 #: ui/BoxGroupAppsOptions.ui.h:6 ui/BoxWindowPreviewOptions.ui.h:47
 msgid "bold"
-msgstr "grasse"
+msgstr "gras"
 
 #: ui/BoxGroupAppsOptions.ui.h:7 ui/BoxWindowPreviewOptions.ui.h:48
 msgid "bolder"
-msgstr "plus grasse"
+msgstr "plus gras"
 
 #: ui/BoxGroupAppsOptions.ui.h:8
 msgid "Font color of the application titles"
@@ -888,7 +888,7 @@ msgstr "19"
 
 #: ui/BoxWindowPreviewOptions.ui.h:29
 msgid "20"
-msgstr "200"
+msgstr "20"
 
 #: ui/BoxWindowPreviewOptions.ui.h:30
 msgid "21"
@@ -922,7 +922,7 @@ msgstr "Bouton de fermeture et position de l'en-tête"
 
 #: ui/BoxWindowPreviewOptions.ui.h:39
 msgid "Display window preview headers"
-msgstr "Afficher le titre de la fenêtre dans la prévis."
+msgstr "Afficher le titre de la fenêtre dans la prévisualisation."
 
 #: ui/BoxWindowPreviewOptions.ui.h:40
 msgid "Icon size (px) of the window preview"
@@ -938,11 +938,11 @@ msgstr "Taille (px) du texte des prévisualisations"
 
 #: ui/BoxWindowPreviewOptions.ui.h:43
 msgid "Font weight of the preview titles"
-msgstr "Épaisseur du texte des titres de prévisualisation"
+msgstr "Épaisseur du texte des titres pendant la prévisualisation"
 
 #: ui/BoxWindowPreviewOptions.ui.h:49
 msgid "Font color of the preview titles"
-msgstr "Couleur du texte des titres de prévisualisation"
+msgstr "Couleur du texte des titres pendant la prévisualisation"
 
 #: ui/BoxWindowPreviewOptions.ui.h:50
 msgid "Enable window peeking"
@@ -1416,7 +1416,7 @@ msgid "Gradient bottom color and opacity (%)"
 msgstr "Couleur et opacité (%) du bas du gradient"
 
 msgid "Weekday"
-msgstr "Jour de semaine"
+msgstr "Jour de la semaine"
 
 msgid "Date"
 msgstr "Date"
