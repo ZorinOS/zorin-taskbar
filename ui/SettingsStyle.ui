@@ -9,7 +9,7 @@
   </object>
 
   <object class="AdwPreferencesPage" id="style">
-    <property name="title">Style</property>
+    <property name="title" translatable="yes">Style</property>
     <property name="icon_name">applications-graphics-symbolic</property>
 
     <!-- group panel intellihide -->
@@ -49,6 +49,17 @@
     <child>
       <object class="AdwPreferencesGroup" id="style_group_dynamic_trans2">
         <property name="title" translatable="yes">Panel style</property>
+
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Floating rounded theme</property>
+            <child>
+              <object class="GtkSwitch" id="floating_rounded_theme_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
 
         <child>
           <object class="AdwActionRow">

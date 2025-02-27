@@ -1,9 +1,9 @@
 {
-"extension-id": "zorin-taskbar",
-"uuid": "zorin-taskbar@zorinos.com",
-"name": "Zorin Taskbar",
-"description": "A taskbar extension for the Zorin Desktop environment.",
-"shell-version": [ "42", "43", "44" ],
-"gettext-domain": "zorin-taskbar",
-"version": 56
+  "extension-id": "zorin-taskbar",
+  "uuid": "zorin-taskbar@zorinos.com",
+  "name": "Zorin Taskbar",
+  "description": "A taskbar extension for the Zorin OS desktop.",
+  "shell-version": [ "46", "47" ],
+  "gettext-domain": "zorin-taskbar",
+  "version": 65
 }

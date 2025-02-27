@@ -1,3 +1,22 @@
+gnome-shell-extension-zorin-taskbar (65.2) noble; urgency=medium
+
+  * Separated floating rounded theme from intellihide as an independent
+    styling option
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Thu, 27 Feb 2025 13:57:03 +0000
+
+gnome-shell-extension-zorin-taskbar (65.1) noble; urgency=medium
+
+  * Fixed various bugs
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 26 Feb 2025 12:20:34 +0000
+
+gnome-shell-extension-zorin-taskbar (65) noble; urgency=medium
+
+  * Re-based on upstream version 65
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 25 Feb 2025 22:29:43 +0000
+
 gnome-shell-extension-zorin-taskbar (56.11) jammy; urgency=medium
 
   * Updated French translations

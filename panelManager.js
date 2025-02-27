@@ -27,39 +27,36 @@
  * Some code was also adapted from the upstream Gnome Shell source code.
  */
 
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const { Overview } = Me.imports.overview;
-const { Panel, panelBoxes } = Me.imports.panel;
-const PanelSettings = Me.imports.panelSettings;
-const Proximity = Me.imports.proximity;
-const Taskbar = Me.imports.taskbar;
-const Utils = Me.imports.utils;
-const DesktopIconsIntegration = Me.imports.desktopIconsIntegration;
+import * as Overview from './overview.js';
+import * as Panel from './panel.js';
+import * as PanelSettings from './panelSettings.js';
+import * as Proximity from './proximity.js';
+import * as Utils from './utils.js';
+import * as DesktopIconsIntegration from './desktopIconsIntegration.js';
 
-const Gi = imports._gi;
-const GLib = imports.gi.GLib;
-const GObject = imports.gi.GObject;
-const Clutter = imports.gi.Clutter;
-const Meta = imports.gi.Meta;
-const Shell = imports.gi.Shell;
-const St = imports.gi.St;
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import Clutter from 'gi://Clutter';
+import Meta from 'gi://Meta';
+import Shell from 'gi://Shell';
+import St from 'gi://St';
 
-const AppDisplay = imports.ui.appDisplay;
-const BoxPointer = imports.ui.boxpointer;
-const Dash = imports.ui.dash;
-const IconGrid = imports.ui.iconGrid;
-const LookingGlass = imports.ui.lookingGlass;
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const Layout = imports.ui.layout;
-const WM = imports.ui.windowManager;
-const { SecondaryMonitorDisplay, WorkspacesView } = imports.ui.workspacesView;
+import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
+import * as LookingGlass from 'resource:///org/gnome/shell/ui/lookingGlass.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
+import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {SETTINGS} from './extension.js';
+import {SecondaryMonitorDisplay, WorkspacesView} from 'resource:///org/gnome/shell/ui/workspacesView.js';
 
-var PanelManager = class {
+
+export const PanelManager = class {
 
     constructor() {
-        this.overview = new Overview();
+        this.overview = new Overview.Overview();
         this.panelsElementPositions = {};
+        this._injectionManager = new InjectionManager();
 
         this._saveMonitors();
     }
@@ -70,14 +67,14 @@ var PanelManager = class {
         this.proximityManager = new Proximity.ProximityManager();
 
         if (this.dtpPrimaryMonitor) {
-            this.primaryPanel = this._createPanel(this.dtpPrimaryMonitor, Me.settings.get_boolean('stockgs-keep-top-panel'));
+            this.primaryPanel = this._createPanel(this.dtpPrimaryMonitor, SETTINGS.get_boolean('stockgs-keep-top-panel'));
             this.allPanels.push(this.primaryPanel);
             this.overview.enable(this.primaryPanel);
 
             this.setFocusedMonitor(this.dtpPrimaryMonitor);
         }
 
-        if (Me.settings.get_boolean('multi-monitors')) {
+        if (SETTINGS.get_boolean('multi-monitors')) {
             Main.layoutManager.monitors.filter(m => m != this.dtpPrimaryMonitor).forEach(m => {
                 this.allPanels.push(this._createPanel(m, true));
             });
@@ -105,7 +102,7 @@ var PanelManager = class {
         if (BoxPointer.BoxPointer.prototype.vfunc_get_preferred_height) {
             let panelManager = this;
 
-            Utils.hookVfunc(BoxPointer.BoxPointer.prototype, 'get_preferred_height', function(forWidth) {
+            this._injectionManager.overrideMethod(BoxPointer.BoxPointer.prototype, 'vfunc_get_preferred_height', () => function(forWidth) {
                 let alloc = { min_size: 0, natural_size: 0 };
                 
                 [alloc.min_size, alloc.natural_size] = this.vfunc_get_preferred_height(forWidth);
@@ -153,7 +150,7 @@ var PanelManager = class {
         //listen settings
         this._signalsHandler.add(
             [
-                Me.settings,
+                SETTINGS,
                 [
                     'changed::multi-monitors',
                     'changed::isolate-monitors',
@@ -165,17 +162,17 @@ var PanelManager = class {
                 () => this._reset()
             ],
             [
-                Me.settings,
+                SETTINGS,
                 'changed::panel-element-positions',
                 () => this._updatePanelElementPositions()
             ],
             [
-                Me.settings,
+                SETTINGS,
                 'changed::intellihide-key-toggle-text',
                 () => this._setKeyBindings(true)
             ],
             [
-                Me.settings,
+                SETTINGS,
                 'changed::panel-sizes',
                 () => {
                     GLib.idle_add(GLib.PRIORITY_LOW, () => {
@@ -196,20 +193,22 @@ var PanelManager = class {
             ]
         );
 
-        panelBoxes.forEach(c => this._signalsHandler.add(
+        Panel.panelBoxes.forEach(c => this._signalsHandler.add(
             [
                 Main.panel[c], 
-                'actor-added', 
-                (parent, child) => 
-                    this.primaryPanel && 
-                    this._adjustPanelMenuButton(this._getPanelMenuButton(child), this.primaryPanel.monitor, this.primaryPanel.getPosition())
+                'child-added', 
+                (parent, child) => {
+                    this.primaryPanel &&
+                    child instanceof St.Bin && 
+                    this._adjustPanelMenuButton(this._getPanelMenuButton(child.get_first_child()), this.primaryPanel.monitor, this.primaryPanel.getPosition())
+                }
             ]
         ));
 
         this._setKeyBindings(true);
 
         // keep GS overview.js from blowing away custom panel styles
-        if(!Me.settings.get_boolean('stockgs-keep-top-panel'))
+        if(!SETTINGS.get_boolean('stockgs-keep-top-panel'))
             Object.defineProperty(Main.panel, "style", {configurable: true, set(v) {}});
     }
 
@@ -244,7 +243,7 @@ var PanelManager = class {
             } else {
                 p.panelBox.remove_child(p);
                 p.remove_child(p.panel);
-                p.panelBox.add(p.panel);
+                p.panelBox.add_child(p.panel);
 
                 p.panelBox.set_position(clipContainer.x, clipContainer.y);
 
@@ -253,9 +252,7 @@ var PanelManager = class {
             }
         });
 
-        if (BoxPointer.BoxPointer.prototype.vfunc_get_preferred_height) {
-            Utils.hookVfunc(BoxPointer.BoxPointer.prototype, 'get_preferred_height', BoxPointer.BoxPointer.prototype.vfunc_get_preferred_height);
-        }
+        this._injectionManager.clear();
 
         if (Main.layoutManager.primaryMonitor) {
             Main.layoutManager.panelBox.set_position(Main.layoutManager.primaryMonitor.x, Main.layoutManager.primaryMonitor.y);
@@ -290,6 +287,10 @@ var PanelManager = class {
         delete Main.panel.style;
         this._desktopIconsUsableArea.destroy();
         this._desktopIconsUsableArea = null;
+    }
+
+    toggleDash() {
+        this.overview.toggleDash();
     }
 
     _setDesktopIconsMargins() {
@@ -356,12 +357,12 @@ var PanelManager = class {
             } else {
                 // No idea why atm, but we need the import at the top of this file and to use the
                 // full imports ns here, otherwise SecondaryMonitorDisplay can't be used ¯\_(ツ)_/¯
-                view = new imports.ui.workspacesView.SecondaryMonitorDisplay(i,
+                view = new SecondaryMonitorDisplay(i,
                     this._controls,
                     this._scrollAdjustment,
                     this._fitModeAdjustment,
                     this._overviewAdjustment);
-                Main.layoutManager.overviewGroup.add_actor(view);
+                Main.layoutManager.overviewGroup.add_child(view);
             }
 
             this._workspacesViews.push(view);
@@ -379,7 +380,7 @@ var PanelManager = class {
 
         Main.layoutManager.monitors.filter(m => m.index != primaryIndex).forEach(m => newMonitors.push(m.index));
         
-        Me.settings.set_value(keyMonitors, new GLib.Variant('ai', newMonitors));
+        SETTINGS.set_value(keyMonitors, new GLib.Variant('ai', newMonitors));
     }
 
     checkIfFocusedMonitor(monitor) {
@@ -404,8 +405,8 @@ var PanelManager = class {
         clipContainer.add_child(panelBox);
         Main.layoutManager.trackChrome(panelBox, { trackFullscreen: true, affectsStruts: true, affectsInputRegion: true });
         
-        panel = new Panel(this, monitor, panelBox, isStandalone);
-        panelBox.add(panel);
+        panel = new Panel.Panel(this, monitor, panelBox, isStandalone);
+        panelBox.add_child(panel);
         panel.enable();
 
         panelBox.visible = true;
@@ -424,7 +425,7 @@ var PanelManager = class {
     }
 
     _updatePanelElementPositions() {
-        this.panelsElementPositions = PanelSettings.getSettingsJson(Me.settings, 'panel-element-positions');
+        this.panelsElementPositions = PanelSettings.getSettingsJson(SETTINGS, 'panel-element-positions');
         this.allPanels.forEach(p => p.updateElementPositions());
     }
 
@@ -444,7 +445,7 @@ var PanelManager = class {
     }
 
     _getBoxPointerPreferredHeight(boxPointer, alloc, monitor) {
-        if (boxPointer._dtpInPanel && boxPointer.sourceActor && Me.settings.get_boolean('intellihide')) {
+        if (boxPointer._dtpInPanel && boxPointer.sourceActor && SETTINGS.get_boolean('intellihide')) {
             monitor = monitor || Main.layoutManager.findMonitorForActor(boxPointer.sourceActor);
             let panel = Utils.find(global.zorinTaskbar.panels, p => p.monitor == monitor);
             let excess = alloc.natural_size + panel.dtpSize + 10 - monitor.height; // 10 is arbitrary
@@ -498,7 +499,7 @@ var PanelManager = class {
             Utils.removeKeybinding(k);
 
             if (enable) {
-                Utils.addKeybinding(k, Me.settings, keys[k], Shell.ActionMode.NORMAL);
+                Utils.addKeybinding(k, SETTINGS, keys[k], Shell.ActionMode.NORMAL);
             }
         });
     }
@@ -507,7 +508,7 @@ var PanelManager = class {
 
 // This class drives long-running icon animations, to keep them running in sync
 // with each other.
-var IconAnimator = class {
+export const IconAnimator = class {
 
     constructor(actor) {
         this._count = 0;

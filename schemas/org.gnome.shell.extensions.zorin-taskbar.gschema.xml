@@ -189,10 +189,10 @@
       <summary>Keybinding toggle intellihide</summary>
       <description>Keybinding to reveal the panel while in intellihide mode</description>
     </key>
-    <key type="b" name="intellihide-floating-rounded-theme">
-      <default>true</default>
+    <key type="b" name="floating-rounded-theme">
+      <default>false</default>
       <summary>Floating rounded theme</summary>
-      <description>Display the panel with a floating rounded theme while in intellihide mode</description>
+      <description>Display the panel with a floating rounded theme</description>
     </key>
     <key type="as" name="panel-context-menu-commands">
      <default>[]</default>

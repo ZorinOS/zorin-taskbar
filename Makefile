@@ -20,7 +20,7 @@ INSTALLNAME = zorin-taskbar@zorinos.com
 # in the metadata and in the generated zip-file.
 ifdef VERSION
 else
-	VERSION = 56
+	VERSION = 65
 endif
 
 ifdef TARGET

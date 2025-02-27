@@ -17,130 +17,116 @@
  */
 
 
-const Main = imports.ui.main;
-const Meta = imports.gi.Meta;
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
-const Shell = imports.gi.Shell;
-const St = imports.gi.St;
-const WindowManager = imports.ui.windowManager;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Mainloop = imports.mainloop;
-const Signals = imports.signals;
+import Gio from 'gi://Gio';
 
-const Me = ExtensionUtils.getCurrentExtension();
-const { PanelManager } = Me.imports.panelManager;
-const Utils = Me.imports.utils;
-const AppIcons = Me.imports.appIcons;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {EventEmitter} from 'resource:///org/gnome/shell/misc/signals.js';
+import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+
+import * as  PanelManager from './panelManager.js';
+import * as AppIcons from './appIcons.js';
+
 
 const ZORIN_DASH_UUID = 'zorin-dash@zorinos.com';
 
 let panelManager;
 let extensionChangedHandler;
+let startupCompleteHandler;
 let disabledZorinDash;
-let extensionSystem = (Main.extensionManager || imports.ui.extensionSystem);
+let extensionSystem = Main.extensionManager;
 
-function init() {
-    this._realHasOverview = Main.sessionMode.hasOverview;
+export let DTP_EXTENSION = null;
+export let SETTINGS = null;
+export let DESKTOPSETTINGS = null;
+export let TERMINALSETTINGS = null;
+export let PERSISTENTSTORAGE = null;
+export let EXTENSION_UUID = null;
+export let EXTENSION_PATH = null;
 
-    ExtensionUtils.initTranslations(Utils.TRANSLATION_DOMAIN);
-    
-    //create an object that persists until gnome-shell is restarted, even if the extension is disabled
-    Me.persistentStorage = {};
-}
+export default class ZorinTaskbarExtension extends Extension {
+    constructor(metadata) {
+        super(metadata);
 
-function enable() {
-    // The Zorin Dash extension might get enabled after this extension
-    extensionChangedHandler = extensionSystem.connect('extension-state-changed', (data, extension) => {
-        if (extension.uuid === ZORIN_DASH_UUID && extension.state === 1) {
-            _enable();
-        }
-    });
-
-    //create a global object that can emit signals and conveniently expose functionalities to other extensions 
-    global.zorinTaskbar = {};
-    Signals.addSignalMethods(global.zorinTaskbar);
-    
-    _enable();
-}
-
-function _enable() {
-    let zorinDash = Main.extensionManager ?
-                    Main.extensionManager.lookup(ZORIN_DASH_UUID) : //gnome-shell >= 3.33.4
-                    ExtensionUtils.extensions[ZORIN_DASH_UUID];
-
-    if (zorinDash && zorinDash.stateObj && zorinDash.stateObj.dockManager) {
-        // Disable Zorin Dash
-        let extensionOrder = (extensionSystem.extensionOrder || extensionSystem._extensionOrder);
-
-        Utils.getStageTheme().get_theme().unload_stylesheet(zorinDash.stylesheet);
-        zorinDash.stateObj.disable();
-        disabledZorinDash = true;
-        zorinDash.state = 2; //ExtensionState.DISABLED
-        extensionOrder.splice(extensionOrder.indexOf(ZORIN_DASH_UUID), 1);
-
-        //reset to prevent conflicts with the Zorin Dash
-        if (panelManager) {
-            disable(true);
-        }
+        this._realHasOverview = Main.sessionMode.hasOverview;
+        
+        //create an object that persists until gnome-shell is restarted, even if the extension is disabled
+        PERSISTENTSTORAGE = {};
     }
 
-    if (panelManager) return; //already initialized
+    enable() {
+        DTP_EXTENSION = this;
 
-    Me.settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.zorin-taskbar');
-    Me.desktopSettings = ExtensionUtils.getSettings('org.gnome.desktop.interface');
+        // The Zorin Dash extension might get enabled after this extension
+        extensionChangedHandler = extensionSystem.connect('extension-state-changed', (data, extension) => {
+            if (extension.uuid === ZORIN_DASH_UUID && extension.state === 1) {
+                _enable(this);
+            }
+        });
+
+        //create a global object that can emit signals and conveniently expose functionalities to other extensions 
+        global.zorinTaskbar = new EventEmitter();
+        
+        _enable(this);
+    }
+
+    disable(reset = false) {
+        panelManager.disable();
+
+        DTP_EXTENSION = null;
+        SETTINGS = null;
+        DESKTOPSETTINGS = null;
+        TERMINALSETTINGS = null;
+        panelManager = null;
+
+        if (!reset) {
+            extensionSystem.disconnect(extensionChangedHandler);
+
+            if (disabledZorinDash) {
+                disabledZorinDash = false;
+                extensionSystem.enableExtension(ZORIN_DASH_UUID);
+            }
+
+            delete global.zorinTaskbar;
+
+            AppIcons.resetRecentlyClickedApp();
+        }
+
+        if (startupCompleteHandler) {
+            Main.layoutManager.disconnect(startupCompleteHandler);
+            startupCompleteHandler = null;
+        }
+
+        Main.sessionMode.hasOverview = this._realHasOverview;
+    }
+}
+
+function _enable(extension) {
+    let enabled = global.settings.get_strv('enabled-extensions');
+
+    if (enabled?.indexOf(ZORIN_DASH_UUID) >= 0) {
+        disabledZorinDash = true;
+        extensionSystem.disableExtension(ZORIN_DASH_UUID);
+    }
+
+    if (panelManager)
+        return panelManager.toggleDash(); // already initialized but Zorin Dash restored the original dash on disable
+
+    SETTINGS = extension.getSettings('org.gnome.shell.extensions.zorin-taskbar');
+    DESKTOPSETTINGS = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'});
+    TERMINALSETTINGS = new Gio.Settings({schema_id: 'org.gnome.desktop.default-applications.terminal'})
+    EXTENSION_UUID = extension.uuid
+    EXTENSION_PATH = extension.path
 
     Main.layoutManager.startInOverview = false;
 
     if (Main.layoutManager._startingUp) {
         Main.sessionMode.hasOverview = false;
-        Main.layoutManager.connect('startup-complete', () => {
-            Main.sessionMode.hasOverview = this._realHasOverview
+        startupCompleteHandler = Main.layoutManager.connect('startup-complete', () => {
+            Main.sessionMode.hasOverview = extension._realHasOverview
         });
     }
 
-    panelManager = new PanelManager();
+    panelManager = new PanelManager.PanelManager();
 
     panelManager.enable();
-    
-    Utils.removeKeybinding('open-application-menu');
-    Utils.addKeybinding(
-        'open-application-menu',
-        new Gio.Settings({ schema_id: WindowManager.SHELL_KEYBINDINGS_SCHEMA }),
-        () => {
-            panelManager.primaryPanel.taskbar.popupFocusedAppSecondaryMenu();
-        },
-        Shell.ActionMode.NORMAL | Shell.ActionMode.POPUP
-    );
-}
-
-function disable(reset) {
-    panelManager.disable();
-    Me.settings.run_dispose();
-    Me.desktopSettings.run_dispose();
-
-    delete Me.settings;
-    panelManager = null;
-    
-    Utils.removeKeybinding('open-application-menu');
-    Utils.addKeybinding(
-        'open-application-menu',
-        new Gio.Settings({ schema_id: WindowManager.SHELL_KEYBINDINGS_SCHEMA }),
-        Main.wm._toggleAppMenu.bind(Main.wm),
-        Shell.ActionMode.NORMAL | Shell.ActionMode.POPUP
-    );
-
-    if (!reset) {
-        extensionSystem.disconnect(extensionChangedHandler);
-        delete global.zorinTaskbar;
-
-        // Re-enable Zorin Dash if it was disabled by dash to panel
-        if (disabledZorinDash && Main.sessionMode.allowExtensions) {
-            (extensionSystem._callExtensionEnable || extensionSystem.enableExtension).call(extensionSystem, ZORIN_DASH_UUID);
-        }
-
-        AppIcons.resetRecentlyClickedApp();
-    }
-
-    Main.sessionMode.hasOverview = this._realHasOverview;
 }

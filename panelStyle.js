@@ -22,18 +22,9 @@
  * mathematical.coffee@gmail.com
  */
 
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const ExtensionUtils = imports.misc.extensionUtils;
-const Main = imports.ui.main;
-const Mainloop = imports.mainloop;
-const St = imports.gi.St;
-const Shell = imports.gi.Shell;
+import * as Utils from './utils.js';
 
-const Panel = Me.imports.panel;
-const Taskbar = Me.imports.taskbar;
-const Utils = Me.imports.utils;
-
-var PanelStyle = class {
+export const PanelStyle = class {
 
     enable(panel) {
         this.panel = panel;
@@ -56,7 +47,7 @@ var PanelStyle = class {
         this._applyStylesRecursively();
         
         /* connect signal */
-        this._rightBoxActorAddedID = this.panel._rightBox.connect('actor-added',
+        this._rightBoxActorAddedID = this.panel._rightBox.connect('child-added',
             (container, actor) => {
                 if(this._rightBoxOperations.length && !this._ignoreAddedChild)
                     this._recursiveApply(actor, this._rightBoxOperations);
@@ -64,7 +55,7 @@ var PanelStyle = class {
                 this._ignoreAddedChild = 0;
             }
         );
-        this._centerBoxActorAddedID = this.panel._centerBox.connect('actor-added',
+        this._centerBoxActorAddedID = this.panel._centerBox.connect('child-added',
             (container, actor) => {
                 if(this._centerBoxOperations.length && !this._ignoreAddedChild)
                     this._recursiveApply(actor, this._centerBoxOperations);
@@ -72,7 +63,7 @@ var PanelStyle = class {
                 this._ignoreAddedChild = 0;
             }
         );
-        this._leftBoxActorAddedID = this.panel._leftBox.connect('actor-added',
+        this._leftBoxActorAddedID = this.panel._leftBox.connect('child-added',
             (container, actor) => {
                 if(this._leftBoxOperations.length)
                     this._recursiveApply(actor, this._leftBoxOperations);

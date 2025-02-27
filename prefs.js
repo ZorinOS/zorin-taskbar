@@ -21,22 +21,17 @@
  * Some code was also adapted from the upstream Gnome Shell source code.
  */
 
-const GdkPixbuf = imports.gi.GdkPixbuf;
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
-const GObject = imports.gi.GObject;
-const Gtk = imports.gi.Gtk;
-const Adw = imports.gi.Adw;
-const Gdk = imports.gi.Gdk;
-const Mainloop = imports.mainloop;
+import GdkPixbuf from 'gi://GdkPixbuf';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import Gtk from 'gi://Gtk';
+import Gdk from 'gi://Gdk';
 
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const ExtensionUtils = imports.misc.extensionUtils;
-const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
-const _ = Gettext.gettext;
-const N_ = function(e) { return e };
-const PanelSettings = Me.imports.panelSettings;
-const Pos = Me.imports.panelPositions;
+import * as PanelSettings from './panelSettings.js';
+import * as Pos from './panelPositions.js';
+
+import {ExtensionPreferences, gettext as _, ngettext} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 const SCALE_UPDATE_TIMEOUT = 500;
 const DEFAULT_PANEL_SIZES = [ 96, 64, 48, 32, 24 ];
@@ -146,51 +141,55 @@ function checkHotkeyPrefix(settings) {
 }
 
 function mergeObjects(main, bck) {
-    for (var prop in bck) {
+    for (const prop in bck) {
         if (!main.hasOwnProperty(prop) && bck.hasOwnProperty(prop)) {
             main[prop] = bck[prop];
         }
     }
 
     return main;
-};
+}
 
 const Preferences = class {
 
-    constructor(window) {
-        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.zorin-taskbar');
-        this._gnomeInterfaceSettings = ExtensionUtils.getSettings('org.gnome.desktop.interface');
+    constructor(window, settings, gnomeInterfaceSettings, path) {
+        // this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.zorin-taskbar');
         this._rtl = (Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL);
         this._builder = new Gtk.Builder();
         this._builder.set_scope(new BuilderScope(this));
-        this._builder.set_translation_domain(Me.metadata['gettext-domain']);
+        this._settings = settings;
+        this._gnomeInterfaceSettings = gnomeInterfaceSettings;
+        this._path = path;
+        
+        this._metadata = ExtensionPreferences.lookupByURL(import.meta.url).metadata;
+        this._builder.set_translation_domain(this._metadata['gettext-domain']);
 
         window.set_search_enabled(true);
 
         // dialogs
-        this._builder.add_from_file(Me.path + '/ui/BoxShowDesktopOptions.ui');
-        this._builder.add_from_file(Me.path + '/ui/BoxDynamicOpacityOptions.ui');
-        this._builder.add_from_file(Me.path + '/ui/BoxIntellihideOptions.ui');
-        this._builder.add_from_file(Me.path + '/ui/BoxShowDateMenuOptions.ui');
-        this._builder.add_from_file(Me.path + '/ui/BoxWindowPreviewOptions.ui');
-        this._builder.add_from_file(Me.path + '/ui/BoxGroupAppsOptions.ui');
-        this._builder.add_from_file(Me.path + '/ui/BoxMiddleClickOptions.ui');
-        this._builder.add_from_file(Me.path + '/ui/BoxOverlayShortcut.ui');
+        this._builder.add_from_file(this._path + '/ui/BoxShowDesktopOptions.ui');
+        this._builder.add_from_file(this._path + '/ui/BoxDynamicOpacityOptions.ui');
+        this._builder.add_from_file(this._path + '/ui/BoxIntellihideOptions.ui');
+        this._builder.add_from_file(this._path + '/ui/BoxShowDateMenuOptions.ui');
+        this._builder.add_from_file(this._path + '/ui/BoxWindowPreviewOptions.ui');
+        this._builder.add_from_file(this._path + '/ui/BoxGroupAppsOptions.ui');
+        this._builder.add_from_file(this._path + '/ui/BoxMiddleClickOptions.ui');
+        this._builder.add_from_file(this._path + '/ui/BoxOverlayShortcut.ui');
 
         // pages
-        this._builder.add_from_file(Me.path + '/ui/SettingsStyle.ui');
+        this._builder.add_from_file(this._path + '/ui/SettingsStyle.ui');
         let pageStyle = this._builder.get_object('style');
         window.add(pageStyle);
 
-        this._builder.add_from_file(Me.path + '/ui/SettingsPosition.ui');
+        this._builder.add_from_file(this._path + '/ui/SettingsPosition.ui');
         let pagePosition = this._builder.get_object('position');
         window.add(pagePosition);
 
-        this._builder.add_from_file(Me.path + '/ui/SettingsBehavior.ui');
+        this._builder.add_from_file(this._path + '/ui/SettingsBehavior.ui');
         let pageBehavior = this._builder.get_object('behavior');
         window.add(pageBehavior);
 
-        this._builder.add_from_file(Me.path + '/ui/SettingsAction.ui');
+        this._builder.add_from_file(this._path + '/ui/SettingsAction.ui');
         let pageAction = this._builder.get_object('action');
         window.add(pageAction);
 
@@ -627,6 +626,12 @@ const Preferences = class {
 
         this._updateWidgetSettingsForMonitor(this._currentMonitorIndex);
 
+        //panel style
+        this._settings.bind('floating-rounded-theme',
+                            this._builder.get_object('floating_rounded_theme_switch'),
+                            'active',
+                            Gio.SettingsBindFlags.DEFAULT); 
+
         //dynamic opacity
         this._settings.bind('trans-use-custom-opacity',
                             this._builder.get_object('trans_opacity_override_switch'),
@@ -700,11 +705,6 @@ const Preferences = class {
                             'sensitive',
                             Gio.SettingsBindFlags.DEFAULT);
 
-        this._settings.bind('intellihide-floating-rounded-theme',
-                            this._builder.get_object('intellihide_floating_rounded_theme_switch'),
-                            'active',
-                            Gio.SettingsBindFlags.DEFAULT); 
-
         this._settings.bind('intellihide-hide-from-windows',
                             this._builder.get_object('intellihide_window_hide_switch'),
                             'active',
@@ -757,7 +757,6 @@ const Preferences = class {
             let dialog = this._createPreferencesDialog(_('Intellihide options'), box, () =>
             {
                 // restore default settings
-                this._settings.set_value('intellihide-floating-rounded-theme', this._settings.get_default_value('intellihide-floating-rounded-theme'));
                 this._settings.set_value('intellihide-hide-from-windows', this._settings.get_default_value('intellihide-hide-from-windows'));
                 this._settings.set_value('intellihide-behaviour', this._settings.get_default_value('intellihide-behaviour'));
                 this._settings.set_value('intellihide-use-pressure', this._settings.get_default_value('intellihide-use-pressure'));
@@ -1053,7 +1052,7 @@ const Preferences = class {
             {objectName: 'panel_length_scale', valueName: '', range: LENGTH_MARKS }
         ];
 
-        for(var idx in sizeScales) {
+        for(const idx in sizeScales) {
             let size_scale = this._builder.get_object(sizeScales[idx].objectName);
             let range = sizeScales[idx].range;
             size_scale.set_range(range[range.length - 1], range[0]);
@@ -1142,9 +1141,9 @@ const BuilderScope = GObject.registerClass({
     panel_size_scale_value_changed_cb(scale) {
         // Avoid settings the size continuously
         if (this._preferences._panel_size_timeout > 0)
-            Mainloop.source_remove(this._preferences._panel_size_timeout);
+            GLib.Source.remove(this._preferences._panel_size_timeout);
 
-        this._preferences._panel_size_timeout = Mainloop.timeout_add(SCALE_UPDATE_TIMEOUT, (() => {
+        this._preferences._panel_size_timeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, SCALE_UPDATE_TIMEOUT, () => {
             const value = scale.get_value();
             const monitorSync = this._preferences._settings.get_boolean('panel-element-positions-monitors-sync');
             const monitorsToSetFor = monitorSync ? this._preferences.monitors : [this._preferences._currentMonitorIndex];
@@ -1154,17 +1153,18 @@ const BuilderScope = GObject.registerClass({
 
             this._preferences._panel_size_timeout = 0;
             return GLib.SOURCE_REMOVE;
-        }));
+        });
     }
 });
 
-function init() {
-    ExtensionUtils.initTranslations();
-}
+export default class ZorinTaskbarPreferences extends ExtensionPreferences {
+    fillPreferencesWindow(window) {
+        window._settings = this.getSettings('org.gnome.shell.extensions.zorin-taskbar');
+        window._gnomeInterfaceSettings = this.getSettings('org.gnome.desktop.interface');
 
-function fillPreferencesWindow(window) {
-    // use default width or window
-    window.set_default_size(0, 625);
+        // use default width or window
+        window.set_default_size(0, 625);
 
-    let preferences = new Preferences(window);
+        let preferences = new Preferences(window, window._settings, window._gnomeInterfaceSettings, this.path);
+    }
 }

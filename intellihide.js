@@ -18,21 +18,20 @@
  * This file is based on code from the Dash to Panel extension
  */
 
-const Clutter = imports.gi.Clutter;
-const Meta = imports.gi.Meta;
-const Shell = imports.gi.Shell;
-const St = imports.gi.St;
+import Clutter from 'gi://Clutter';
+import Meta from 'gi://Meta';
+import Shell from 'gi://Shell';
+import St from 'gi://St';
 
-var GrabHelper = imports.ui.grabHelper;
-const Layout = imports.ui.layout;
-const Main = imports.ui.main;
-const OverviewControls = imports.ui.overviewControls;
-const PointerWatcher = imports.ui.pointerWatcher;
+import * as GrabHelper from 'resource:///org/gnome/shell/ui/grabHelper.js';
+import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as OverviewControls from 'resource:///org/gnome/shell/ui/overviewControls.js';
+import * as PointerWatcher from 'resource:///org/gnome/shell/ui/pointerWatcher.js';
 
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const Panel = Me.imports.panel;
-const Proximity = Me.imports.proximity;
-const Utils = Me.imports.utils;
+import * as Proximity from './proximity.js';
+import * as Utils from './utils.js';
+import {SETTINGS} from './extension.js';
 
 var INTELLIHIDE_PRESSURE_THRESHOLD = 100;
 var INTELLIHIDE_PRESSURE_TIME = 1000;
@@ -50,17 +49,16 @@ const MIN_UPDATE_MS = 250;
 const T1 = 'checkGrabTimeout';
 const T2 = 'limitUpdateTimeout';
 const T3 = 'postAnimateTimeout';
-const T4 = 'panelBoxClipTimeout';
 
-var SIDE_CONTROLS_ANIMATION_TIME = OverviewControls.SIDE_CONTROLS_ANIMATION_TIME / (OverviewControls.SIDE_CONTROLS_ANIMATION_TIME > 1 ? 1000 : 1);
+const SIDE_CONTROLS_ANIMATION_TIME = OverviewControls.SIDE_CONTROLS_ANIMATION_TIME / (OverviewControls.SIDE_CONTROLS_ANIMATION_TIME > 1 ? 1000 : 1);
 
-var Hold = {
+export const Hold = {
     NONE: 0,
     TEMPORARY: 1,
     PERMANENT: 2
 };
 
-var Intellihide = class {
+export const Intellihide = class {
 
     constructor(dtpPanel) {
         this._dtpPanel = dtpPanel;
@@ -72,8 +70,8 @@ var Intellihide = class {
         this._signalsHandler = new Utils.GlobalSignalsHandler();
         this._timeoutsHandler = new Utils.TimeoutsHandler();
 
-        this._intellihideChangedId = Me.settings.connect('changed::intellihide', () => this._changeEnabledStatus());
-        this._intellihideOnlySecondaryChangedId = Me.settings.connect('changed::intellihide-only-secondary', () => this._changeEnabledStatus());
+        this._intellihideChangedId = SETTINGS.connect('changed::intellihide', () => this._changeEnabledStatus());
+        this._intellihideOnlySecondaryChangedId = SETTINGS.connect('changed::intellihide-only-secondary', () => this._changeEnabledStatus());
 
         this.enabled = false;
         this._changeEnabledStatus();
@@ -94,11 +92,11 @@ var Intellihide = class {
         this._setTrackPanel(true);
         this._bindGeneralSignals();
 
-        if (Me.settings.get_boolean('intellihide-hide-from-windows')) {
+        if (SETTINGS.get_boolean('intellihide-hide-from-windows')) {
             this._proximityWatchId = this._proximityManager.createWatch(
                 this._panelBox.get_parent(),
                 this._dtpPanel.monitor.index,
-                Proximity.Mode[Me.settings.get_string('intellihide-behaviour')], 
+                Proximity.Mode[SETTINGS.get_string('intellihide-behaviour')], 
                 0, 0,
                 overlap => { 
                     this._windowOverlap = overlap;
@@ -109,7 +107,6 @@ var Intellihide = class {
 
         this._setRevealMechanism();
         this._queueUpdatePanelPosition();
-        this._toggleFloatingRoundedTheme();
     }
 
     disable(reset) {
@@ -127,17 +124,11 @@ var Intellihide = class {
         this._revealPanel(!reset);
         
         this.enabled = false;
-
-        if (this._panelBox.has_style_class_name('floating')) {
-            this._panelBox.remove_style_class_name('floating');
-            
-            this._resetPanelGeometry();
-        }
     }
 
     destroy() {
-        Me.settings.disconnect(this._intellihideChangedId);
-        Me.settings.disconnect(this._intellihideOnlySecondaryChangedId);
+        SETTINGS.disconnect(this._intellihideChangedId);
+        SETTINGS.disconnect(this._intellihideOnlySecondaryChangedId);
         
         if (this.enabled) {
             this.disable();
@@ -169,27 +160,9 @@ var Intellihide = class {
         this.enable();
     }
 
-    _toggleFloatingRoundedTheme() {
-        if (Me.settings.get_boolean('intellihide-floating-rounded-theme')) {
-            if (!this._panelBox.has_style_class_name('floating'))
-                this._panelBox.add_style_class_name('floating');
-        } else {
-            if (this._panelBox.has_style_class_name('floating'))
-                this._panelBox.remove_style_class_name('floating');
-        }
-        
-        this._resetPanelGeometry();
-    }
-    
-    _resetPanelGeometry() {
-        this._dtpPanel.geom = this._dtpPanel.getGeometry();
-        this._dtpPanel._setPanelPosition();
-        this._dtpPanel.dynamicTransparency.updateExternalStyle();
-    }
-
     _changeEnabledStatus() {
-        let intellihide = Me.settings.get_boolean('intellihide');
-        let onlySecondary = Me.settings.get_boolean('intellihide-only-secondary');
+        let intellihide = SETTINGS.get_boolean('intellihide');
+        let onlySecondary = SETTINGS.get_boolean('intellihide-only-secondary');
         let enabled = intellihide && !(this._dtpPanel.isPrimary && onlySecondary);
 
         if (this.enabled !== enabled) {
@@ -208,20 +181,13 @@ var Intellihide = class {
                 }
             ],
             [
-                Me.settings, 
+                SETTINGS, 
                 [
                     'changed::intellihide-use-pressure',
                     'changed::intellihide-hide-from-windows',
                     'changed::intellihide-behaviour'
                 ],
                 () => this.reset()
-            ],
-            [
-                Me.settings,
-                [
-                    'changed::intellihide-floating-rounded-theme'
-                ],
-                () => this._toggleFloatingRoundedTheme()
             ],
             [
                 this._panelBox,
@@ -273,7 +239,7 @@ var Intellihide = class {
     _setRevealMechanism() {
         let barriers = Meta.BackendCapabilities.BARRIERS
 
-        if ((global.backend.capabilities & barriers) === barriers && Me.settings.get_boolean('intellihide-use-pressure')) {
+        if ((global.backend.capabilities & barriers) === barriers && SETTINGS.get_boolean('intellihide-use-pressure')) {
             this._edgeBarrier = this._createBarrier();
             this._pressureBarrier = new Layout.PressureBarrier(
                 INTELLIHIDE_PRESSURE_THRESHOLD,
@@ -373,13 +339,13 @@ var Intellihide = class {
             
             //the user is trying to reveal the panel
             if (this._monitor.inFullscreen && !mouseBtnIsPressed) {
-                return Me.settings.get_boolean('intellihide-show-in-fullscreen');
+                return SETTINGS.get_boolean('intellihide-show-in-fullscreen');
             }
 
             return !mouseBtnIsPressed;
         }
 
-        if (!Me.settings.get_boolean('intellihide-hide-from-windows')) {
+        if (!SETTINGS.get_boolean('intellihide-hide-from-windows')) {
             return this._panelBox.hover;
         }
 
