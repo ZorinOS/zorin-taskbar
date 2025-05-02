@@ -1505,9 +1505,6 @@ msgstr "Mostrar iconas na escritorio"
 msgid "Show Desktop button padding (px)"
 msgstr "Recheo Mostrar o botón do escritorio (px)"
 
-msgid "Floating rounded theme"
-msgstr "Tema redondeado flotante"
-
 #~ msgid "Top, with plugin icons collapsed to bottom"
 #~ msgstr "Arriba, coas iconas contraídas"
 

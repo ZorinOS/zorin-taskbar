@@ -21,6 +21,3 @@ msgstr "Näytä työpöytä-kuvake"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Näytä työpöytä painikkeen asettelu (px)"
-
-msgid "Floating rounded theme"
-msgstr "Kelluva ja pyöristetty teema"

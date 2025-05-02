@@ -1461,9 +1461,6 @@ msgstr "Показать значок рабочего стола"
 msgid "Show Desktop button padding (px)"
 msgstr "Показать рабочий стол - отступ внутри кнопки (px)"
 
-msgid "Floating rounded theme"
-msgstr "Плавающая закругленная тема"
-
 msgid "Isolate Workspaces and Monitors in Application Switching settings"
 msgstr "Изолируйте рабочие столы и мониторы в настройках Переключения между приложениями"
 

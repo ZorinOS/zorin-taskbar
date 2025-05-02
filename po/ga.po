@@ -21,6 +21,3 @@ msgstr "Taispeáin deilbhín Deisce"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Stuáil Taispeáin cnaipe Deisce (px)"
-
-msgid "Floating rounded theme"
-msgstr "Téama chothromú ar snámh"

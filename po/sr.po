@@ -21,6 +21,3 @@ msgstr "Прикажи икону радне површине"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Подлога „Прикажи дугме радне површине“ (пк)"
-
-msgid "Floating rounded theme"
-msgstr "Плутајућа заобљена тема"

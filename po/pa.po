@@ -21,6 +21,3 @@ msgstr "ਡੈਸਕਟਾਪ ਆਈਕਾਨ ਵੇਖਾਓ"
 
 msgid "Show Desktop button padding (px)"
 msgstr "ਡੈਸਕਟਾਪ ਬਟਨ ਦਿਖਾਓ ਭਰਾਵ (px)"
-
-msgid "Floating rounded theme"
-msgstr "ਫਲੋਟਿੰਗ ਗੋਲ ਥੀਮ"

@@ -21,6 +21,3 @@ msgstr "Prikaži ikonu radne površine"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Podmetač Prikaži gumb radne površine (px)"
-
-msgid "Floating rounded theme"
-msgstr "Plutajuća zaobljena tema"

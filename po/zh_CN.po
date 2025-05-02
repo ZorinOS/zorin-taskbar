@@ -1441,9 +1441,6 @@ msgstr "显示桌面图标"
 msgid "Show Desktop button padding (px)"
 msgstr "“显示桌面按钮”的内边距(px)"
 
-msgid "Floating rounded theme"
-msgstr "悬浮圆角主题"
-
 #, javascript-format
 #~ msgid "%d ."
 #~ msgstr "%d ."

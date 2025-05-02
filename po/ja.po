@@ -1492,9 +1492,6 @@ msgstr "デスクトップアイコンを表示"
 msgid "Show Desktop button padding (px)"
 msgstr "デスクトップボタンを表示 余白 (px)"
 
-msgid "Floating rounded theme"
-msgstr "フローティングラウンドテーマ"
-
 msgid "Isolate Workspaces and Monitors in Application Switching settings"
 msgstr "アプリケーションの切り替え設定でワークスペースとモニターを分離する"
 

@@ -21,6 +21,3 @@ msgstr "Vis skrivebords ikon"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Vis skrivebords knap afstand (px)"
-
-msgid "Floating rounded theme"
-msgstr "Flydende afrundet tema"

@@ -18,6 +18,3 @@ msgstr "ডেস্কটপ আইকন দেখান"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Show Desktop button প্যাডিং (px আকারে)"
-
-msgid "Floating rounded theme"
-msgstr "ভাসমান বৃত্তাকার থিম"

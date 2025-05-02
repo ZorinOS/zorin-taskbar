@@ -1507,9 +1507,6 @@ msgstr "Mostrar Escritorio - ícono"
 msgid "Show Desktop button padding (px)"
 msgstr "Mostrar Escritorio - espaciado del botón (px)"
 
-msgid "Floating rounded theme"
-msgstr "Tema flotante redondeado"
-
 msgid "Isolate Workspaces and Monitors in Application Switching settings"
 msgstr "Aislar espacios de trabajo y monitores en la configuración de Cambio de aplicaciones"
 

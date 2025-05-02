@@ -1,32 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <interface>
+  <!-- interface-name SettingsStyle.ui -->
   <requires lib="gtk" version="4.0"/>
-
-  <object class="GtkAdjustment" id="trans_opacity_adjustment">
-    <property name="upper">100</property>
-    <property name="step_increment">5</property>
-    <property name="page_increment">10</property>
+  <requires lib="libadwaita" version="1.6"/>
+  <object class="GtkAdjustment" id="panel_margin_adjustment">
+    <property name="lower">0.33</property>
+    <property name="page-increment">0.1</property>
+    <property name="step-increment">0.01</property>
+    <property name="upper">1</property>
   </object>
-
+  <object class="GtkAdjustment" id="trans_opacity_adjustment">
+    <property name="page-increment">10</property>
+    <property name="step-increment">5</property>
+    <property name="upper">100</property>
+  </object>
   <object class="AdwPreferencesPage" id="style">
+    <property name="icon-name">applications-graphics-symbolic</property>
     <property name="title" translatable="yes">Style</property>
-    <property name="icon_name">applications-graphics-symbolic</property>
-
-    <!-- group panel intellihide -->
     <child>
       <object class="AdwPreferencesGroup" id="position_group_panel2">
-
         <child>
           <object class="AdwActionRow">
-            <property name="title" translatable="yes">Panel Intellihide</property>
             <property name="subtitle" translatable="yes">Hide and reveal the panel according to preferences</property>
+            <property name="title" translatable="yes">Panel Intellihide</property>
             <child>
               <object class="GtkButton" id="intellihide_options_button">
-                <property name="receives_default">True</property>
+                <property name="receives-default">True</property>
                 <property name="valign">center</property>
                 <child>
                   <object class="GtkImage" id="image_intellihide_options">
-                    <property name="icon_name">emblem-system-symbolic</property>
+                    <property name="icon-name">emblem-system-symbolic</property>
                   </object>
                 </child>
                 <style>
@@ -41,26 +44,46 @@
             </child>
           </object>
         </child>
-
       </object>
     </child>
-
-    <!-- group dynamic trans2 -->
     <child>
-      <object class="AdwPreferencesGroup" id="style_group_dynamic_trans2">
+      <object class="AdwPreferencesGroup" id="style_group_dynamic_trans">
         <property name="title" translatable="yes">Panel style</property>
-
         <child>
           <object class="AdwActionRow">
-            <property name="title" translatable="yes">Floating rounded theme</property>
+            <property name="subtitle" translatable="yes">(default is 0)</property>
+            <property name="title" translatable="yes">Margin</property>
             <child>
-              <object class="GtkSwitch" id="floating_rounded_theme_switch">
-                <property name="valign">center</property>
+              <object class="GtkScale" id="panel_margin_scale">
+                <property name="adjustment">panel_margin_adjustment</property>
+                <property name="digits">0</property>
+                <property name="draw-value">True</property>
+                <property name="round-digits">0</property>
+                <property name="value-pos">right</property>
+                <property name="width-request">300</property>
               </object>
             </child>
           </object>
         </child>
-
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Border radius</property>
+            <child>
+              <object class="GtkScale" id="global_border_radius_scale">
+                <property name="adjustment">global_border_radius_adjustment</property>
+                <property name="digits">0</property>
+                <property name="draw-value">True</property>
+                <property name="round-digits">0</property>
+                <property name="value-pos">right</property>
+                <property name="width-request">300</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup" id="style_group_dynamic_trans2">
         <child>
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Override panel theme background opacity</property>
@@ -71,31 +94,29 @@
             </child>
           </object>
         </child>
-
         <child>
           <object class="AdwActionRow" id="trans_opacity_box">
             <property name="title" translatable="yes">Panel background opacity (%)</property>
             <child>
               <object class="GtkSpinButton" id="trans_opacity_spinbutton">
-                <property name="valign">center</property>
-                <property name="text" translatable="yes">0</property>
                 <property name="adjustment">trans_opacity_adjustment</property>
+                <property name="text" translatable="yes">0</property>
+                <property name="valign">center</property>
               </object>
             </child>
           </object>
         </child>
-
         <child>
           <object class="AdwActionRow" id="trans_opacity_box2">
-            <property name="title" translatable="yes">Dynamic background opacity</property>
             <property name="subtitle" translatable="yes">Change opacity when a window gets close to the panel</property>
+            <property name="title" translatable="yes">Dynamic background opacity</property>
             <child>
               <object class="GtkButton" id="trans_dyn_options_button">
-                <property name="receives_default">True</property>
+                <property name="receives-default">True</property>
                 <property name="valign">center</property>
                 <child>
                   <object class="GtkImage" id="image_trans_dyn_options">
-                    <property name="icon_name">emblem-system-symbolic</property>
+                    <property name="icon-name">emblem-system-symbolic</property>
                   </object>
                 </child>
                 <style>
@@ -110,9 +131,13 @@
             </child>
           </object>
         </child>
-
       </object>
     </child>
-
+  </object>
+  <object class="GtkAdjustment" id="global_border_radius_adjustment">
+    <property name="lower">0.33</property>
+    <property name="page-increment">0.1</property>
+    <property name="step-increment">0.01</property>
+    <property name="upper">1</property>
   </object>
 </interface>

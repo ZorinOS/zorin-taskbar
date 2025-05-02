@@ -21,6 +21,3 @@ msgstr "Hiển thị biểu tượng Desktop"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Phần đệm Show Desktop button (px)"
-
-msgid "Floating rounded theme"
-msgstr "Theme có dạng bo tròn nỗi"

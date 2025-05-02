@@ -1469,9 +1469,6 @@ msgstr "바탕 화면 아이콘 표시"
 msgid "Show Desktop button padding (px)"
 msgstr "바탕 화면 버튼 표시 패딩(px)"
 
-msgid "Floating rounded theme"
-msgstr "떠 다니는 둥근 테마"
-
 #~ msgid "Current Show Applications icon"
 #~ msgstr "현재 프로그램 표시 아이콘"
 

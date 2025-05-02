@@ -21,6 +21,3 @@ msgstr "Sýna skjáborðstáknið"
 
 msgid "Show Desktop button padding (px)"
 msgstr "„Sýna skjáborðshnapp“ padding (px)"
-
-msgid "Floating rounded theme"
-msgstr "Fljótandi ávalið þema"

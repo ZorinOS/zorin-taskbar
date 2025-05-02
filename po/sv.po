@@ -1504,9 +1504,6 @@ msgstr "Visa Skrivbordsikonen"
 msgid "Show Desktop button padding (px)"
 msgstr "Fyllnad (px) för knappen Visa Skrivbordet"
 
-msgid "Floating rounded theme"
-msgstr "Flytande rundat tema"
-
 #~ msgid "Top, with plugin icons collapsed to bottom"
 #~ msgstr "Topp, med tilläggsikoner kollapsade till botten"
 

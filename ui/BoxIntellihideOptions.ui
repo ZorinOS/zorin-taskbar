@@ -1,19 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <interface>
+  <!-- interface-name BoxIntellihideOptions.ui -->
   <requires lib="gtk" version="4.0"/>
-
+  <requires lib="libadwaita" version="1.3"/>
   <object class="GtkBox" id="box_intellihide_options">
-    <property name="orientation">vertical</property>
-    <property name="width-request">600</property>
-    <property name="spacing">24</property>
-    <property name="margin-top">32</property>
     <property name="margin-bottom">32</property>
-    <property name="margin-start">32</property>
     <property name="margin-end">32</property>
-
+    <property name="margin-start">32</property>
+    <property name="margin-top">32</property>
+    <property name="orientation">vertical</property>
+    <property name="spacing">24</property>
+    <property name="width-request">600</property>
     <child>
       <object class="AdwPreferencesGroup">
-
         <child>
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Only hide the panel when it is obstructed by windows</property>
@@ -24,7 +23,6 @@
             </child>
           </object>
         </child>
-
         <child>
           <object class="AdwActionRow" id="intellihide_behaviour_options">
             <property name="title" translatable="yes">The panel hides from</property>
@@ -40,13 +38,10 @@
             </child>
           </object>
         </child>
-
       </object>
     </child>
-
     <child>
       <object class="AdwPreferencesGroup">
-
         <child>
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Require pressure at the edge of the screen to reveal the panel</property>
@@ -57,13 +52,10 @@
             </child>
           </object>
         </child>
-
       </object>
     </child>
-
     <child>
       <object class="AdwPreferencesGroup">
-
         <child>
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Allow the panel to be revealed while in fullscreen mode</property>
@@ -74,11 +66,10 @@
             </child>
           </object>
         </child>
-
         <child>
           <object class="AdwActionRow" id="grid_intellihide_only_secondary">
-            <property name="title" translatable="yes">Only hide secondary panels</property>
             <property name="subtitle" translatable="yes">(requires multi-monitors option)</property>
+            <property name="title" translatable="yes">Only hide secondary panels</property>
             <child>
               <object class="GtkSwitch" id="intellihide_only_secondary_switch">
                 <property name="valign">center</property>
@@ -86,24 +77,41 @@
             </child>
           </object>
         </child>
-
         <child>
           <object class="AdwActionRow">
-            <property name="title" translatable="yes">Keyboard shortcut to reveal and hold the panel</property>
             <property name="subtitle" translatable="yes">Syntax: &amp;lt;Shift&amp;gt;, &amp;lt;Ctrl&amp;gt;, &amp;lt;Alt&amp;gt;, &amp;lt;Super&amp;gt;</property>
+            <property name="title" translatable="yes">Keyboard shortcut to reveal and hold the panel</property>
             <child>
               <object class="GtkEntry" id="intellihide_toggle_entry">
+                <property name="placeholder-text" translatable="yes">e.g. &lt;Super&gt;i</property>
                 <property name="valign">center</property>
-                <property name="width_chars">12</property>
-                <property name="placeholder_text" translatable="yes">e.g. &lt;Super&gt;i</property>
+                <property name="width-chars">12</property>
               </object>
             </child>
           </object>
         </child>
-
+        <child>
+          <object class="AdwActionRow" id="grid_intellihide_persist_state">
+            <property name="title" translatable="yes">Persist state across restarts</property>
+            <child>
+              <object class="GtkSwitch" id="intellihide_persist_state_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="subtitle" translatable="yes">(respects "Do Not Disturb" and requires show notification counter badge option)</property>
+            <property name="title" translatable="yes">Reveal and hold the panel on notification</property>
+            <child>
+              <object class="GtkSwitch" id="intellihide_show_on_notification_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
-
   </object>
-
 </interface>

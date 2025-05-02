@@ -21,6 +21,3 @@ msgstr "ડેસ્કટ .પ ચિહ્ન બતાવો"
 
 msgid "Show Desktop button padding (px)"
 msgstr "ડેસ્કટtopપ બટન બતાવો પેડિંગ (પીએક્સ)"
-
-msgid "Floating rounded theme"
-msgstr "ફ્લોટિંગ ગોળાકાર થીમ"

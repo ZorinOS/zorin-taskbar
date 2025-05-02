@@ -1404,9 +1404,6 @@ msgstr "Zobrať ikonu plochy"
 msgid "Show Desktop button padding (px)"
 msgstr "Zobraziť ikonu plochy výplň (px)"
 
-msgid "Floating rounded theme"
-msgstr "Zaoblený plávajúci motív"
-
 #, javascript-format
 #~ msgid "%d ."
 #~ msgstr "%d ."

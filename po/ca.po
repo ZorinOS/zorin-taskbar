@@ -21,6 +21,3 @@ msgstr "Mostrar l'icona de l'Escriptori"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Farciment Mostra el botó de l'escriptori (px)"
-
-msgid "Floating rounded theme"
-msgstr "Tema flotant arrodonit"

@@ -1498,9 +1498,6 @@ msgstr "顯示桌面圖示"
 msgid "Show Desktop button padding (px)"
 msgstr "顯示桌面按鈕 空間 (像素)"
 
-msgid "Floating rounded theme"
-msgstr "浮動圓滑主題"
-
 #~ msgid "Show Details"
 #~ msgstr "顯示詳細資訊"
 

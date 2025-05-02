@@ -1,3 +1,21 @@
+gnome-shell-extension-zorin-taskbar (68.1) noble; urgency=medium
+
+  * Adjusted app icon margins and padding
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 02 May 2025 14:19:18 +0100
+
+gnome-shell-extension-zorin-taskbar (68) noble; urgency=medium
+
+  * Re-based on upstream version 68
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 29 Apr 2025 20:36:02 +0100
+
+gnome-shell-extension-zorin-taskbar (65.3) noble; urgency=medium
+
+  * Changed activities button default position
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sun, 02 Mar 2025 19:39:09 +0000
+
 gnome-shell-extension-zorin-taskbar (65.2) noble; urgency=medium
 
   * Separated floating rounded theme from intellihide as an independent

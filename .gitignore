@@ -5,3 +5,4 @@ zorin-taskbar@zorinos.com*.zip
 *.mo
 po/zorin-taskbar.pot
 ui/*.ui.h
+node_modules/

@@ -21,6 +21,3 @@ msgstr "Kuva töölauaikoon"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Täitmine Kuva töölaua nupp (px)"
-
-msgid "Floating rounded theme"
-msgstr "Ujuv ümardatud teema"

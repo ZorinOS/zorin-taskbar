@@ -18,6 +18,7 @@
     <value value='5' nick='QUIT'/>
     <value value='6' nick='TOGGLE-SHOWPREVIEW'/>
     <value value='7' nick='TOGGLE-CYCLE'/>
+    <value value='8' nick='TOGGLE-SPREAD'/>
   </enum>
   <enum id='org.gnome.shell.extensions.zorin-taskbar.scrollAction'>
     <value value='0' nick='NOTHING'/>
@@ -71,7 +72,7 @@
     </key>
     <key type="s" name="panel-lengths">
       <default>'{}'</default>
-      <summary>Percentages of screen edge for panel to span</summary>
+      <summary>Percentages of screen edge for panel to span, -1 for dynamic length (dock mode)</summary>
       <description>Length of the panels, in percent (JSON).</description>
     </key>
     <key type="s" name="panel-anchors">
@@ -99,11 +100,6 @@
       <summary>Style of the running indicator (unfocused)</summary>
       <description>Style of the running indicator for the icon for applications which are not currently focused</description>
     </key>
-    <key type="b" name="dot-color-dominant">
-      <default>false</default>
-      <summary>Running indicator dominant color</summary>
-      <description>Whether to use the app icon's dominant color for .app-well-running-dot</description>
-    </key>
     <key type="b" name="stockgs-keep-top-panel">
       <default>false</default>
       <summary>Keep top panel</summary>
@@ -118,6 +114,10 @@
       <default>false</default>
       <summary>Lock the taskbar</summary>
       <description>Specifies if the user can modify the taskbar</description>
+    </key>
+    <key type="i" name="panel-margin">
+        <default>0</default>
+        <summary>Panel margin</summary>
     </key>
     <key type="b" name="trans-use-custom-opacity">
       <default>false</default>
@@ -171,8 +171,12 @@
     </key>
     <key type="b" name="intellihide-show-in-fullscreen">
       <default>false</default>
-      <summary>Intellihide pressure</summary>
+      <summary>Allow revealing the panel while in fullscreen</summary>
       <description>Allow the panel to be revealed while an application is in fullscreen mode</description>
+    </key>
+    <key type="b" name="intellihide-show-on-notification">
+      <default>false</default>
+      <summary>Reveal the panel on notification</summary>
     </key>
     <key type="b" name="intellihide-only-secondary">
       <default>false</default>
@@ -189,10 +193,9 @@
       <summary>Keybinding toggle intellihide</summary>
       <description>Keybinding to reveal the panel while in intellihide mode</description>
     </key>
-    <key type="b" name="floating-rounded-theme">
-      <default>false</default>
-      <summary>Floating rounded theme</summary>
-      <description>Display the panel with a floating rounded theme</description>
+    <key type="i" name="intellihide-persisted-state">
+      <default>-1</default>
+      <summary>Persisted intellihide hold status. -1 means the option is disabled</summary>
     </key>
     <key type="as" name="panel-context-menu-commands">
      <default>[]</default>
@@ -279,11 +282,6 @@
       <summary>Display panels on all monitors</summary>
       <description>Specifies if a panel is shown on every monitors</description>
     </key>
-    <key type="ai" name="available-monitors">
-     <default>[]</default>
-     <summary>Available monitors</summary>
-     <description>Available gnome-shell (Mutter) monitors, internal use</description>
-    </key>
     <key type="b" name="isolate-monitors">
       <default>false</default>
       <summary>Provide monitor isolation</summary>
@@ -292,7 +290,7 @@
     <key type="b" name="show-favorites-all-monitors">
       <default>true</default>
       <summary>Display the favorites on all monitors</summary>
-      <description>Specifies if every panel should display the favorite applications. If false, the favorite appplications are only displayed on the primary monitor.</description>
+      <description>Specifies if every panel should display the favorite applications. If false, the favorite applications are only displayed on the primary monitor.</description>
     </key>
     <key type="b" name="customize-click">
       <default>true</default>
@@ -336,6 +334,10 @@
       <default>true</default>
       <summary>Middle click preview to close window</summary>
       <description>Middle click on the window preview to close that window</description>
+    </key>
+    <key type="i" name="global-border-radius">
+        <default>0</default>
+        <summary>Border radius of panel elements</summary>
     </key>
     <key type="s" name="shortcut-text">
       <default>"&lt;Super&gt;q"</default>
@@ -801,6 +803,10 @@
       <default>true</default>
       <summary>Show badge count on app icon</summary>
       <description>Whether to show badge count overlay on app icon, for supported applications.</description>
+    </key>
+    <key type="s" name="target-prefs-page">
+      <default>''</default>
+      <summary>The preferences page name to display</summary>
     </key>
   </schema>
 </schemalist>

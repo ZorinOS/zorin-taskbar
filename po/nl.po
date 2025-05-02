@@ -1502,9 +1502,6 @@ msgstr "Pictogram Bureaublad weergeven"
 msgid "Show Desktop button padding (px)"
 msgstr "Opvulling Pictogram bureaublad weergeven (px)"
 
-msgid "Floating rounded theme"
-msgstr "Zwevend afgerond thema"
-
 msgid "Isolate Workspaces and Monitors in Application Switching settings"
 msgstr "Isoleer werkruimten en monitoren in de instellingen voor het Wisselen tussen toepassingen"
 

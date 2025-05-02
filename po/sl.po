@@ -21,6 +21,3 @@ msgstr "Pokaži ikono za namizje"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Pokaži ikono za namizje razmik (px)"
-
-msgid "Floating rounded theme"
-msgstr "Plavajoča zaokrožena tema"

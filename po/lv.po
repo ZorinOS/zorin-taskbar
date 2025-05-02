@@ -21,6 +21,3 @@ msgstr "Rādīt darbvirsmas ikonu"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Rādīt darbvirsmas pogu polsterējums (px)"
-
-msgid "Floating rounded theme"
-msgstr "Peldoša noapaļota tēma"

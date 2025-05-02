@@ -22,8 +22,5 @@ msgstr "Mostrar ícone da Área de Trabalho"
 msgid "Show Desktop button padding (px)"
 msgstr "Preenchimento do botão Mostrar Área de Trabalho (px)"
 
-msgid "Floating rounded theme"
-msgstr "Tema arredondado flutuante"
-
 msgid "Isolate Workspaces and Monitors in Application Switching settings"
 msgstr "Isolar espaços de trabalho e monitores nas configurações de Comutação de aplicações"

@@ -21,6 +21,3 @@ msgstr "แสดงไอคอนเดสก์ท็อป"
 
 msgid "Show Desktop button padding (px)"
 msgstr "ช่องว่างภายใน แสดงปุ่มเดสก์ท็อป (px)"
-
-msgid "Floating rounded theme"
-msgstr "ธีมกลมลอย"

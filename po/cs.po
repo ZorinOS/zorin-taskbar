@@ -1412,9 +1412,6 @@ msgstr "Zobrazit ikonu plochy"
 msgid "Show Desktop button padding (px)"
 msgstr "vybarvení tlačítka Zobraz plochu"
 
-msgid "Floating rounded theme"
-msgstr "Plovoucí zaoblený vzhled"
-
 #~ msgid "Top, with plugin icons collapsed to bottom"
 #~ msgstr "Nahoře, ikony dole"
 

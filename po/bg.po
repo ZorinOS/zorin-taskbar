@@ -21,6 +21,3 @@ msgstr "Показване на икона на работния плот"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Бутон Покажи работния плот - подложка (px)"
-
-msgid "Floating rounded theme"
-msgstr "Плаваща заоблена тема"

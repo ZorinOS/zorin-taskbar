@@ -1525,9 +1525,6 @@ msgstr "Masaüstünü Göster simgesi"
 msgid "Show Desktop button padding (px)"
 msgstr "Masaüstünü göster butonu boşluğu (px)"
 
-msgid "Floating rounded theme"
-msgstr "Yüzen yuvarlatılmış tema"
-
 msgid "Isolate Workspaces and Monitors in Application Switching settings"
 msgstr "Uygulama Geçişi ayarlarında Çalışma Alanlarını ve Monitörleri Yalıtım"
 

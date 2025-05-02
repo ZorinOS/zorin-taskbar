@@ -21,6 +21,3 @@ msgstr "Паказаць значок працоўнага стала"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Пракладка Паказаць кнопку працоўнага стала (px)"
-
-msgid "Floating rounded theme"
-msgstr "Плаваючая круглявая тэма"

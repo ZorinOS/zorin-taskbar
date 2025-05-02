@@ -21,6 +21,3 @@ msgstr "Tunjukkan ikon Atas Meja"
 
 msgid "Show Desktop button padding (px)"
 msgstr "Pemadatan Tunjuk butang Atas Meja (px)"
-
-msgid "Floating rounded theme"
-msgstr "Tema bundar terapung"

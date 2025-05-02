@@ -22,8 +22,5 @@ msgstr "أظهر أيقونات سطح المكتب"
 msgid "Show Desktop button padding (px)"
 msgstr "أظهر زر سطح المكتب المساحة المتروكة (بيكسل)"
 
-msgid "Floating rounded theme"
-msgstr "مظهر دائري عائم"
-
 msgid "Isolate Workspaces and Monitors in Application Switching settings"
 msgstr "عزل مساحات العمل والشاشات في إعدادات تبديل التطبيقات"
