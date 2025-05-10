@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (68.2) noble; urgency=medium
+
+  * Corrected code to detect Tiling Shell gap offset
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 10 May 2025 23:52:12 +0100
+
 gnome-shell-extension-zorin-taskbar (68.1) noble; urgency=medium
 
   * Adjusted app icon margins and padding

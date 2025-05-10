@@ -59,6 +59,7 @@ import * as Transparency from './transparency.js'
 import {
   SETTINGS,
   TILINGSETTINGS,
+  SHELLSETTINGS,
   DESKTOPSETTINGS,
   PERSISTENTSTORAGE,
   EXTENSION_PATH,
@@ -1078,7 +1079,7 @@ export const Panel = GObject.registerClass(
 
         if (
           TILINGSETTINGS != null &&
-          Main.extensionManager._extensionOrder.includes(ZORIN_TILING_SHELL_UUID) &&
+          SHELLSETTINGS.get_strv('enabled-extensions').includes(ZORIN_TILING_SHELL_UUID) &&
           TILINGSETTINGS.get_uint('outer-gaps') > 0
         ) {
           let position = this.getPosition()

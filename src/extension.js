@@ -42,6 +42,7 @@ let zorinDashDelayId = 0
 export let DTP_EXTENSION = null
 export let SETTINGS = null
 export let TILINGSETTINGS = null
+export let SHELLSETTINGS = null
 export let DESKTOPSETTINGS = null
 export let TERMINALSETTINGS = null
 export let NOTIFICATIONSSETTINGS = null
@@ -69,6 +70,9 @@ export default class ZorinTaskbarExtension extends Extension {
     } catch (e) {
       console.log(e)
     }
+    SHELLSETTINGS = new Gio.Settings({
+      schema_id: 'org.gnome.shell',
+    })
     DESKTOPSETTINGS = new Gio.Settings({
       schema_id: 'org.gnome.desktop.interface',
     })
@@ -135,6 +139,7 @@ export default class ZorinTaskbarExtension extends Extension {
 
     DTP_EXTENSION = null
     SETTINGS = null
+    SHELLSETTINGS = null
     DESKTOPSETTINGS = null
     TERMINALSETTINGS = null
     panelManager = null
