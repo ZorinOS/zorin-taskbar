@@ -8,6 +8,6 @@ Rules-Requires-Root: no
 
 Package: gnome-shell-extension-zorin-taskbar
 Architecture: all
-Depends: ${misc:Depends}, gnome-shell (>= 46), gnome-shell (<< 48~)
+Depends: ${misc:Depends}, gnome-shell (>= 46), gnome-shell (<< 49~)
 Description: Zorin Taskbar extension
  A taskbar extension for the Zorin OS desktop.

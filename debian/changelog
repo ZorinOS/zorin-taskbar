@@ -1,3 +1,15 @@
+gnome-shell-extension-zorin-taskbar (68.2.2) noble; urgency=medium
+
+  * Added settings schema to metadata file
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 06 Jun 2025 23:03:34 +0100
+
+gnome-shell-extension-zorin-taskbar (68.2.1) noble; urgency=medium
+
+  * Updated debian control file
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 23 May 2025 20:05:49 +0100
+
 gnome-shell-extension-zorin-taskbar (68.2) noble; urgency=medium
 
   * Corrected code to detect Tiling Shell gap offset

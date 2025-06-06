@@ -5,5 +5,6 @@
   "description": "A taskbar extension for the Zorin OS desktop.",
   "shell-version": [ "46", "47", "48" ],
   "gettext-domain": "zorin-taskbar",
+  "settings-schema": "org.gnome.shell.extensions.zorin-taskbar",
   "version": 68
 }
