@@ -670,7 +670,7 @@ export const PanelManager = class {
   }
 
   _adjustPanelMenuButton(button, monitor, arrowSide) {
-    if (button) {
+    if (button && button.menu) {
       button.menu._boxPointer._dtpSourceActor =
         button.menu._boxPointer.sourceActor
       button.menu._boxPointer.sourceActor = button

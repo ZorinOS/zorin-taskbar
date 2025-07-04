@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (68.2.3) noble; urgency=medium
+
+  * Fixed logic error when adjusting panel menu buttons
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 04 Jul 2025 20:36:32 +0100
+
 gnome-shell-extension-zorin-taskbar (68.2.2) noble; urgency=medium
 
   * Added settings schema to metadata file
