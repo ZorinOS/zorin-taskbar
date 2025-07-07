@@ -54,8 +54,6 @@ export default class ZorinTaskbarExtension extends Extension {
   constructor(metadata) {
     super(metadata)
 
-    this._realHasOverview = Main.sessionMode.hasOverview
-
     //create an object that persists until gnome-shell is restarted, even if the extension is disabled
     PERSISTENTSTORAGE = {}
   }
@@ -93,16 +91,6 @@ export default class ZorinTaskbarExtension extends Extension {
 
     // To remove later, try to map settings using monitor indexes to monitor ids
     PanelSettings.adjustMonitorSettings(SETTINGS)
-
-    Main.layoutManager.startInOverview = false
-
-    if (Main.layoutManager._startingUp) {
-      Main.sessionMode.hasOverview = false
-      startupCompleteHandler = Main.layoutManager.connect(
-        'startup-complete',
-        () => (Main.sessionMode.hasOverview = this._realHasOverview),
-      )
-    }
 
     this.enableGlobalStyles()
 
@@ -154,8 +142,6 @@ export default class ZorinTaskbarExtension extends Extension {
       Main.layoutManager.disconnect(startupCompleteHandler)
       startupCompleteHandler = null
     }
-
-    Main.sessionMode.hasOverview = this._realHasOverview
   }
 
   resetGlobalStyles() {
