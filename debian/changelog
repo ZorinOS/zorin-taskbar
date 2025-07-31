@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (68.4) noble; urgency=medium
+
+  * Applied monitor selection and reset geometry fixes
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Thu, 31 Jul 2025 19:40:58 +0100
+
 gnome-shell-extension-zorin-taskbar (68.3) noble; urgency=medium
 
   * Removed code to handle overview startup animation
