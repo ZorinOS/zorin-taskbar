@@ -142,6 +142,7 @@
 
 /* border radius, grrr no css variables in ST */
 #uiGroup.br5 .zorintaskbarPanel.dock,
+#uiGroup.br5 .zorintaskbarPanel.dock .zorintaskbarMainPanel,
 #uiGroup.br5 .show-apps,
 #uiGroup.br5 .dtp-container,
 #uiGroup.br5 .dtp-dots-container { 
@@ -154,6 +155,7 @@
 }
 
 #uiGroup.br10 .zorintaskbarPanel.dock,
+#uiGroup.br10 .zorintaskbarPanel.dock .zorintaskbarMainPanel,
 #uiGroup.br10 .show-apps,
 #uiGroup.br10 .dtp-container,
 #uiGroup.br10 .dtp-dots-container { 
@@ -166,6 +168,7 @@
 }
 
 #uiGroup.br15 .zorintaskbarPanel.dock,
+#uiGroup.br15 .zorintaskbarPanel.dock .zorintaskbarMainPanel,
 #uiGroup.br15 .show-apps,
 #uiGroup.br15 .dtp-container,
 #uiGroup.br15 .dtp-dots-container { 
@@ -178,6 +181,7 @@
 }
 
 #uiGroup.br20 .zorintaskbarPanel.dock,
+#uiGroup.br20 .zorintaskbarPanel.dock .zorintaskbarMainPanel,
 #uiGroup.br20 .show-apps,
 #uiGroup.br20 .dtp-container,
 #uiGroup.br20 .dtp-dots-container { 
@@ -190,6 +194,7 @@
 }
 
 #uiGroup.br25 .zorintaskbarPanel.dock,
+#uiGroup.br25 .zorintaskbarPanel.dock .zorintaskbarMainPanel,
 #uiGroup.br25 .show-apps,
 #uiGroup.br25 .dtp-container,
 #uiGroup.br25 .dtp-dots-container { 

@@ -144,16 +144,6 @@ function checkHotkeyPrefix(settings) {
   settings.apply()
 }
 
-function mergeObjects(main, bck) {
-  for (const prop in bck) {
-    if (!Object.hasOwn(main, prop) && Object.hasOwn(bck, prop)) {
-      main[prop] = bck[prop]
-    }
-  }
-
-  return main
-}
-
 const Preferences = class {
   constructor(window, settings, gnomeInterfaceSettings, path) {
     // this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.zorin-taskbar');
@@ -890,6 +880,62 @@ const Preferences = class {
         dialog.set_default_size(1, 1)
       })
 
+    // Panel border
+    this._settings.bind(
+      'trans-use-border',
+      this._builder.get_object('trans_border_switch'),
+      'active',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'trans-use-border',
+      this._builder.get_object('trans_border_color_box'),
+      'sensitive',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'trans-use-border',
+      this._builder.get_object('trans_border_width_box'),
+      'sensitive',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'trans-border-use-custom-color',
+      this._builder.get_object('trans_border_color_switch'),
+      'active',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'trans-border-use-custom-color',
+      this._builder.get_object('trans_border_color_colorbutton'),
+      'sensitive',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    let rgba = new Gdk.RGBA()
+    rgba.parse(this._settings.get_string('trans-border-custom-color'))
+    this._builder.get_object('trans_border_color_colorbutton').set_rgba(rgba)
+    this._builder
+      .get_object('trans_border_color_colorbutton')
+      .connect('color-set', (button) => {
+        let rgba = button.get_rgba()
+        let css = rgba.to_string()
+        this._settings.set_string('trans-border-custom-color', css)
+      })
+
+    this._builder
+      .get_object('trans_border_width_spinbutton')
+      .set_value(this._settings.get_int('trans-border-width'))
+    this._builder
+      .get_object('trans_border_width_spinbutton')
+      .connect('value-changed', (widget) => {
+        this._settings.set_int('trans-border-width', widget.get_value())
+      })
+
     this._settings.bind(
       'intellihide',
       this._builder.get_object('intellihide_switch'),
@@ -906,22 +952,133 @@ const Preferences = class {
 
     this._settings.bind(
       'intellihide-hide-from-windows',
-      this._builder.get_object('intellihide_window_hide_switch'),
+      this._builder.get_object('intellihide_window_hide_button'),
       'active',
       Gio.SettingsBindFlags.DEFAULT,
     )
 
     this._settings.bind(
-      'intellihide-hide-from-windows',
-      this._builder.get_object('intellihide_behaviour_options'),
-      'sensitive',
+      'intellihide-hide-from-monitor-windows',
+      this._builder.get_object('intellihide_window_monitor_hide_button'),
+      'active',
       Gio.SettingsBindFlags.DEFAULT,
     )
+
+    let setIntellihideBehaviorSensitivity = () => {
+      let overlappingButton = this._builder.get_object(
+        'intellihide_window_hide_button',
+      )
+      let hideFromMonitorWindows = this._settings.get_boolean(
+        'intellihide-hide-from-monitor-windows',
+      )
+
+      if (hideFromMonitorWindows) overlappingButton.set_active(false)
+
+      overlappingButton.set_sensitive(!hideFromMonitorWindows)
+
+      this._builder
+        .get_object('intellihide_behaviour_options')
+        .set_sensitive(
+          this._settings.get_boolean('intellihide-hide-from-windows') ||
+            hideFromMonitorWindows,
+        )
+    }
+
+    this._settings.connect(
+      'changed::intellihide-hide-from-windows',
+      setIntellihideBehaviorSensitivity,
+    )
+    this._settings.connect(
+      'changed::intellihide-hide-from-monitor-windows',
+      setIntellihideBehaviorSensitivity,
+    )
+
+    setIntellihideBehaviorSensitivity()
 
     this._settings.bind(
       'intellihide-behaviour',
       this._builder.get_object('intellihide_behaviour_combo'),
       'active-id',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'intellihide-use-pointer',
+      this._builder.get_object('intellihide_use_pointer_switch'),
+      'active',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'intellihide-use-pointer-limit-size',
+      this._builder.get_object('intellihide_use_pointer_limit_button'),
+      'active',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'intellihide-use-pointer',
+      this._builder.get_object('intellihide_use_pointer_limit_button'),
+      'sensitive',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'intellihide-revealed-hover',
+      this._builder.get_object('intellihide_revealed_hover_switch'),
+      'active',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'intellihide-use-pointer',
+      this._builder.get_object('intellihide_revealed_hover_switch'),
+      'sensitive',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'intellihide-revealed-hover-limit-size',
+      this._builder.get_object('intellihide_revealed_hover_limit_button'),
+      'active',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'intellihide-revealed-hover',
+      this._builder.get_object('intellihide_revealed_hover_limit_button'),
+      'sensitive',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.connect('changed::intellihide-use-pointer', () => {
+      if (!this._settings.get_boolean('intellihide-use-pointer')) {
+        this._settings.set_boolean('intellihide-revealed-hover', false)
+        this._settings.set_boolean('intellihide-use-pointer-limit-size', false)
+        this._settings.set_boolean('intellihide-use-pressure', false)
+      }
+    })
+
+    this._settings.connect('changed::intellihide-revealed-hover', () => {
+      if (!this._settings.get_boolean('intellihide-revealed-hover')) {
+        this._settings.set_boolean(
+          'intellihide-revealed-hover-limit-size',
+          false,
+        )
+      }
+    })
+
+    this._settings.bind(
+      'intellihide-use-pointer',
+      this._builder.get_object('intellihide_revealed_hover_options'),
+      'sensitive',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
+      'intellihide-use-pointer',
+      this._builder.get_object('intellihide_use_pressure_options'),
+      'sensitive',
       Gio.SettingsBindFlags.DEFAULT,
     )
 
@@ -1009,8 +1166,34 @@ const Preferences = class {
               this._settings.get_default_value('intellihide-hide-from-windows'),
             )
             this._settings.set_value(
+              'intellihide-hide-from-monitor-windows',
+              this._settings.get_default_value(
+                'intellihide-hide-from-monitor-windows',
+              ),
+            )
+            this._settings.set_value(
               'intellihide-behaviour',
               this._settings.get_default_value('intellihide-behaviour'),
+            )
+            this._settings.set_value(
+              'intellihide-use-pointer',
+              this._settings.get_default_value('intellihide-use-pointer'),
+            )
+            this._settings.set_value(
+              'intellihide-use-pointer-limit-size',
+              this._settings.get_default_value(
+                'intellihide-use-pointer-limit-size',
+              ),
+            )
+            this._settings.set_value(
+              'intellihide-revealed-hover',
+              this._settings.get_default_value('intellihide-revealed-hover'),
+            )
+            this._settings.set_value(
+              'intellihide-revealed-hover-limit-size',
+              this._settings.get_default_value(
+                'intellihide-revealed-hover-limit-size',
+              ),
             )
             this._settings.set_value(
               'intellihide-use-pressure',

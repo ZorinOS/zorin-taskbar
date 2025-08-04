@@ -35,6 +35,7 @@ import * as Utils from './utils.js'
 import * as DesktopIconsIntegration from './desktopIconsIntegration.js'
 import { DTP_EXTENSION, SETTINGS, tracker } from './extension.js'
 
+import Gio from 'gi://Gio'
 import GLib from 'gi://GLib'
 import GObject from 'gi://GObject'
 import Clutter from 'gi://Clutter'
@@ -93,6 +94,8 @@ export const PanelManager = class {
     this._updatePanelElementPositions()
 
     if (reset) return
+
+    this._syncAppSwitcherWorkspaceIsolation()
 
     this.notificationsMonitor = new NotificationsMonitor()
 
@@ -159,19 +162,23 @@ export const PanelManager = class {
         },
     )
 
-    this._injectionManager.overrideMethod(
-      Object.getPrototypeOf(
-        // WorkspaceDot in activities button
-        Main.panel.statusArea.activities.get_first_child().get_first_child(),
-      ),
-      'vfunc_get_preferred_width',
-      (get_preferred_width) =>
-        function (forHeight) {
-          return Utils.getBoxLayoutVertical(this.get_parent())
-            ? [0, forHeight]
-            : get_preferred_width.call(this, forHeight)
-        },
-    )
+    let activitiesChild = Main.panel.statusArea.activities.get_first_child()
+
+    if (activitiesChild?.constructor.name == 'WorkspaceIndicators') {
+      this._injectionManager.overrideMethod(
+        Object.getPrototypeOf(
+          // WorkspaceDot in activities button
+          activitiesChild.get_first_child(),
+        ),
+        'vfunc_get_preferred_width',
+        (get_preferred_width) =>
+          function (forHeight) {
+            return Utils.getBoxLayoutVertical(this.get_parent())
+              ? [0, forHeight]
+              : get_preferred_width.call(this, forHeight)
+          },
+      )
+    }
 
     LookingGlass.LookingGlass.prototype._oldResize =
       LookingGlass.LookingGlass.prototype._resize
@@ -250,6 +257,11 @@ export const PanelManager = class {
         },
       ],
       [
+        SETTINGS,
+        'changed::isolate-workspaces',
+        this._syncAppSwitcherWorkspaceIsolation,
+      ],
+      [
         Utils.DisplayWrapper.getMonitorManager(),
         'monitors-changed',
         async () => {
@@ -273,7 +285,7 @@ export const PanelManager = class {
             this._adjustPanelMenuButton(
               this._getPanelMenuButton(child.get_first_child()),
               this.primaryPanel.monitor,
-              this.primaryPanel.getPosition(),
+              this.primaryPanel.geom.position,
             )
         },
       ]),
@@ -312,10 +324,8 @@ export const PanelManager = class {
 
       p.disable()
 
-      let clipContainer = p.panelBox.get_parent()
-
+      Main.layoutManager._untrackActor(p)
       Main.layoutManager._untrackActor(p.panelBox)
-      Main.layoutManager.removeChrome(clipContainer)
 
       if (p.isStandalone) {
         p.panelBox.destroy()
@@ -324,14 +334,18 @@ export const PanelManager = class {
         p.remove_child(p.panel)
         p.panelBox.add_child(p.panel)
 
-        p.panelBox.set_position(clipContainer.x, clipContainer.y)
+        p.panelBox.set_position(p.clipContainer.x, p.clipContainer.y)
 
-        clipContainer.remove_child(p.panelBox)
+        delete p.panelBox._dtpIndex
+
+        p.clipContainer.remove_child(p.panelBox)
         Main.layoutManager.addChrome(p.panelBox, {
           affectsStruts: true,
           trackFullscreen: true,
         })
       }
+
+      Main.layoutManager.removeChrome(p.clipContainer)
     })
 
     if (Main.layoutManager.primaryMonitor) {
@@ -385,6 +399,18 @@ export const PanelManager = class {
     delete Main.panel.style
     this._desktopIconsUsableArea.destroy()
     this._desktopIconsUsableArea = null
+  }
+
+  _syncAppSwitcherWorkspaceIsolation() {
+    // alt-tab menu
+    let appSwitcherSettings = new Gio.Settings({
+      schema_id: 'org.gnome.shell.app-switcher',
+    })
+
+    appSwitcherSettings.set_boolean(
+      'current-workspace-only',
+      SETTINGS.get_boolean('isolate-workspaces'),
+    )
   }
 
   _setDesktopIconsMargins() {
@@ -640,20 +666,29 @@ export const PanelManager = class {
     Main.layoutManager.trackChrome(panelBox, {
       trackFullscreen: true,
       affectsStruts: true,
-      affectsInputRegion: true,
     })
 
-    panel = new Panel.Panel(this, monitor, panelBox, isStandalone)
+    panel = new Panel.Panel(
+      this,
+      monitor,
+      clipContainer,
+      panelBox,
+      isStandalone,
+    )
     panelBox.add_child(panel)
     panel.enable()
 
+    Main.layoutManager.trackChrome(panel, {
+      affectsInputRegion: true,
+      affectsStruts: false,
+    })
+
     panelBox._dtpIndex = monitor.index
     panelBox.set_position(0, 0)
-
-    if (panel.checkIfVertical) panelBox.set_width(-1)
+    panelBox.set_width(-1)
 
     this._findPanelMenuButtons(panelBox).forEach((pmb) =>
-      this._adjustPanelMenuButton(pmb, monitor, panel.getPosition()),
+      this._adjustPanelMenuButton(pmb, monitor, panel.geom.position),
     )
 
     panel.taskbar.iconAnimator.start()
@@ -897,7 +932,7 @@ function newUpdateHotCorners() {
       global.zorinTaskbar.panels,
       (p) => p.monitor.index == i,
     )
-    let panelPosition = panel ? panel.getPosition() : St.Side.BOTTOM
+    let panelPosition = panel ? panel.geom.position : St.Side.BOTTOM
     let panelTopLeft =
       panelPosition == St.Side.TOP || panelPosition == St.Side.LEFT
     let monitor = this.monitors[i]
@@ -951,9 +986,9 @@ function newUpdateHotCorners() {
       corner.setBarrierSize = (size) =>
         Object.getPrototypeOf(corner).setBarrierSize.call(
           corner,
-          Math.min(size, 32),
+          Math.min(size, Panel.GS_PANEL_SIZE),
         )
-      corner.setBarrierSize(panel ? panel.geom.innerSize : 32)
+      corner.setBarrierSize(panel ? panel.geom.innerSize : Panel.GS_PANEL_SIZE)
       this.hotCorners.push(corner)
     } else {
       this.hotCorners.push(null)
@@ -986,7 +1021,7 @@ function newUpdatePanelBarrier(panel) {
   let fixed1 = panel.monitor.y
   let fixed2 = panel.monitor.y + barrierSize
 
-  if (panel.checkIfVertical()) {
+  if (panel.geom.vertical) {
     barriers._rightPanelBarrier.push(
       panel.monitor.y + panel.monitor.height,
       Meta.BarrierDirection.NEGATIVE_Y,
@@ -1006,7 +1041,7 @@ function newUpdatePanelBarrier(panel) {
     )
   }
 
-  switch (panel.getPosition()) {
+  switch (panel.geom.position) {
     //values are initialized as St.Side.TOP
     case St.Side.BOTTOM:
       fixed1 = panel.monitor.y + panel.monitor.height - barrierSize
@@ -1057,13 +1092,13 @@ function _newLookingGlassResize() {
     (p) => p.monitor == Main.layoutManager.primaryMonitor,
   )
   let topOffset =
-    primaryMonitorPanel.getPosition() == St.Side.TOP
+    primaryMonitorPanel.geom.position == St.Side.TOP
       ? primaryMonitorPanel.geom.outerSize +
         (SETTINGS.get_boolean('stockgs-keep-top-panel')
           ? Main.layoutManager.panelBox.height
           : 0) +
         8
-      : 32
+      : Panel.GS_PANEL_SIZE
 
   this._oldResize()
 

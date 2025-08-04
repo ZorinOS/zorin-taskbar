@@ -199,7 +199,7 @@ export const Taskbar = class extends EventEmitter {
     this._labelShowing = false
     this.fullScrollView = 0
 
-    let isVertical = panel.checkIfVertical()
+    let isVertical = panel.geom.vertical
 
     this._box = Utils.createBoxLayout({
       vertical: isVertical,
@@ -470,7 +470,7 @@ export const Taskbar = class extends EventEmitter {
     // force a fixed label width to prevent the icons from "wiggling" when an animation runs
     // (adding or removing an icon). When the taskbar is full, revert to a dynamic label width
     // to allow them to resize and make room for new icons.
-    if (!this.dtpPanel.checkIfVertical() && !this.isGroupApps) {
+    if (!this.dtpPanel.geom.vertical && !this.isGroupApps) {
       let initial = this.fullScrollView
 
       if (
@@ -1054,7 +1054,7 @@ export const Taskbar = class extends EventEmitter {
     this._shownInitially = false
     this._redisplay()
 
-    if (geometryChange && this.dtpPanel.checkIfVertical()) {
+    if (geometryChange) {
       this.previewMenu._updateClip()
     }
   }
@@ -1115,7 +1115,7 @@ export const Taskbar = class extends EventEmitter {
     if (!this._settings.is_writable('favorite-apps'))
       return DND.DragMotionResult.NO_DROP
 
-    let isVertical = this.dtpPanel.checkIfVertical()
+    let isVertical = this.dtpPanel.geom.vertical
 
     if (!this._box.contains(source) && !source._dashItemContainer) {
       //not an appIcon of the taskbar, probably from the applications view
