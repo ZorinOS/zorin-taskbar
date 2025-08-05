@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (68.5.1) noble; urgency=medium
+
+  * Minor code cleanups
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 05 Aug 2025 22:47:20 +0100
+
 gnome-shell-extension-zorin-taskbar (68.5) noble; urgency=medium
 
   * Rebased on upstream commit 16e16c11ce08abc3c9f0bf922bbc08e17b2c1f08

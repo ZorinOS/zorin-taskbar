@@ -36,7 +36,6 @@ const ZORIN_DASH_UUID = 'zorin-dash@zorinos.com'
 export const ZORIN_TILING_SHELL_UUID = 'zorin-tiling-shell@zorinos.com'
 
 let panelManager
-let startupCompleteHandler
 let zorinDashDelayId = 0
 
 export let DTP_EXTENSION = null
@@ -122,26 +121,25 @@ export default class ZorinTaskbarExtension extends Extension {
 
   disable() {
     if (zorinDashDelayId) GLib.Source.remove(zorinDashDelayId)
+    zorinDashDelayId = 0
 
-    panelManager.disable()
+    panelManager?.disable()
 
     DTP_EXTENSION = null
     SETTINGS = null
+    TILINGSETTINGS = null
     SHELLSETTINGS = null
     DESKTOPSETTINGS = null
     TERMINALSETTINGS = null
+    NOTIFICATIONSSETTINGS = null
     panelManager = null
+    tracker = null
 
     delete global.zorinTaskbar
 
     this.disableGlobalStyles()
 
     AppIcons.resetRecentlyClickedApp()
-
-    if (startupCompleteHandler) {
-      Main.layoutManager.disconnect(startupCompleteHandler)
-      startupCompleteHandler = null
-    }
   }
 
   resetGlobalStyles() {
