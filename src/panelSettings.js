@@ -45,6 +45,7 @@ export var availableMonitors = []
 
 export async function init(settings) {
   useCache = true
+  cache = {}
 
   await setMonitorsInfo(settings)
 }

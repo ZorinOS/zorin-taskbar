@@ -58,6 +58,12 @@ export default class ZorinTaskbarExtension extends Extension {
   }
 
   async enable() {
+    // Workaround for race condition in GNOME Shell where enable() may be called multiple times
+    if (this._alreadyEnabled) {
+      return
+    }
+    this._alreadyEnabled = true
+
     DTP_EXTENSION = this
     SETTINGS = this.getSettings('org.gnome.shell.extensions.zorin-taskbar')
     try {
@@ -124,6 +130,7 @@ export default class ZorinTaskbarExtension extends Extension {
     zorinDashDelayId = 0
 
     panelManager?.disable()
+    PanelSettings.clearCache()
 
     DTP_EXTENSION = null
     SETTINGS = null
@@ -140,6 +147,8 @@ export default class ZorinTaskbarExtension extends Extension {
     this.disableGlobalStyles()
 
     AppIcons.resetRecentlyClickedApp()
+
+    this._alreadyEnabled = false
   }
 
   resetGlobalStyles() {

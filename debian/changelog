@@ -1,3 +1,15 @@
+gnome-shell-extension-zorin-taskbar (68.5.3) noble; urgency=medium
+
+  * Added workaround for race condition
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Thu, 07 Aug 2025 00:09:07 +0100
+
+gnome-shell-extension-zorin-taskbar (68.5.2) noble; urgency=medium
+
+  * Fixed settings cache issues
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Wed, 06 Aug 2025 23:45:25 +0100
+
 gnome-shell-extension-zorin-taskbar (68.5.1) noble; urgency=medium
 
   * Minor code cleanups
