@@ -100,6 +100,11 @@
       <summary>Style of the running indicator (unfocused)</summary>
       <description>Style of the running indicator for the icon for applications which are not currently focused</description>
     </key>
+    <key type="b" name="stockgs-keep-dash">
+      <default>false</default>
+      <summary>Keep dash</summary>
+      <description>Whether to keep the stock gnome-shell dash while in overview</description>
+    </key>
     <key type="b" name="stockgs-keep-top-panel">
       <default>false</default>
       <summary>Keep top panel</summary>

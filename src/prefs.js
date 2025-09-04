@@ -1775,6 +1775,13 @@ const Preferences = class {
     )
 
     this._settings.bind(
+      'stockgs-keep-dash',
+      this._builder.get_object('stockgs_dash_switch'),
+      'active',
+      Gio.SettingsBindFlags.DEFAULT,
+    )
+
+    this._settings.bind(
       'stockgs-keep-top-panel',
       this._builder.get_object('stockgs_top_panel_switch'),
       'active',

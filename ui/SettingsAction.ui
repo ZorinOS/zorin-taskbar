@@ -102,6 +102,17 @@
         <property name="title" translatable="yes">Gnome functionality</property>
         <child>
           <object class="AdwActionRow">
+            <property name="subtitle" translatable="yes">(overview)</property>
+            <property name="title" translatable="yes">Keep original gnome-shell dash</property>
+            <child>
+              <object class="GtkSwitch" id="stockgs_dash_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">Keep original gnome-shell top panel</property>
             <child>
               <object class="GtkSwitch" id="stockgs_top_panel_switch">

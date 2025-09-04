@@ -71,7 +71,7 @@ export const Overview = class {
 
     this._signalsHandler.add([
       SETTINGS,
-      ['changed::panel-sizes'],
+      ['changed::stockgs-keep-dash', 'changed::panel-sizes'],
       () => this.toggleDash(),
     ])
   }
@@ -91,7 +91,7 @@ export const Overview = class {
 
   toggleDash(visible) {
     if (visible === undefined) {
-      visible = false
+      visible = SETTINGS.get_boolean('stockgs-keep-dash')
     }
 
     let visibilityFunc = visible ? 'show' : 'hide'

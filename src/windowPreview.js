@@ -48,7 +48,7 @@ const MIN_DIMENSION = 100
 const FOCUSED_COLOR_OFFSET = 24
 const FADE_SIZE = 36
 const PEEK_INDEX_PROP = '_dtpPeekInitialIndex'
-const MARGIN_SIZE = 8
+const MARGIN_SIZE = 4
 
 const SHOW_WINDOW_PREVIEWS_TIMEOUT = 400
 const LEAVE_TIMEOUT = 250

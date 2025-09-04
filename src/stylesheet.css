@@ -137,7 +137,7 @@
 
 .preview-container,
 #preview-menu {
-	border-radius: 10px;
+	border-radius: 15px;
 }
 
 /* border radius, grrr no css variables in ST */

@@ -1,3 +1,15 @@
+gnome-shell-extension-zorin-taskbar (68.7) noble; urgency=medium
+
+  * Adjusted window preview margin and rounding
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Thu, 04 Sep 2025 14:22:11 +0100
+
+gnome-shell-extension-zorin-taskbar (68.6) noble; urgency=medium
+
+  * Introduced keep gnome shell dash option
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 23 Aug 2025 15:04:05 +0100
+
 gnome-shell-extension-zorin-taskbar (68.5.3) noble; urgency=medium
 
   * Added workaround for race condition
