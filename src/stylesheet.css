@@ -38,10 +38,6 @@
 	text-align: left;
 }
 
-.zorintaskbarMainPanel .dash-item-container .show-apps .overview-icon {
-	color: #FFF;
-}
-
 #zorintaskbarTaskbar .dash-item-container .overview-tile:hover,
 #zorintaskbarTaskbar .dash-item-container .overview-tile .dtp-container .overview-icon,
 .zorintaskbarMainPanel .dash-item-container .show-apps:hover .overview-icon {

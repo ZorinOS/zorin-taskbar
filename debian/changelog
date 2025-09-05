@@ -1,3 +1,10 @@
+gnome-shell-extension-zorin-taskbar (68.8) noble; urgency=medium
+
+  * Fixed app grid icon styling and rebased on upstream commit
+    4787d12180462f0c1c90d3f38ece5921e7e31b7a
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 05 Sep 2025 17:44:41 +0100
+
 gnome-shell-extension-zorin-taskbar (68.7) noble; urgency=medium
 
   * Adjusted window preview margin and rounding
