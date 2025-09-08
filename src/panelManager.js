@@ -64,14 +64,14 @@ export const PanelManager = class {
   }
 
   enable(reset) {
-    // g-s version 49 switched to clutter gestures
-    if (!AppDisplay.AppIcon.prototype._removeMenuTimeout)
-      AppDisplay.AppIcon.prototype._setPopupTimeout =
-        AppDisplay.AppIcon.prototype._removeMenuTimeout = () => {}
-
     this.allPanels = []
     this.dtpPrimaryMonitor = Main.layoutManager.primaryMonitor // The real primary monitor should always have the main panel
     this.proximityManager = new Proximity.ProximityManager()
+
+    // g-s version 49 switched to clutter gestures
+    if (!AppDisplay.AppIcon.prototype._removeMenuTimeout)
+      AppDisplay.AppIcon.prototype._setPopupTimeout =
+        AppDisplay.AppIcon.prototype._removeMenuTimeout = this._emptyFunc
 
     if (this.dtpPrimaryMonitor) {
       this.primaryPanel = this._createPanel(
@@ -418,6 +418,8 @@ export const PanelManager = class {
       SETTINGS.get_boolean('isolate-workspaces'),
     )
   }
+
+  _emptyFunc() {}
 
   _setDesktopIconsMargins() {
     this._desktopIconsUsableArea?.resetMargins()

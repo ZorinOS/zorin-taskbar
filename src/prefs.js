@@ -881,7 +881,7 @@ const Preferences = class {
       })
 
     // Panel border
-    this._settings.bind(
+    /*this._settings.bind(
       'trans-use-border',
       this._builder.get_object('trans_border_switch'),
       'active',
@@ -934,7 +934,7 @@ const Preferences = class {
       .get_object('trans_border_width_spinbutton')
       .connect('value-changed', (widget) => {
         this._settings.set_int('trans-border-width', widget.get_value())
-      })
+      })*/
 
     this._settings.bind(
       'intellihide',

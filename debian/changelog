@@ -1,3 +1,10 @@
+gnome-shell-extension-zorin-taskbar (68.9) noble; urgency=medium
+
+  * Rebased on upstream commit 44be0a739f26d872f27e81bd57928b6f61920476
+    and hid panel border settings
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Mon, 08 Sep 2025 21:39:56 +0100
+
 gnome-shell-extension-zorin-taskbar (68.8) noble; urgency=medium
 
   * Fixed app grid icon styling and rebased on upstream commit
