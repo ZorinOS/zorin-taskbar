@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (69) noble; urgency=medium
+
+  * Re-based on upstream version 69
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Fri, 12 Sep 2025 14:14:35 +0100
+
 gnome-shell-extension-zorin-taskbar (68.9) noble; urgency=medium
 
   * Rebased on upstream commit 44be0a739f26d872f27e81bd57928b6f61920476
