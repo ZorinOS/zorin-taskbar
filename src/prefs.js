@@ -1855,7 +1855,7 @@ export default class ZorinTaskbarPreferences extends ExtensionPreferences {
     })
 
     // use default width or window
-    window.set_default_size(0, 625)
+    window.set_default_size(600, 625)
 
     new Preferences(window, window._settings, window._gnomeInterfaceSettings, this.path)
   }
