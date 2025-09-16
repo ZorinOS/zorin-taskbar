@@ -50,7 +50,7 @@ export var hotkeyAppNumbers = {}
 export const DASH_ANIMATION_TIME = 0.2 // Dash.DASH_ANIMATION_TIME is now private
 const DASH_ITEM_HOVER_TIMEOUT = 0.3 // Dash.DASH_ITEM_HOVER_TIMEOUT is now private
 export const MIN_ICON_SIZE = 4
-export const APPICON_MARGIN = 6
+export const APPICON_MARGIN = 4
 export const APPICON_PADDING = 8
 
 const T1 = 'ensureAppIconVisibilityTimeout'

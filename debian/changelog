@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (69.2) noble; urgency=medium
+
+  * Adjusted app icon margin
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 16 Sep 2025 16:03:52 +0100
+
 gnome-shell-extension-zorin-taskbar (69.1) noble; urgency=medium
 
   * Set prefs window width
