@@ -73,6 +73,14 @@ export const PanelManager = class {
       AppDisplay.AppIcon.prototype._setPopupTimeout =
         AppDisplay.AppIcon.prototype._removeMenuTimeout = this._emptyFunc
 
+    Main.layoutManager.findIndexForActor = (actor) =>
+      '_dtpIndex' in actor
+        ? actor._dtpIndex
+        : Layout.LayoutManager.prototype.findIndexForActor.call(
+            Main.layoutManager,
+            actor,
+          )
+
     if (this.dtpPrimaryMonitor) {
       this.primaryPanel = this._createPanel(
         this.dtpPrimaryMonitor,
@@ -123,14 +131,6 @@ export const PanelManager = class {
       Main.layoutManager,
     )
     Main.layoutManager._updateHotCorners()
-
-    Main.layoutManager.findIndexForActor = (actor) =>
-      '_dtpIndex' in actor
-        ? actor._dtpIndex
-        : Layout.LayoutManager.prototype.findIndexForActor.call(
-            Main.layoutManager,
-            actor,
-          )
 
     if (Main.layoutManager._interfaceSettings) {
       this._enableHotCornersId = Main.layoutManager._interfaceSettings.connect(
@@ -671,10 +671,6 @@ export const PanelManager = class {
 
     Main.layoutManager.addChrome(clipContainer, { affectsInputRegion: false })
     clipContainer.add_child(panelBox)
-    Main.layoutManager.trackChrome(panelBox, {
-      trackFullscreen: true,
-      affectsStruts: true,
-    })
 
     panel = new Panel.Panel(
       this,
@@ -686,9 +682,18 @@ export const PanelManager = class {
     panelBox.add_child(panel)
     panel.enable()
 
+    panelBox._dtpIndex = monitor.index
+    panelBox.set_position(0, 0)
+    panelBox.set_width(-1)
+
     Main.layoutManager.trackChrome(panel, {
       affectsInputRegion: true,
       affectsStruts: false,
+    })
+
+    Main.layoutManager.trackChrome(panelBox, {
+      trackFullscreen: true,
+      affectsStruts: true,
     })
 
     panelBox._dtpIndex = monitor.index

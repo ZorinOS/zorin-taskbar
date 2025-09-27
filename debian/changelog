@@ -1,3 +1,10 @@
+gnome-shell-extension-zorin-taskbar (70) noble; urgency=medium
+
+  * Rebased on upstream commit 134f6f991126b96738efef303572f1db9bdec9bd
+    but without commit 114d87149872da003af947315d4da2f0e40d41c9
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 27 Sep 2025 23:17:10 +0100
+
 gnome-shell-extension-zorin-taskbar (69.2) noble; urgency=medium
 
   * Adjusted app icon margin

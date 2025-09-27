@@ -52,7 +52,7 @@ export const DynamicTransparency = class {
   }
 
   updateExternalStyle() {
-    this._setStyle()
+    this._setBackground()
   }
 
   _bindSignals() {
@@ -120,19 +120,18 @@ export const DynamicTransparency = class {
     this._updateColor(themeBackground)
     this._updateAlpha(themeBackground)
     this._updateBorder()
-    this._updateBackground()
-    this._setStyle()
+    this._setBackground()
+    this._setBorder()
   }
 
   _updateAlphaAndSet() {
     this._updateAlpha()
-    this._updateBackground()
-    this._setStyle()
+    this._setBackground()
   }
 
   _updateBorderAndSet() {
     this._updateBorder()
-    this._setStyle()
+    this._setBorder()
   }
 
   _updateColor(themeBackground) {
@@ -180,26 +179,30 @@ export const DynamicTransparency = class {
       borderPosition = 'top'
     }
 
-    const style = `border: 0 solid ${rgba}; border-${borderPosition}-width:${borderWidth}px; `
+    const style = `border: 0 solid ${rgba}; border-${borderPosition}-width:${borderWidth}px;`
     this._borderStyle = showBorder ? style : ''
   }
 
-  _updateBackground() {
+  _setBackground() {
     this.currentBackgroundColor = Utils.getrgbaColor(
       this.backgroundColorRgb,
       this.alpha,
     )
 
-    this._backgroundStyle = `background-color: ${this.currentBackgroundColor}`
+    let transition = 'transition-duration: 300ms;'
+
+    this._dtpPanel.set_style(
+      'background-color: ' + this.currentBackgroundColor + transition,
+    )
   }
 
-  _setStyle() {
-    const transition = 'transition-duration: 300ms;'
-
+  _setBorder() {
     this._dtpPanel.panel.set_style(
-      transition +
-        this._backgroundStyle +
-        this._borderStyle,
+      'background: none; ' +
+        'border-image: none; ' +
+        'background-image: none; ' +
+        this._borderStyle +
+        'transition-duration: 300ms;'
     )
   }
 
