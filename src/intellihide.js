@@ -83,6 +83,9 @@ export const Intellihide = class {
     )
 
     this.enabled = false
+  }
+
+  init() {
     this._changeEnabledStatus()
   }
 

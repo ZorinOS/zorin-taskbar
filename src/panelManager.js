@@ -311,6 +311,11 @@ export const PanelManager = class {
     this.primaryPanel && this.overview.disable()
     this.proximityManager.destroy()
 
+    if (AppDisplay.AppIcon.prototype._removeMenuTimeout == this._emptyFunc) {
+      delete AppDisplay.AppIcon.prototype._setPopupTimeout
+      delete AppDisplay.AppIcon.prototype._removeMenuTimeout
+    }
+
     this.allPanels.forEach((p) => {
       p.taskbar.iconAnimator.pause()
 
@@ -696,9 +701,8 @@ export const PanelManager = class {
       affectsStruts: true,
     })
 
-    panelBox._dtpIndex = monitor.index
-    panelBox.set_position(0, 0)
-    panelBox.set_width(-1)
+    // intellihide changes the chrome when enabled, so init after setting initial chrome params
+    panel.intellihide.init()
 
     this._findPanelMenuButtons(panelBox).forEach((pmb) =>
       this._adjustPanelMenuButton(pmb, monitor, panel.geom.position),

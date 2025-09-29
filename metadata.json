@@ -6,5 +6,5 @@
   "shell-version": [ "46", "47", "48", "49" ],
   "gettext-domain": "zorin-taskbar",
   "settings-schema": "org.gnome.shell.extensions.zorin-taskbar",
-  "version": 68
+  "version": 70
 }
