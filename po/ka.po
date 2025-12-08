@@ -1,17 +1,770 @@
+# Georgian translation for zorin taskbar.
+# Copyright (C) 2025 zorin taskbar authors.
+# This file is distributed under the same license as the zorin taskbar package.
+# Ekaterine Papava <papava.e@gtu.ge>, 2025.
+#
 msgid ""
 msgstr ""
+"Project-Id-Version: zorin taskbar\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-08 05:42+0100\n"
+"PO-Revision-Date: 2025-12-08 07:39+0100\n"
+"Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2\n"
-"Project-Id-Version: Zorin OS\n"
-"Language: ka\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.8\n"
 
-msgid "System Monitor"
-msgstr "სისტემის მონიტორი"
-
-msgid "Show Desktop icon"
-msgstr "აჩვენე დესკტოპის იკონები"
-
+#: src/prefs.js:240
 msgid "Show Desktop button padding (px)"
-msgstr "ღილაკი აჩვენე დესკტოპი"
+msgstr "სამუშაო მაგიდის ღილაკის შევსების ჩვენება (პიქს)"
+
+#: src/prefs.js:311 ui/SettingsPosition.ui.h:10
+msgid "Left"
+msgstr "მარცხენა"
+
+#: src/prefs.js:312
+msgid "Center"
+msgstr "ცენტრი"
+
+#: src/prefs.js:313 ui/SettingsPosition.ui.h:11
+msgid "Right"
+msgstr "მარჯვენა"
+
+#: src/prefs.js:315 ui/SettingsPosition.ui.h:9
+msgid "Top"
+msgstr "ზედა"
+
+#: src/prefs.js:316 src/prefs.js:321 ui/SettingsPosition.ui.h:19
+msgid "Middle"
+msgstr "შუა"
+
+#: src/prefs.js:317 ui/SettingsPosition.ui.h:8
+msgid "Bottom"
+msgstr "ქვედა"
+
+#: src/prefs.js:320 ui/SettingsPosition.ui.h:18
+msgid "Start"
+msgstr "დაწყება"
+
+#: src/prefs.js:322 ui/SettingsPosition.ui.h:20
+msgid "End"
+msgstr "დასასრული"
+
+#: src/prefs.js:447
+msgid "Show Applications button"
+msgstr "აპლიკაციების ღილაკის ჩვენება"
+
+#: src/prefs.js:448
+msgid "Activities button"
+msgstr "აქტივობების ღილაკი"
+
+#: src/prefs.js:449
+msgid "Taskbar"
+msgstr "ამოცანების პანელი"
+
+#: src/prefs.js:450
+msgid "Date menu"
+msgstr "თარიღის მენიუ"
+
+#: src/prefs.js:451
+msgid "System menu"
+msgstr "სისტემის მენიუ"
+
+#: src/prefs.js:452
+msgid "Left box"
+msgstr "მარცხენა ბლოკი"
+
+#: src/prefs.js:453
+msgid "Center box"
+msgstr "ცენტრალური ბლოკი"
+
+#: src/prefs.js:454
+msgid "Right box"
+msgstr "მარჯვენა ბლოკი"
+
+#: src/prefs.js:455
+msgid "Desktop button"
+msgstr "სამუშაო მაგიდის ღილაკი"
+
+#: src/prefs.js:465
+msgid "Move up"
+msgstr "აწევა"
+
+#: src/prefs.js:467
+msgid "Move down"
+msgstr "ჩამოწევა"
+
+#: src/prefs.js:473
+msgid "Visible"
+msgstr "ხილული"
+
+#: src/prefs.js:477
+msgid "Select element position"
+msgstr "აირჩიეთ ელემენტის მდებარეობა"
+
+#: src/prefs.js:491
+msgid "Stacked to top"
+msgstr "ზემოთ"
+
+#: src/prefs.js:491
+msgid "Stacked to left"
+msgstr "მარცხნივ"
+
+#: src/prefs.js:495
+msgid "Stacked to bottom"
+msgstr "ქვემოთ"
+
+#: src/prefs.js:495
+msgid "Stacked to right"
+msgstr "მარჯვნივ"
+
+#: src/prefs.js:497
+msgid "Centered"
+msgstr "დაცენტრებული"
+
+#: src/prefs.js:498
+msgid "Monitor Center"
+msgstr "ეკრანის ცენტრი"
+
+#: src/prefs.js:525
+msgid "More options"
+msgstr "მეტი პარამეტრი"
+
+#: src/prefs.js:560
+msgid "Reset to defaults"
+msgstr "ნაგულისხმევზე ჩამოყრა"
+
+#: src/prefs.js:583
+msgid "Date Menu options"
+msgstr "თარიღის მენიუს მორგება"
+
+#: src/prefs.js:601
+msgid "Show Desktop options"
+msgstr "სამუშაო მაგიდის ჩვენების მორგება"
+
+#: src/prefs.js:654
+msgid "Primary monitor"
+msgstr "ძირითადი ეკრანი"
+
+#: src/prefs.js:655
+msgid "Monitor "
+msgstr "ეკრანი "
+
+#: src/prefs.js:858
+msgid "Dynamic opacity options"
+msgstr "დინამიკური გაუმჭვირვალობის მორგება"
+
+#: src/prefs.js:1160
+msgid "Intellihide options"
+msgstr "ჭკვიანი დამალვის მორგება"
+
+#: src/prefs.js:1330
+msgid "Window preview options"
+msgstr "ფანჯრის მინიატურის მორგება"
+
+#: src/prefs.js:1432
+msgid "Ungrouped application options"
+msgstr "არადაჯგუფებული აპლიკაციების მორგება"
+
+#: src/prefs.js:1507
+msgid "Customize middle-click behavior"
+msgstr "შუა წკაპის ქცევის მორგება"
+
+#: src/prefs.js:1654
+msgid "Advanced hotkeys options"
+msgstr "დამატებითი კლავიატურის მალსახმობის პარამეტრები"
+
+#: src/appIcons.js:1668 src/appIcons.js:1673 ui/BoxMiddleClickOptions.ui.h:11
+msgid "Quit"
+msgstr "გასვლა"
+
+#: src/appIcons.js:1679
+#, javascript-format
+msgid "Quit %d Window"
+msgid_plural "Quit %d Windows"
+msgstr[0] "%d ფანჯრიდან გასვლა"
+msgstr[1] "%d ფანჯრიდან გასვლა"
+
+#: src/appIcons.js:1944
+msgid "System Monitor"
+msgstr "სისტემური მონიტორი"
+
+#: src/appIcons.js:1949
+msgid "Files"
+msgstr "ფაილები"
+
+#: src/appIcons.js:1954
+msgid "Settings"
+msgstr "მორგება"
+
+#: src/appIcons.js:1959
+msgid "Zorin Appearance"
+msgstr "Zorin-ის გარეგნობა"
+
+#: src/appIcons.js:1972
+msgid "Unlock taskbar"
+msgstr "ამოცანების პანელის განბლოკვა"
+
+#: src/appIcons.js:1973
+msgid "Lock taskbar"
+msgstr "ამოცანების პანელის დაბლოკვა"
+
+#: src/appIcons.js:1982
+msgid "Taskbar Settings"
+msgstr "ამოცანების პანელის მორგება"
+
+#: src/appIcons.js:1989
+msgid "Restore Windows"
+msgstr "ფანჯრების აღდგენა"
+
+#: src/appIcons.js:1990
+msgid "Show Desktop"
+msgstr "სამუშაო მაგიდის ჩვენება"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:1
+msgid "The panel background opacity is affected by"
+msgstr "პანელის ფონის გაუმჭვირვალობის პირობა"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:2 ui/BoxIntellihideOptions.ui.h:5
+msgid "All windows"
+msgstr "ყველა ფანჯარა"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:3 ui/BoxIntellihideOptions.ui.h:6
+msgid "Focused windows"
+msgstr "ფოკუსირებული ფანჯრები"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:4 ui/BoxIntellihideOptions.ui.h:7
+msgid "Maximized windows"
+msgstr "გაშლილი ფანჯრები"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:6
+#, no-c-format
+msgid "Change opacity to (%)"
+msgstr "გაუმჭვირვალობის შეცვლა (%)"
+
+#: ui/BoxDynamicOpacityOptions.ui.h:7 ui/SettingsStyle.ui.h:11
+msgid "0"
+msgstr "0"
+
+#: ui/BoxGroupAppsOptions.ui.h:1
+msgid "Maximum width (px) of the application titles"
+msgstr "აპლიკაციის სათაურების მაქსიმალური სიგანე (პიქს)"
+
+#: ui/BoxGroupAppsOptions.ui.h:2
+msgid "(default is 160)"
+msgstr "(ნაგულისხმევია 160)"
+
+#: ui/BoxGroupAppsOptions.ui.h:3
+msgid "Use a fixed width for the application titles"
+msgstr "ფიქსირებული სიგანის გამოყენება აპლიკაციის სათაურებისთვის"
+
+#: ui/BoxGroupAppsOptions.ui.h:4
+msgid ""
+"The application titles all have the same width, even if their texts are "
+"shorter than the maximum width. The maximum width value is used as the fixed "
+"width."
+msgstr ""
+"ყველა აპლიკაციის სათაურს იგივე სიგანე ექნება მაშინაც კი, თუ მათი ტექსტი "
+"მაქსიმალურ სიგანეზე ნაკლებია. ფიქსირებულ მნიშვნელობად მაქსიმალური სიგანის "
+"მნიშვნელობა გამოიყენება."
+
+#: ui/BoxGroupAppsOptions.ui.h:5
+msgid "Use the favorite icons as application launchers"
+msgstr "რჩეული ხატულების გამოყენება აპლიკაციის გამშვებებად"
+
+#: ui/BoxIntellihideOptions.ui.h:1
+msgid "Only hide the panel from windows"
+msgstr "პანელის დამალვა ზედ ფანჯრის დადებისას"
+
+#: ui/BoxIntellihideOptions.ui.h:2
+msgid "Overlapping"
+msgstr "გადაფარვა"
+
+#: ui/BoxIntellihideOptions.ui.h:3
+msgid "On same monitor"
+msgstr "იგივე ეკრანზე"
+
+#: ui/BoxIntellihideOptions.ui.h:4
+msgid "The panel hides from"
+msgstr "ვისგან იმალება პანელი"
+
+#: ui/BoxIntellihideOptions.ui.h:8
+msgid "Touching the monitor's edge with the pointer reveals the panel"
+msgstr "მონიტორი წიბოს შეხება კურსორით პანელს გამოაჩენს"
+
+#: ui/BoxIntellihideOptions.ui.h:9
+msgid "Limit to panel length"
+msgstr "შეზღუდვა პანელის სიგრძეზე"
+
+#: ui/BoxIntellihideOptions.ui.h:10
+msgid "Hovering the panel area keeps the panel revealed"
+msgstr "თაგუნას კურსორის პანელზე გაჩერება მას ხილულად ინარჩუნებს"
+
+#: ui/BoxIntellihideOptions.ui.h:11
+msgid "Require pressure at the edge of the monitor to reveal the panel"
+msgstr "პანელის გამოსაჩენად ეკრანის წიბოზე დაჭერის მოთხოვნა"
+
+#: ui/BoxIntellihideOptions.ui.h:12
+msgid "Allow the panel to be revealed while in fullscreen mode"
+msgstr "პანელის სრულეკრანიან რეჟიმში გამოჩენის დაშვება"
+
+#: ui/BoxIntellihideOptions.ui.h:13
+msgid "(requires multi-monitors option)"
+msgstr "(ესაჭიროება მრავალეკრანიანი ვარიანტი)"
+
+#: ui/BoxIntellihideOptions.ui.h:14
+msgid "Only hide secondary panels"
+msgstr "მხოლოდ, მეორადი პანელების დამალვა"
+
+#: ui/BoxIntellihideOptions.ui.h:15 ui/BoxOverlayShortcut.ui.h:10
+msgid "Syntax: &lt;Shift&gt;, &lt;Ctrl&gt;, &lt;Alt&gt;, &lt;Super&gt;"
+msgstr "სინტაქსი: &lt;Shift&gt;, &lt;Ctrl&gt;, &lt;Alt&gt;, &lt;Super&gt;"
+
+#: ui/BoxIntellihideOptions.ui.h:16
+msgid "Keyboard shortcut to reveal and hold the panel"
+msgstr "კლავიატურის მალსახმობი პანელის გამოსაჩენად და შესაკავებლად"
+
+#: ui/BoxIntellihideOptions.ui.h:17
+msgid "e.g. <Super>i"
+msgstr "მაგ <Super>i"
+
+#: ui/BoxIntellihideOptions.ui.h:18
+msgid "Persist state across restarts"
+msgstr "მდგომარეობის შენარჩუნება გადატვირთვებს შორის"
+
+#: ui/BoxIntellihideOptions.ui.h:19
+msgid ""
+"(respects \"Do Not Disturb\" and requires show notification counter badge "
+"option)"
+msgstr ""
+"(ითვალისწინებს პარამეტრს \"არ შემაწუხოთ\" და ითხოვს პარამეტრს "
+"\"გაფრთხილებების რაოდენობის ჩვენება\")"
+
+#: ui/BoxIntellihideOptions.ui.h:20
+msgid "Reveal and hold the panel on notification"
+msgstr "პანელის გამოჩენა და შენარჩუნება გაფრთხილების მიღებისას"
+
+#: ui/BoxMiddleClickOptions.ui.h:1
+msgid "Shift+Click action"
+msgstr "Shift+წკაპის ქმედება"
+
+#: ui/BoxMiddleClickOptions.ui.h:2
+msgid ""
+"When set to minimize, double clicking minimizes all the windows of the "
+"application."
+msgstr ""
+"როცა დაყენებულია ჩაკეცვაზე, ორმაგი წკაპი აპლიკაციის ყველა ფანჯარას ჩაკეცავს."
+
+#: ui/BoxMiddleClickOptions.ui.h:3 ui/SettingsAction.ui.h:10
+msgid "Raise windows"
+msgstr "ფანჯრების ამოწევა"
+
+#: ui/BoxMiddleClickOptions.ui.h:4
+msgid "Minimize window"
+msgstr "ფანჯრის ჩაკეცვა"
+
+#: ui/BoxMiddleClickOptions.ui.h:5 ui/SettingsAction.ui.h:11
+msgid "Launch new instance"
+msgstr "ახალი გაშვებული ასლის გაშვება"
+
+#: ui/BoxMiddleClickOptions.ui.h:6 ui/SettingsAction.ui.h:5
+msgid "Cycle through windows"
+msgstr "წრიული გადართვა ფანჯრებში"
+
+#: ui/BoxMiddleClickOptions.ui.h:7 ui/SettingsAction.ui.h:4
+msgid "Cycle windows + minimize"
+msgstr "წრიული გადართვა ფანჯრებში + ჩაკეცვა"
+
+#: ui/BoxMiddleClickOptions.ui.h:8 ui/SettingsAction.ui.h:6
+msgid "Toggle single / Preview multiple"
+msgstr "ერთის / ბევრის გადახედვის გადართვა"
+
+#: ui/BoxMiddleClickOptions.ui.h:9 ui/SettingsAction.ui.h:7
+msgid "Toggle single / Cycle multiple"
+msgstr "ერთის / ბევრს შორის გადართვის გადართვა"
+
+#: ui/BoxMiddleClickOptions.ui.h:10 ui/SettingsAction.ui.h:8
+msgid "Toggle single / Spread multiple"
+msgstr "ერთის / ბევრის განაწილების გადართვა"
+
+#: ui/BoxMiddleClickOptions.ui.h:12
+msgid "Middle-Click action"
+msgstr "შუა-წკაპის ქმედება"
+
+#: ui/BoxMiddleClickOptions.ui.h:13
+msgid "Behavior for Middle-Click."
+msgstr "შუა წკაპის ქცევის მორგება."
+
+#: ui/BoxMiddleClickOptions.ui.h:14
+msgid "Shift+Middle-Click action"
+msgstr "Shift+შუაწკაპის ქმედება"
+
+#: ui/BoxMiddleClickOptions.ui.h:15
+msgid "Behavior for Shift+Middle-Click."
+msgstr "ქცევა Shift+შუაწკაპისთვის."
+
+#: ui/BoxOverlayShortcut.ui.h:1
+msgid "Hotkeys will either be Super+Number or Super+Alt+Num"
+msgstr "კლავიატურის მალსახმობები იქნება ან Super+ციფრი ან Super+Alt+ციფრი"
+
+#: ui/BoxOverlayShortcut.ui.h:2
+msgid "Hotkeys prefix"
+msgstr "კლავიატურის მალსახმობების პრეფიქსი"
+
+#: ui/BoxOverlayShortcut.ui.h:3
+msgid "Super"
+msgstr "Super"
+
+#: ui/BoxOverlayShortcut.ui.h:4
+msgid "Super + Alt"
+msgstr "Super + Alt"
+
+#: ui/BoxOverlayShortcut.ui.h:5
+msgid ""
+"Temporarily show the application numbers over the icons when using the "
+"hotkeys."
+msgstr ""
+"აპლიკაციის ნომრების დროებით ჩვენება ხატულებზე კლავიატურის მალსახმობების "
+"გამოყენებისას."
+
+#: ui/BoxOverlayShortcut.ui.h:6
+msgid "Number overlay"
+msgstr "ციფრების გადაფარვა"
+
+#: ui/BoxOverlayShortcut.ui.h:7
+msgid "Never"
+msgstr "არასდროს"
+
+#: ui/BoxOverlayShortcut.ui.h:8
+msgid "Show temporarily"
+msgstr "დროებით ჩვენება"
+
+#: ui/BoxOverlayShortcut.ui.h:9
+msgid "Always visible"
+msgstr "ყოველთვის ხილული"
+
+#: ui/BoxOverlayShortcut.ui.h:11
+msgid "Shortcut to show the overlay for 2 seconds"
+msgstr "მალსახმობი განლაგების 2 წამით საჩვენებლად"
+
+#: ui/BoxOverlayShortcut.ui.h:12
+msgid "e.g. <Super>q"
+msgstr "მაგ: <Super>q"
+
+#: ui/BoxOverlayShortcut.ui.h:13
+msgid "Show previews when the application have multiple instances"
+msgstr ""
+"მინიატურების ჩვენება, როცა არსებობს აპლიკაციის ერთზე მეტი გაშვებული ასლი"
+
+#: ui/BoxOverlayShortcut.ui.h:14
+msgid "Show window previews on hotkey"
+msgstr "ფანჯრის მინიატურების ჩვენება კლავიატურის მალსახმობების გამოყენებისას"
+
+#: ui/BoxOverlayShortcut.ui.h:15
+msgid "Select which keyboard number keys are used to activate the hotkeys"
+msgstr ""
+"აირჩიეთ, რომელი ციფრის ღილაკები გამოიყენება კლავიატურის მალსახმობების "
+"გასააქტიურებლად"
+
+#: ui/BoxOverlayShortcut.ui.h:16
+msgid "Hotkeys are activated with"
+msgstr "როგორ აქტიურდება კლავიატურის მალსახმობები"
+
+#: ui/BoxOverlayShortcut.ui.h:17
+msgid "Number row"
+msgstr "ციფრებიანი მწკრივი"
+
+#: ui/BoxOverlayShortcut.ui.h:18
+msgid "Numeric keypad"
+msgstr "ციფრული კლავიატურა"
+
+#: ui/BoxOverlayShortcut.ui.h:19
+msgid "Both"
+msgstr "ორივე"
+
+#: ui/BoxShowDateMenuOptions.ui.h:1
+msgid "Date"
+msgstr "თარიღი"
+
+#: ui/BoxShowDateMenuOptions.ui.h:2
+msgid "Weekday"
+msgstr "კვირის დღე"
+
+#: ui/BoxShowDateMenuOptions.ui.h:3
+msgid "Seconds"
+msgstr "წამი"
+
+#: ui/BoxShowDesktopOptions.ui.h:1
+msgid "Show Desktop icon"
+msgstr "სამუშაო მაგიდის ხატულას ჩვენება"
+
+#: ui/BoxShowDesktopOptions.ui.h:2
+msgid "Reveal the desktop when hovering the Show Desktop button"
+msgstr ""
+"სამუშაო მაგიდის გამოჩენა კურსორის 'სამუშაო მაგიდის ჩვენების' ღილაკზე "
+"გაჩერებისას"
+
+#: ui/BoxWindowPreviewOptions.ui.h:1
+msgid "Middle click on the preview to close the window"
+msgstr "შუა წკაპი მინიატურაზე დახურავს ფანჯარას"
+
+#: ui/BoxWindowPreviewOptions.ui.h:2
+msgid "Window previews preferred size (px)"
+msgstr "ფანჯრის მინიატურის სასურველი ზომა (პიქს)"
+
+#: ui/BoxWindowPreviewOptions.ui.h:3
+msgid "Enable window peeking"
+msgstr "ფანჯარაზე ჭვრიტინის დაშვება"
+
+#: ui/BoxWindowPreviewOptions.ui.h:4
+msgid ""
+"When hovering over a window preview for some time, the window gets "
+"distinguished."
+msgstr ""
+"ფანჯრის მინიატურაზე კურსორის ცოტა ხნით გაჩერებისას ფანჯრის გამორჩევა მოხდება."
+
+#: ui/SettingsAction.ui.h:1
+msgid "Action"
+msgstr "ქმედება"
+
+#: ui/SettingsAction.ui.h:2
+msgid "Click action"
+msgstr "წკაპის ქმედება"
+
+#: ui/SettingsAction.ui.h:3
+msgid "Behaviour when clicking on the icon of a running application."
+msgstr "ქცევა გაშვებული აპლიკაციის ხატულაზე დაწკაპუნებისას."
+
+#: ui/SettingsAction.ui.h:9
+msgid "Toggle windows"
+msgstr "ფანჯრების გადართვა"
+
+#: ui/SettingsAction.ui.h:12
+msgid "Scroll action"
+msgstr "გადახვევის ქმედება"
+
+#: ui/SettingsAction.ui.h:13
+msgid "Behavior when mouse scrolling over an application icon."
+msgstr "ქცევა აპლიკაციის ხატულაზე თაგუნათი გადახვევისას."
+
+#: ui/SettingsAction.ui.h:14
+msgid "Scroll icon action"
+msgstr "ხატულაზე გადახვევის ქმედება"
+
+#: ui/SettingsAction.ui.h:15
+msgid "Do nothing"
+msgstr "არაფრის გაკეთება"
+
+#: ui/SettingsAction.ui.h:16
+msgid "Cycle windows"
+msgstr "ფანჯრების წრიული გადართვა"
+
+#: ui/SettingsAction.ui.h:17
+msgid "Hotkey overlay"
+msgstr "კლავიატურის მალსახმობის განლაგება"
+
+#: ui/SettingsAction.ui.h:18
+msgid ""
+"Enable Super+(0-9) as shortcuts to activate apps. It can also be used "
+"together with Shift and Ctrl."
+msgstr ""
+"Super+(0-0) მალსახმობების გამოყენება აპების გასააქტიურებლად. ისინი Shift და "
+"Ctrl ღილაკთან ერთადაც შეგიძლიათ, გამოიყენოთ."
+
+#: ui/SettingsAction.ui.h:19
+msgid "Use hotkeys to activate apps"
+msgstr "კლავიატურის მალსახმობების გამოყენება აპლიკაციების გასააქტიურებლად"
+
+#: ui/SettingsAction.ui.h:20
+msgid "Gnome functionality"
+msgstr "GNOME-ის ფუნქციონალი"
+
+#: ui/SettingsAction.ui.h:21
+msgid "(overview)"
+msgstr "(მიმოხილვა)"
+
+#: ui/SettingsAction.ui.h:22
+msgid "Keep original gnome-shell dash"
+msgstr "GNOME-ის პანელის შენარჩუნება"
+
+#: ui/SettingsAction.ui.h:23
+msgid "Keep original gnome-shell top panel"
+msgstr "GNOME-ის ზედა პანელის შენარჩუნება"
+
+#: ui/SettingsAction.ui.h:24
+msgid "Activate panel menu buttons on click only"
+msgstr "პანელის მენიუს ღილაკების გააქტიურება მხოლოდ დაწკაპუნებით"
+
+#: ui/SettingsAction.ui.h:25
+msgid "(e.g. date menu)"
+msgstr "(მაგ: თარიღის მენიუ)"
+
+#: ui/SettingsBehavior.ui.h:1
+msgid "Behavior"
+msgstr "ქცევა"
+
+#: ui/SettingsBehavior.ui.h:2
+msgid "Applications"
+msgstr "აპლიკაციები"
+
+#: ui/SettingsBehavior.ui.h:3
+msgid "Show favorite applications"
+msgstr "რჩეული აპლიკაციების ჩვენება"
+
+#: ui/SettingsBehavior.ui.h:4
+msgid "Show favorite applications on secondary panels"
+msgstr "რჩეული აპლიკაციების ჩვენება მეორად პანელებზე"
+
+#: ui/SettingsBehavior.ui.h:5
+msgid "Show running applications"
+msgstr "გაშვებული აპლიკაციების ჩვენება"
+
+#: ui/SettingsBehavior.ui.h:6
+msgid "Ungroup applications"
+msgstr "პროგრამების დაჯგუფების გაუქმება"
+
+#: ui/SettingsBehavior.ui.h:7
+msgid "Show notification counter badge"
+msgstr "შეტყობინებების რაოდენობის ჩვენება ხატულაზე"
+
+#: ui/SettingsBehavior.ui.h:8
+msgid "Hover"
+msgstr "გადატარება"
+
+#: ui/SettingsBehavior.ui.h:9
+msgid "Show window previews on hover"
+msgstr "ფანჯრის მინიატურის ჩვენება ზედ კურსორის გაჩერებისას"
+
+#: ui/SettingsBehavior.ui.h:10
+msgid "Show tooltip on hover"
+msgstr "მინიშნების ჩვენება ზედ კურსორის გაჩერებისას"
+
+#: ui/SettingsBehavior.ui.h:11
+msgid "Isolate"
+msgstr "იზოლირება"
+
+#: ui/SettingsBehavior.ui.h:12
+msgid "Isolate Workspaces and Monitors in Application Switching settings"
+msgstr ""
+"სამუშაო სივრცეებისა და ეკრანების იზოლაცია აპლიკაციების გადართვის მორგებისას"
+
+#: ui/SettingsPosition.ui.h:1
+msgid "Position"
+msgstr "მდებარეობა"
+
+#: ui/SettingsPosition.ui.h:2
+msgid "Panel"
+msgstr "პანელი"
+
+#: ui/SettingsPosition.ui.h:3
+msgid "Display panels on all monitors"
+msgstr "პანელების ჩვენება ყველა ეკრანზე"
+
+#: ui/SettingsPosition.ui.h:4
+msgid "Order and Position on monitors"
+msgstr "მიმდევრობა და მდებარეობა ეკრანებზე"
+
+#: ui/SettingsPosition.ui.h:5
+msgid "Monitor"
+msgstr "ეკრანი"
+
+#: ui/SettingsPosition.ui.h:6
+msgid "Apply changes to all monitors"
+msgstr "ცვლილებების გადატარება ყველა ეკრანზე"
+
+#: ui/SettingsPosition.ui.h:7
+msgid "Panel monitor position"
+msgstr "პანელის მდებარეობა ეკრანზე"
+
+#: ui/SettingsPosition.ui.h:12
+msgid "(default is 48)"
+msgstr "(ნაგულისხმევია 48)"
+
+#: ui/SettingsPosition.ui.h:13
+msgid "Panel thickness"
+msgstr "პანელის სისქე"
+
+#: ui/SettingsPosition.ui.h:14
+msgid "(default is 100)"
+msgstr "(ნაგულისხმევია 100)"
+
+#: ui/SettingsPosition.ui.h:15
+msgid "Panel length"
+msgstr "პანელის სიგრძე"
+
+#: ui/SettingsPosition.ui.h:16
+msgid "Dynamic"
+msgstr "დინამიკური"
+
+#: ui/SettingsPosition.ui.h:17
+msgid "Anchor"
+msgstr "მიმაგრება"
+
+#: ui/SettingsPosition.ui.h:21
+msgid "Taskbar Display"
+msgstr "ამოცანების პანელის ჩვენება"
+
+#: ui/SettingsStyle.ui.h:1
+msgid "Style"
+msgstr "სტილი"
+
+#: ui/SettingsStyle.ui.h:2
+msgid "Hide and reveal the panel according to preferences"
+msgstr "პანელის დამალვა და გამოჩენა პარამეტრების მიხედვით"
+
+#: ui/SettingsStyle.ui.h:3
+msgid "Panel Intellihide"
+msgstr "პანელის ჭკვიანი დამალვა"
+
+#: ui/SettingsStyle.ui.h:4
+msgid "Panel style"
+msgstr "პანელის სტილი"
+
+#: ui/SettingsStyle.ui.h:5
+msgid "(default is 0)"
+msgstr "(ნაგულისხმევია 0)"
+
+#: ui/SettingsStyle.ui.h:6
+msgid "Margin"
+msgstr "ზღვარი"
+
+#: ui/SettingsStyle.ui.h:7
+msgid "Border radius"
+msgstr "საზღვრის რადიუსი"
+
+#: ui/SettingsStyle.ui.h:8
+msgid "Override panel theme background opacity"
+msgstr "პანელის ტემის ფონის გაუმჭვირვალობის გადაფარვა"
+
+#: ui/SettingsStyle.ui.h:10
+#, no-c-format
+msgid "Panel background opacity (%)"
+msgstr "პანელის ფონის გაუმჭვირვალობა (%)"
+
+#: ui/SettingsStyle.ui.h:12
+msgid "Change opacity when a window gets close to the panel"
+msgstr "გაუმჭვირვალობის შეცვლა, როცა ფანჯარა პანელს მიუახლოვდება"
+
+#: ui/SettingsStyle.ui.h:13
+msgid "Dynamic background opacity"
+msgstr "დინამიკური ფონის გაუმჭვირვალობა"
+
+#: ui/SettingsStyle.ui.h:14
+msgid "Panel border"
+msgstr "პანელის საზღვარი"
+
+#: ui/SettingsStyle.ui.h:15
+msgid "Override border color"
+msgstr "საზღვრის ფერის გადაფარვა"
+
+#: ui/SettingsStyle.ui.h:16
+msgid "Border thickness"
+msgstr "საზღვრის სისქე"
+
+#: ui/SettingsStyle.ui.h:17
+msgid "1"
+msgstr "1"
