@@ -178,12 +178,12 @@ export const Panel = GObject.registerClass(
         this.panel._toggleMenu = (indicator) => {
           if (
             !indicator ||
-            (!this.intellihide.enabled && !indicator.mapped) ||
+            (!this.intellihide?.enabled && !indicator.mapped) ||
             !indicator.reactive
           )
             return
 
-          this.intellihide.revealAndHold(0, true)
+          this.intellihide?.revealAndHold(0, true)
           Object.getPrototypeOf(this.panel)._toggleMenu(indicator)
         }
 
@@ -1514,6 +1514,13 @@ export const Panel = GObject.registerClass(
       } else {
         if (!this._showDesktopButton) return
 
+        this._timeoutsHandler.remove(T4)
+
+        if (this._hiddenDesktopWorkspace) {
+          this._toggleWorkspaceWindows(false, this._hiddenDesktopWorkspace)
+          this._hiddenDesktopWorkspace = null
+        }
+
         this.panel.remove_child(this._showDesktopButton)
         this._showDesktopButton.destroy()
         this._showDesktopButton = null
@@ -1531,10 +1538,8 @@ export const Panel = GObject.registerClass(
     _setShowDesktopButtonStyle() {
       let rgb = this._getDefaultLineColor()
 
-      for (let i = 0; i < this._showDesktopButton.get_children().length; i++) {
-        if (this._showDesktopButton.get_children()[i] == this._showDesktopButton.icon) {
-          this._showDesktopButton.remove_child(this._showDesktopButton.icon)
-        }
+      if (this._showDesktopButton.icon.get_parent() == this._showDesktopButton) {
+        this._showDesktopButton.remove_child(this._showDesktopButton.icon)
       }
 
       if (this._showDesktopButton) {

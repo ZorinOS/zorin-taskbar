@@ -777,8 +777,12 @@ export const PreviewMenu = GObject.registerClass(
       }
 
       Main.wm._shouldAnimate = () => false
-      workspace.activate(global.display.get_current_time_roundtrip())
-      Main.wm._shouldAnimate = shouldAnimate
+
+      try {
+        workspace.activate(global.display.get_current_time_roundtrip())
+      } finally {
+        Main.wm._shouldAnimate = shouldAnimate
+      }
     }
 
     _focusMetaWindow(dimOpacity, window, immediate, ignoreFocus) {
@@ -835,12 +839,17 @@ export const PreviewMenu = GObject.registerClass(
 
       if (windowActor) {
         if (Object.hasOwn(this._peekedWindow, PEEK_INDEX_PROP)) {
-          windowActor
-            .get_parent()
-            .set_child_at_index(
+          let parent = windowActor.get_parent()
+
+          if (parent) {
+            let savedIndex = this._peekedWindow[PEEK_INDEX_PROP]
+            let maxIndex = parent.get_n_children() - 1
+            parent.set_child_at_index(
               windowActor,
-              this._peekedWindow[PEEK_INDEX_PROP],
+              Math.min(savedIndex, maxIndex),
             )
+          }
+
           delete this._peekedWindow[PEEK_INDEX_PROP]
         }
 

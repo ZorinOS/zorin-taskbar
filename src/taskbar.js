@@ -396,6 +396,14 @@ export const Taskbar = class extends EventEmitter {
       this._waitIdleId = 0
     }
 
+    // Clean up the _onStageKeyPress override if the overview is still showing
+    // via the Show Apps button. The override is normally cleaned up by a
+    // 'hidden' signal handler, but if we're destroyed while the overview is
+    // open, that handler would leak.
+    if (Object.hasOwn(SearchController, '_onStageKeyPress')) {
+      delete SearchController._onStageKeyPress
+    }
+
     this._timeoutsHandler.destroy()
     this.iconAnimator.destroy()
 
@@ -599,8 +607,12 @@ export const Taskbar = class extends EventEmitter {
 
   _disconnectWorkspaceSignals() {
     if (this._lastWorkspace) {
-      this._lastWorkspace.disconnect(this._workspaceWindowAddedId)
-      this._lastWorkspace.disconnect(this._workspaceWindowRemovedId)
+      try {
+        this._lastWorkspace.disconnect(this._workspaceWindowAddedId)
+        this._lastWorkspace.disconnect(this._workspaceWindowRemovedId)
+      } catch (e) {
+        // workspace may have been removed (dynamic workspaces)
+      }
 
       this._lastWorkspace = null
     }
@@ -649,14 +661,14 @@ export const Taskbar = class extends EventEmitter {
       })
     }
 
-    appIcon.connect('menu-state-changed', (appIcon, opened) => {
-      this._itemMenuStateChanged(item, opened)
-    })
-
     let item = new TaskbarItemContainer()
 
     item._dtpPanel = this.dtpPanel
     extendDashItemContainer(item)
+
+    appIcon.connect('menu-state-changed', (appIcon, opened) => {
+      this._itemMenuStateChanged(item, opened)
+    })
 
     item.setChild(appIcon)
     appIcon._dashItemContainer = item

@@ -284,7 +284,7 @@ export const Intellihide = class {
     actorData.affectsStruts = !enable
     actorData.trackFullscreen = !enable
 
-    this._panelBox.visible = enable ? enable : this._panelBox.visible
+    if (enable) this._panelBox.visible = true
 
     Main.layoutManager._queueUpdateRegions()
   }

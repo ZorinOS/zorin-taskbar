@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (73.1) noble; urgency=medium
+
+  * Additional bug fixes
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 04 Apr 2026 00:25:48 +0100
+
 gnome-shell-extension-zorin-taskbar (73) noble; urgency=medium
 
   * Re-based on upstream version 73

@@ -121,6 +121,9 @@ export default class ZorinTaskbarExtension extends Extension {
           200,
           completeEnable,
         )
+      } else {
+        // Zorin Dash is already disabled, proceed immediately
+        completeEnable()
       }
     } else completeEnable()
   }

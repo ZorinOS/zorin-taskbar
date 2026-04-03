@@ -373,6 +373,11 @@ export const TaskbarAppIcon = GObject.registerClass(
       this._timeoutsHandler.destroy()
       this._signalsHandler.destroy()
 
+      if (this._menu) {
+        this._menu.destroy()
+        this._menu = null
+      }
+
       this._previewMenu.close(true)
     }
 
@@ -1526,7 +1531,7 @@ export function activateAllWindows(app, monitor) {
 
 export function activateFirstWindow(app, monitor) {
   let windows = getInterestingWindows(app, monitor)
-  Main.activateWindow(windows[0])
+  if (windows.length) Main.activateWindow(windows[0])
 }
 
 export function cycleThroughWindows(app, reversed, shouldMinimize, monitor) {
@@ -1913,6 +1918,12 @@ export const ShowAppsIconWrapper = class extends EventEmitter {
   }
 
   destroy() {
+    if (this._menu) {
+      this._menu.close()
+      this._menu.actor.destroy()
+      this._menu = null
+    }
+
     this.realShowAppsIcon.destroy()
   }
 }

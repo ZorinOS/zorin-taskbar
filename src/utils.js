@@ -480,9 +480,10 @@ export const animateWindowOpacity = function (window, tweenOpts) {
   //when the animation is complete
   let visible = tweenOpts.opacity > 0
   let windowActor = window
-  let initialOpacity = window.opacity
 
   window = windowActor.get_first_child() || windowActor
+
+  let initialOpacity = window.opacity
 
   if (!windowActor.visible && visible) {
     window.opacity = 0
@@ -726,9 +727,10 @@ export const ColorUtils = {
     // Return {h:h, s:s, v:v} object.
 
     if (arguments.length === 1) {
-      r = r.r
-      g = r.g
-      b = r.b
+      let color = r
+      r = color.r
+      g = color.g
+      b = color.b
     }
 
     let h, s, v

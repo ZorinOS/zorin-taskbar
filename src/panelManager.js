@@ -326,10 +326,12 @@ export const PanelManager = class {
           pmb.menu._boxPointer._container.disconnect(
             pmb.menu._boxPointer._dtpGetPreferredHeightId,
           )
+          delete pmb.menu._boxPointer._dtpGetPreferredHeightId
         }
 
         pmb.menu._boxPointer.sourceActor = pmb.menu._boxPointer._dtpSourceActor
         delete pmb.menu._boxPointer._dtpSourceActor
+        delete pmb.menu._boxPointer._dtpInPanel
         pmb.menu._boxPointer._userArrowSide = St.Side.TOP
       })
 
@@ -379,6 +381,16 @@ export const PanelManager = class {
     this._setKeyBindings(false)
 
     this.notificationsMonitor.destroy()
+
+    // If the extension is disabled while the overview spread is active,
+    // the 'hidden' signal handler that normally restores these will never fire.
+    // Clean up the Workspace prototype override and sessionMode here.
+    if (Workspace.prototype._oldIsMyWindow) {
+      Workspace.prototype._isMyWindow = Workspace.prototype._oldIsMyWindow
+      delete Workspace.prototype._oldIsMyWindow
+    }
+    this.focusedApp = null
+    this.focusedWorkspace = null
 
     this._signalsHandler.destroy()
 
@@ -766,7 +778,7 @@ export const PanelManager = class {
         global.zorinTaskbar.panels,
         (p) => p.monitor == monitor,
       )
-      let excess = alloc.natural_size + panel.outerSize + 10 - monitor.height // 10 is arbitrary
+      let excess = alloc.natural_size + panel.geom.outerSize + 10 - monitor.height // 10 is arbitrary
 
       if (excess > 0) {
         alloc.natural_size -= excess
@@ -1114,6 +1126,12 @@ function _newLookingGlassResize() {
     global.zorinTaskbar.panels,
     (p) => p.monitor == Main.layoutManager.primaryMonitor,
   )
+
+  if (!primaryMonitorPanel) {
+    this._oldResize()
+    return
+  }
+
   let topOffset =
     primaryMonitorPanel.geom.position == St.Side.TOP
       ? primaryMonitorPanel.geom.outerSize +

@@ -77,6 +77,8 @@ export const Overview = class {
   }
 
   disable() {
+    this._endHotkeyPreviewCycle()
+
     this._signalsHandler.destroy()
     this._injectionsHandler.destroy()
     this._timeoutsHandler.destroy()
