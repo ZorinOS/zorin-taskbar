@@ -213,7 +213,11 @@ export const Panel = GObject.registerClass(
 
       this.add_child(this.panel)
 
-      if (Main.panel._onButtonPress || Main.panel._tryDragWindow) {
+      if (
+        Main.panel._onButtonPress ||
+        Main.panel._tryDragWindow ||
+        Main.panel._clickGesture
+      ) {
         this._signalsHandler.add([
           this.panel,
           ['button-press-event', 'touch-event'],
@@ -314,6 +318,23 @@ export const Panel = GObject.registerClass(
           Utils.getStageTheme(),
           'changed',
           () => (this._resetGeometry(), this._setShowDesktopButtonStyle()),
+        ],
+        [
+          this.panelBox,
+          'style-changed',
+          () => {
+            if (this._externalStyleChangeHandled) return
+
+            this._externalStyleChangeHandled = true
+
+            if (
+              JSON.stringify(this._relevantPanelBoxStyles) !=
+              JSON.stringify(this._getRelevantPanelBoxStyles())
+            )
+              this._resetGeometry()
+
+            delete this._externalStyleChangeHandled
+          },
         ],
         [
           // sync hover after a popupmenu is closed
@@ -1099,13 +1120,19 @@ export const Panel = GObject.registerClass(
     }
 
     _setPanelBoxStyle(disable) {
-      let style = ''
+      this.panelBox.set_style('')
+      this.panelBox.remove_style_class_name('zorintaskbar')
 
       if (!disable) {
-        let topBottomMargins = SETTINGS.get_int('panel-margin')
-        let sideMargins = topBottomMargins
+        this.panelBox.add_style_class_name('zorintaskbar')
+        this._relevantPanelBoxStyles = this._getRelevantPanelBoxStyles()
 
-        style = `padding: ${this.geom.topOffset + topBottomMargins}px ${sideMargins}px ${topBottomMargins}px;`
+        let panelMargins = SETTINGS.get_int('panel-margin')
+        let topMargin = panelMargins
+        let bottomMargin = panelMargins
+        let leftMargin = panelMargins
+        let rightMargin = panelMargins
+        let { padding } = this._relevantPanelBoxStyles
 
         if (
           TILINGSETTINGS != null &&
@@ -1117,22 +1144,50 @@ export const Panel = GObject.registerClass(
           let value = 0
 
           if (position == St.Side.TOP) {
-            value = topBottomMargins - margin_offset
-            style += `padding-bottom: ${value > 0 ? value : 0}px;`
+            value = panelMargins - margin_offset
+            bottomMargin = value > 0 ? value : 0
           } else if (position == St.Side.BOTTOM) {
-            value = this.geom.topOffset + topBottomMargins - margin_offset
-            style += `padding-top: ${value > 0 ? value : 0}px;`
+            value = this.geom.topOffset + panelMargins - margin_offset
+            topMargin = value > 0 ? value : 0
           } else if (position == St.Side.LEFT) {
-            value = sideMargins - margin_offset
-            style += `padding-right: ${value > 0 ? value : 0}px;`
+            value = panelMargins - margin_offset
+            rightMargin = value > 0 ? value : 0
           } else if (position == St.Side.RIGHT) {
-            value = sideMargins - margin_offset
-            style += `padding-left: ${value > 0 ? value : 0}px;`
+            value = panelMargins - margin_offset
+            leftMargin = value > 0 ? value : 0
           }
         }
-      }
 
-      this.panelBox.set_style(style)
+        // add existing theme padding to dtp panel margins
+        this.panelBox.set_style(
+          `padding: 
+              ${this.geom.topOffset + topMargin + padding[St.Side.TOP]}px 
+              ${rightMargin + padding[St.Side.RIGHT]}px 
+              ${bottomMargin + padding[St.Side.BOTTOM]}px 
+              ${leftMargin + padding[St.Side.LEFT]}px;`,
+        )
+      }
+    }
+
+    _getRelevantPanelBoxStyles() {
+      // Get unaffected panelbox styles that, if changed externally, would require a
+      // geometry reset (e.g. other extensions css classes).
+      // This is needed as the taskbar sets its panelbox margins using the style property, effectively
+      // overriding any css classes that could be added after the taskbar is enabled
+      let relevantStyles = { padding: {} }
+      let currentStyle = this.panelBox.get_style()
+
+      this.panelBox.set_style('')
+
+      let panelBoxTheme = this.panelBox.get_theme_node()
+
+      Object.values(St.Side).forEach(
+        (v) => (relevantStyles.padding[v] = panelBoxTheme.get_padding(v)),
+      )
+
+      this.panelBox.set_style(currentStyle)
+
+      return relevantStyles
     }
 
     _maybeSetDockCss(disable) {
@@ -1230,10 +1285,20 @@ export const Panel = GObject.registerClass(
 
       if (!dragWindow) return Clutter.EVENT_PROPAGATE
 
+      let dragOpArgs = [Meta.GrabOp.MOVING]
+
+      if (Config.PACKAGE_VERSION < '50')
+        dragOpArgs.push(event.get_device(), event.get_event_sequence())
+      else
+        dragOpArgs.push(
+          global.stage
+            .get_context()
+            .get_backend()
+            .get_sprite(global.stage, event),
+        )
+
       dragWindow.begin_grab_op(
-        Meta.GrabOp.MOVING,
-        event.get_device(),
-        event.get_event_sequence(),
+        ...dragOpArgs,
         event.get_time(),
         new Graphene.Point({ x: stageX, y: stageY }),
       )

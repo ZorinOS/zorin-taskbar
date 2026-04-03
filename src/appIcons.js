@@ -673,7 +673,6 @@ export const TaskbarAppIcon = GObject.registerClass(
 
       this.set_hover(true)
       this._menu.open(BoxPointer.PopupAnimation.FULL)
-      this._menuManager.ignoreRelease()
       this.emit('sync-tooltip')
 
       return false
@@ -1900,7 +1899,6 @@ export const ShowAppsIconWrapper = class extends EventEmitter {
 
     this.actor.set_hover(true)
     this._menu.open(BoxPointer.PopupAnimation.FULL)
-    this._menuManager.ignoreRelease()
     this.emit('sync-tooltip')
 
     return false
