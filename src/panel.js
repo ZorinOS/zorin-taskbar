@@ -582,8 +582,8 @@ export const Panel = GObject.registerClass(
       // For horizontal RTL panels, mirror the panel layout by reversing the
       // element order and swapping the STACKED_TL / STACKED_BR positions.
       // This makes the allocation engine lay out elements in the mirrored
-      // order without any coordinate post-processing, matching the behavior
-      // of GNOME Shell's own panel RTL handling.
+      // order without any coordinate post-processing, visually matching the
+      // RTL handling of GNOME Shell's panel.
       let isHorizontalRtl = !this.geom.vertical &&
         Clutter.get_default_text_direction() === Clutter.TextDirection.RTL
 

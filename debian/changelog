@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (73.2.2) noble; urgency=medium
+
+  * Updated code comment
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 04 Apr 2026 20:01:54 +0100
+
 gnome-shell-extension-zorin-taskbar (73.2.1) noble; urgency=medium
 
   * Removed incorrect text string in Preferences
