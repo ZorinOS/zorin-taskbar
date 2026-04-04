@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (73.2.1) noble; urgency=medium
+
+  * Removed incorrect text string in Preferences
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 04 Apr 2026 16:38:19 +0100
+
 gnome-shell-extension-zorin-taskbar (73.2) noble; urgency=medium
 
   * Mirror panel direction for right-to-left languages
