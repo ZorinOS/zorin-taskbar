@@ -579,6 +579,26 @@ export const Panel = GObject.registerClass(
 
       this._elementGroups = []
 
+      // For horizontal RTL panels, mirror the panel layout by reversing the
+      // element order and swapping the STACKED_TL / STACKED_BR positions.
+      // This makes the allocation engine lay out elements in the mirrored
+      // order without any coordinate post-processing, matching the behavior
+      // of GNOME Shell's own panel RTL handling.
+      let isHorizontalRtl = !this.geom.vertical &&
+        Clutter.get_default_text_direction() === Clutter.TextDirection.RTL
+
+      if (isHorizontalRtl) {
+        panelPositions = [...panelPositions].reverse().map((pos) => {
+          let mirroredPosition = pos.position
+          if (mirroredPosition === Pos.STACKED_TL)
+            mirroredPosition = Pos.STACKED_BR
+          else if (mirroredPosition === Pos.STACKED_BR)
+            mirroredPosition = Pos.STACKED_TL
+
+          return { ...pos, position: mirroredPosition }
+        })
+      }
+
       panelPositions.forEach((pos) => {
         let allocationMap = this.allocationMap[pos.element]
 
@@ -1047,9 +1067,20 @@ export const Panel = GObject.registerClass(
         let br = box[this.varCoord.c2]
         let groupSize = dynamicGroup.size + this.geom.varPadding * 2
 
-        if (this.geom.dynamic == Pos.STACKED_TL) {
+        // In RTL horizontal mode, mirror the dynamic anchoring so that
+        // a TL-anchored panel sits at the right edge and BR at the left
+        let dynamicPosition = this.geom.dynamic
+        if (!this.geom.vertical &&
+            Clutter.get_default_text_direction() === Clutter.TextDirection.RTL) {
+          if (dynamicPosition == Pos.STACKED_TL)
+            dynamicPosition = Pos.STACKED_BR
+          else if (dynamicPosition == Pos.STACKED_BR)
+            dynamicPosition = Pos.STACKED_TL
+        }
+
+        if (dynamicPosition == Pos.STACKED_TL) {
           br = Math.min(br, tl + groupSize)
-        } else if (this.geom.dynamic == Pos.STACKED_BR) {
+        } else if (dynamicPosition == Pos.STACKED_BR) {
           tl = Math.max(tl, br - groupSize)
         } else {
           // CENTERED_MONITOR
@@ -1556,9 +1587,13 @@ export const Panel = GObject.registerClass(
           let isVertical = this.geom.vertical
 
           let style = 'border: 0 solid ' + rgb + '; padding: 0;'
+          let isRtl = !isVertical &&
+            Clutter.get_default_text_direction() === Clutter.TextDirection.RTL
           style += isVertical
             ? 'border-top-width:1px;height:' + buttonSize
-            : 'border-left-width:1px;width:' + buttonSize
+            : (isRtl
+                ? 'border-right-width:1px;width:' + buttonSize
+                : 'border-left-width:1px;width:' + buttonSize)
 
           this._showDesktopButton.set_style(style)
           this._showDesktopButton[(isVertical ? 'x' : 'y') + '_expand'] = true

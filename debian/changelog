@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (73.2) noble; urgency=medium
+
+  * Mirror panel direction for right-to-left languages
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 04 Apr 2026 16:26:16 +0100
+
 gnome-shell-extension-zorin-taskbar (73.1) noble; urgency=medium
 
   * Additional bug fixes
