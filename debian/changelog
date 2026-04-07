@@ -1,3 +1,9 @@
+gnome-shell-extension-zorin-taskbar (73.2.3) noble; urgency=medium
+
+  * Fix disposed boxpointer
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 07 Apr 2026 23:59:42 +0100
+
 gnome-shell-extension-zorin-taskbar (73.2.2) noble; urgency=medium
 
   * Updated code comment

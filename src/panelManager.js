@@ -159,6 +159,9 @@ export const PanelManager = class {
       'vfunc_get_preferred_height',
       () =>
         function (forWidth) {
+          if (!this.bin)
+            return [0, 0]
+
           let alloc = { min_size: 0, natural_size: 0 }
 
           ;[alloc.min_size, alloc.natural_size] =
