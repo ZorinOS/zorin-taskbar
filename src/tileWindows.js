@@ -17,6 +17,7 @@
  */
 
 import Meta from 'gi://Meta'
+import GLib from 'gi://GLib'
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 
@@ -36,24 +37,43 @@ export function tileAppWindows(windows, monitorIndex) {
   let workspace = Utils.getCurrentWorkspace()
   let focusedWindow = global.display.focus_window
 
-  windows.forEach((win, i) => {
-    if (!win.located_on_workspace(workspace)) win.change_workspace(workspace)
-
-    if (win.minimized) win.unminimize()
-    if (win.fullscreen) win.unmake_fullscreen()
-    if (win.maximized_horizontally || win.maximized_vertically)
-      win.unmaximize(Meta.MaximizeFlags.BOTH)
-
+  let rects = windows.map((win, i) => {
     let col = i % cols
     let row = Math.floor(i / cols)
-
-    win.move_resize_frame(
-      true,
+    return [
+      win,
       area.x + col * (cellWidth + GAP),
       area.y + row * (cellHeight + GAP),
       cellWidth,
       cellHeight,
-    )
+    ]
+  })
+
+  let placeWindows = () => {
+    rects.forEach(([win, x, y, w, h]) => {
+      if (!win.located_on_workspace(workspace)) win.change_workspace(workspace)
+
+      if (win.minimized) win.unminimize()
+      if (win.fullscreen) win.unmake_fullscreen()
+      if (win.maximized_horizontally || win.maximized_vertically)
+        win.unmaximize(Meta.MaximizeFlags.BOTH)
+
+      // move_resize_frame у окон с клиентскими декорациями может применить
+      // только размер, проигнорировав позицию, поэтому позицию задаём
+      // отдельным move_frame.
+      win.move_resize_frame(true, x, y, w, h)
+      win.move_frame(true, x, y)
+    })
+  }
+
+  placeWindows()
+
+  // Окна, которые только что переключены на текущий рабочий стол или
+  // развёрнуты из свёрнутого состояния, могут быть ещё не отображены и
+  // отбросить первый запрос — повторяем после обработки событий.
+  GLib.timeout_add(GLib.PRIORITY_DEFAULT, 250, () => {
+    placeWindows()
+    return GLib.SOURCE_REMOVE
   })
 
   if (focusedWindow && windows.includes(focusedWindow)) focusedWindow.raise()
