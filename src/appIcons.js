@@ -44,6 +44,7 @@ import { Hold } from './intellihide.js'
 import * as Utils from './utils.js'
 import * as PanelSettings from './panelSettings.js';
 import * as Taskbar from './taskbar.js'
+import { tileAppWindows } from './tileWindows.js'
 import {
   DTP_EXTENSION,
   SETTINGS,
@@ -1647,6 +1648,10 @@ export function getIconPadding(dtpPanel) {
   return padding
 }
 
+export function getTileWindowsLabel(count) {
+  return ngettext('Tile %d Window', 'Tile %d Windows', count).format(count)
+}
+
 /**
  * Extend AppMenu (AppIconMenu for pre gnome 41)
  *
@@ -1662,6 +1667,13 @@ export class TaskbarSecondaryMenu extends AppMenu.AppMenu {
     // constructor parameter does nos work for some reason
     this._enableFavorites = true
     this._showSingleWindows = true
+
+    this._tileItem = this.addAction('', () =>
+      tileAppWindows(
+        getInterestingWindows(this._app, this.sourceActor.dtpPanel.monitor),
+        this.sourceActor.dtpPanel.monitor.index,
+      ),
+    )
 
     if (source.window)
       this._quitAllItem = this.addAction('QuitAll', () =>
@@ -1685,6 +1697,9 @@ export class TaskbarSecondaryMenu extends AppMenu.AppMenu {
       'Quit %d Windows',
       count,
     ).format(count)
+
+    this._tileItem.visible = count > 1
+    this._tileItem.label.set_text(getTileWindowsLabel(count))
 
     if (ungrouped) {
       this._quitAllItem.label.set_text(quitMultipleText)

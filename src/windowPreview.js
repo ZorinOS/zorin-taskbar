@@ -29,6 +29,8 @@ import St from 'gi://St'
 
 import * as Taskbar from './taskbar.js'
 import * as Utils from './utils.js'
+import { getTileWindowsLabel } from './appIcons.js'
+import { tileAppWindows } from './tileWindows.js'
 import { SETTINGS } from './extension.js'
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js'
 
@@ -1156,6 +1158,16 @@ export const Preview = GObject.registerClass(
         }
       })
 
+      let getInsertIndex = () => {
+        let menuItems = menu.box.get_children()
+        let index = Utils.findIndex(
+          menuItems,
+          (c) => c._delegate instanceof PopupMenu.PopupSeparatorMenuItem,
+        )
+
+        return index >= 0 ? index : menuItems.length - 1
+      }
+
       if (this.window.get_workspace() != currentWorkspace) {
         let menuItem = new PopupMenu.PopupMenuItem(
           _('Move to current Workspace') +
@@ -1163,17 +1175,26 @@ export const Preview = GObject.registerClass(
             (currentWorkspace.index() + 1) +
             ']',
         )
-        let menuItems = menu.box.get_children()
-        let insertIndex = Utils.findIndex(
-          menuItems,
-          (c) => c._delegate instanceof PopupMenu.PopupSeparatorMenuItem,
-        )
 
-        insertIndex = insertIndex >= 0 ? insertIndex : menuItems.length - 1
-        menu.addMenuItem(menuItem, insertIndex)
+        menu.addMenuItem(menuItem, getInsertIndex())
         menuItem.connect('activate', () =>
           this.window.change_workspace(currentWorkspace),
         )
+      }
+
+      let appIcon = this._previewMenu.currentAppIcon
+      let tileWindows = appIcon ? appIcon.getAppIconInterestingWindows() : []
+
+      if (tileWindows.length > 1) {
+        let tileItem = new PopupMenu.PopupMenuItem(
+          getTileWindowsLabel(tileWindows.length),
+        )
+
+        menu.addMenuItem(tileItem, getInsertIndex())
+        tileItem.connect('activate', () => {
+          tileAppWindows(tileWindows, appIcon.dtpPanel.monitor.index)
+          this._previewMenu.close()
+        })
       }
     }
 
