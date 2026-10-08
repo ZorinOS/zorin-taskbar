@@ -48,6 +48,7 @@ const MIN_DIMENSION = 100
 const FOCUSED_COLOR_OFFSET = 24
 const FADE_SIZE = 36
 const PEEK_INDEX_PROP = '_dtpPeekInitialIndex'
+const WINDOW_WS_CHANGED = 'peekedWindowWorkspaceChanged'
 const MARGIN_SIZE = 4
 
 const SHOW_WINDOW_PREVIEWS_TIMEOUT = 400
@@ -93,6 +94,15 @@ export const PreviewMenu = GObject.registerClass(
         Math.min(panel.geom.innerSize, MAX_TRANSLATION) *
         this._translationDirection
 
+      // Clutter inverts START <-> END in RTL mode for x_align. Pre-invert
+      // to counteract this so the preview stays flush with the panel edge
+      // (vertical panels) or positioned correctly by _updatePosition()
+      // (horizontal panels).
+      let isRtl =
+        Clutter.get_default_text_direction() === Clutter.TextDirection.RTL
+      let xAlign = geom.position != St.Side.RIGHT ? 'START' : 'END'
+      if (isRtl) xAlign = xAlign === 'START' ? 'END' : 'START'
+
       this.menu = new St.Widget({
         name: 'preview-menu',
         style_class: 'dash-label',
@@ -101,8 +111,7 @@ export const PreviewMenu = GObject.registerClass(
         track_hover: true,
         x_expand: true,
         y_expand: true,
-        x_align:
-          Clutter.ActorAlign[geom.position != St.Side.RIGHT ? 'START' : 'END'],
+        x_align: Clutter.ActorAlign[xAlign],
         y_align:
           Clutter.ActorAlign[geom.position != St.Side.BOTTOM ? 'START' : 'END'],
       })
@@ -466,6 +475,12 @@ export const PreviewMenu = GObject.registerClass(
         Meta.prefs_get_button_layout().left_buttons.indexOf(
           Meta.ButtonFunction.CLOSE,
         ) >= 0
+
+      // Clutter inverts START <-> END in RTL mode for x_align, so the
+      // close button physically lands on the opposite side. Pre-invert
+      // isLeftButtons to reflect the actual physical side.
+      if (Clutter.get_default_text_direction() === Clutter.TextDirection.RTL)
+        isLeftButtons = !isLeftButtons
       scaleFactor = Utils.getScaleFactor()
       headerHeight = HEADER_HEIGHT * scaleFactor
       animationTime = WINDOW_PREVIEW_ANIMATION_TIME * 0.001
@@ -732,6 +747,12 @@ export const PreviewMenu = GObject.registerClass(
 
       this._peekedWindow = window
 
+      this._signalsHandler.addWithLabel(WINDOW_WS_CHANGED, [
+        this._peekedWindow,
+        'workspace-changed',
+        () => this._endPeek(true, true),
+      ])
+
       if (currentWorkspace != windowWorkspace) {
         this._switchToWorkspaceImmediate(windowWorkspace.index())
         this._timeoutsHandler.add([T3, 100, focusWindow])
@@ -744,16 +765,18 @@ export const PreviewMenu = GObject.registerClass(
       }
     }
 
-    _endPeek(stayHere) {
+    _endPeek(stayHere, ignoreWindow) {
       this._timeoutsHandler.remove(T3)
 
       if (this._peekedWindow) {
+        let window = ignoreWindow ? null : this._peekedWindow
         let immediate =
           !stayHere &&
           this.peekInitialWorkspaceIndex != Utils.getCurrentWorkspace().index()
 
+        this._signalsHandler.removeWithLabel(WINDOW_WS_CHANGED)
         this._restorePeekedWindowStack()
-        this._focusMetaWindow(255, this._peekedWindow, immediate, true)
+        this._focusMetaWindow(255, window, immediate, true)
         this._peekedWindow = null
 
         if (!stayHere) {
@@ -787,12 +810,11 @@ export const PreviewMenu = GObject.registerClass(
 
     _focusMetaWindow(dimOpacity, window, immediate, ignoreFocus) {
       let isAppSpread = !Main.sessionMode.hasWorkspaces
-      let windowWorkspace = isAppSpread
-        ? Utils.getCurrentWorkspace()
-        : window.get_workspace()
       let windows = isAppSpread
         ? Utils.getAllMetaWindows()
-        : windowWorkspace.list_windows()
+        : (
+            window?.get_workspace() || Utils.getCurrentWorkspace()
+          ).list_windows()
 
       windows.forEach((mw) => {
         let wa = mw.get_compositor_private()

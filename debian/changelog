@@ -1,3 +1,15 @@
+gnome-shell-extension-zorin-taskbar (74) noble; urgency=medium
+
+  * Re-based on upstream version 74
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Sat, 03 Oct 2026 18:07:57 +0100
+
+gnome-shell-extension-zorin-taskbar (73.2.4) noble; urgency=medium
+
+  * Fixed window preview behaviour in RTL mode
+
+ -- Artyom Zorin <azorin@zoringroup.com>  Tue, 14 Apr 2026 17:19:02 +0100
+
 gnome-shell-extension-zorin-taskbar (73.2.3) noble; urgency=medium
 
   * Fix disposed boxpointer
